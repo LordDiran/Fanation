@@ -79,3 +79,36 @@ details[open] .faq-body { animation: slide-down 0.2s ease; }
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+
+/* ── Hero carousel ───────────────────────────────────────── */
+.hero-carousel-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+.hero-slide {
+  position: absolute;
+  top: -40%; left: 0; right: 0;
+  height: 180%;
+  background-size: cover;
+  background-position: center top;
+  filter: blur(20px) brightness(0.32) saturate(1.6);
+  opacity: 0;
+  transition: opacity 2s ease;
+  will-change: opacity, transform;
+  transform: translateZ(0);
+}
+.hero-slide.active { opacity: 1; }
+.hero-carousel-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(7,9,26,0.35) 0%, rgba(7,9,26,0.08) 45%, rgba(7,9,26,0.5) 100%);
+}
+
+/* ── Hero particles ──────────────────────────────────────── */
+@keyframes floatUp {
+  0%   { opacity: 0;    transform: translateY(60px)   rotate(0deg)   scale(0.8); }
+  8%   { opacity: 0.12; }
+  85%  { opacity: 0.07; }
+  100% { opacity: 0;    transform: translateY(-400px) rotate(200deg) scale(1.1); }
+}
+.particle {
+  position: absolute; opacity: 0;
+  animation: floatUp var(--dur,10s) var(--del,0s) ease-in-out infinite;
+  user-select: none; pointer-events: none;
+}

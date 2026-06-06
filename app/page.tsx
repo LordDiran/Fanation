@@ -35,19 +35,19 @@ const LIVE_GIFTS = [
 ]
 
 const LIVE_CHECKS = [
-  'Low-latency live video',
+  'Low-latency live video with real-time chat',
   'On-screen coin and gift notifications',
   'Earnings dashboard updates every second',
   'Save and monetise your stream replays',
 ]
 
 const FEATURES = [
-  { icon: '💳', bg: 'rgba(37,153,246,0.12)',   border: 'rgba(37,153,246,0.2)',   title: 'Earn Recurring Income',         body: 'Create subscription plans and generate predictable monthly revenue from your most loyal supporters.',                           pills: ['Monthly memberships', 'Annual plans', 'Tiered access'] },
-  { icon: '🪙', bg: 'rgba(245,166,35,0.12)',   border: 'rgba(245,166,35,0.2)',   title: 'Go Live & Get Paid',             body: 'Host live sessions, interact in real time, and receive gifts and support directly from fans as it happens.',                   pills: ['Real-time gifts', 'Live interaction', 'Instant payouts'] },
-  { icon: '🔴', bg: 'rgba(239,68,68,0.12)',    border: 'rgba(239,68,68,0.2)',    title: 'Own Your Community',             body: 'Build direct relationships through communities, messaging, and exclusive experiences. No algorithm between you and your fans.', pills: ['Direct messaging', 'Group communities', 'No algorithm'] },
-  { icon: '🎬', bg: 'rgba(168,85,247,0.12)',   border: 'rgba(168,85,247,0.2)',   title: 'Sell Exclusive Content',         body: 'Offer premium videos, photos, audio, behind-the-scenes content, and subscriber-only experiences.',                            pills: ['Pay-per-view', 'Subscriber drops', 'Private media'] },
-  { icon: '📈', bg: 'rgba(34,197,94,0.12)',    border: 'rgba(34,197,94,0.2)',    title: 'Grow Beyond Algorithms',         body: 'Stay connected with your audience without depending on social media reach or changing platform rules.',                         pills: ['Direct audience access', 'No feed throttling', 'You own your fans'] },
-  { icon: '📊', bg: 'rgba(245,158,11,0.12)',   border: 'rgba(245,158,11,0.2)',   title: 'Manage Your Creator Business',  body: 'Track earnings, monitor engagement, manage subscribers, and grow your brand with confidence.',                                 pills: ['Earnings dashboard', 'Subscriber analytics', 'Growth insights'] },
+  { icon: '💳', bg: 'rgba(37,153,246,0.12)',   border: 'rgba(37,153,246,0.2)',   title: 'Earn Recurring Income',         body: 'Create subscription plans and generate predictable monthly revenue from your most loyal supporters. Tiered access means fans choose what they value most.',                           pills: ['Monthly memberships', 'Annual plans', 'Tiered access'] },
+  { icon: '🪙', bg: 'rgba(245,166,35,0.12)',   border: 'rgba(245,166,35,0.2)',   title: 'Go Live & Get Paid',             body: 'Host live sessions, interact in real time, and receive gifts and support directly from fans as it happens. The most addictive earn loop on Fanation.',                   pills: ['Real-time gifts', 'Live interaction', 'Instant payouts'] },
+  { icon: '🔴', bg: 'rgba(239,68,68,0.12)',    border: 'rgba(239,68,68,0.2)',    title: 'Own Your Community',             body: 'Build direct relationships through communities, messaging, comments, and exclusive experiences. Your fans, your space — no algorithm between you and them.', pills: ['Direct messaging', 'Group communities', 'No algorithm'] },
+  { icon: '🎬', bg: 'rgba(168,85,247,0.12)',   border: 'rgba(168,85,247,0.2)',   title: 'Sell Exclusive Content',         body: 'Offer premium videos, photos, audio, behind-the-scenes content, and subscriber-only experiences. Lock what\'s valuable and let fans pay to unlock.',                            pills: ['Pay-per-view', 'Subscriber drops', 'Private media'] },
+  { icon: '📈', bg: 'rgba(34,197,94,0.12)',    border: 'rgba(34,197,94,0.2)',    title: 'Grow Beyond Algorithms',         body: 'Stay connected with your audience without depending on social media reach or changing platform rules. On Fanation, you own the relationship.',                         pills: ['Direct audience access', 'No feed throttling', 'You own your fans'] },
+  { icon: '📊', bg: 'rgba(245,158,11,0.12)',   border: 'rgba(245,158,11,0.2)',   title: 'Manage Your Creator Business',  body: 'Track earnings, monitor engagement, manage subscribers, and grow your brand with confidence. Everything you need to run a serious creator business.',                                 pills: ['Earnings dashboard', 'Subscriber analytics', 'Growth insights'] },
 ]
 
 const CREATORS = [
@@ -60,10 +60,10 @@ const CREATORS = [
 ]
 
 const EARN = [
-  { n: '01', title: 'Fan Gifts & Coins',                body: 'Fans buy coins and send them on posts, in DMs, and during live streams. Cash out whenever you like, no hold periods.' },
-  { n: '02', title: 'Subscriptions',                    body: 'Create recurring revenue through monthly or annual memberships. Subscriber tiers unlock exclusive posts, media, and DMs.' },
-  { n: '03', title: 'Exclusive Content',                body: "Unlock premium videos, photos, audio, and experiences for paying supporters. Content your audience can't find anywhere else." },
-  { n: '04', title: 'VIP Communities & Premium Access', body: 'Create private communities for your most engaged fans, offer early access, and build special experiences that deepen loyalty.' },
+  { n: '01', title: 'Fan Gifts & Coins',                body: 'Fans buy coins and send them on posts, in DMs, and during live streams. Receive gifts and support in real time. Cash out whenever you like.' },
+  { n: '02', title: 'Subscriptions',                    body: 'Create recurring revenue through monthly or annual memberships. Subscriber tiers unlock exclusive posts, media, and private DMs.' },
+  { n: '03', title: 'Exclusive Content',                body: 'Offer subscriber-only content your audience can\'t find anywhere else.' },
+  { n: '04', title: 'VIP Communities & Premium Access', body: 'Create private communities for your most engaged fans, offer early access, and build special experiences that deepen loyalty and justify premium pricing.' },
 ]
 
 const COMPARE_OTHER = [
@@ -91,13 +91,13 @@ const TESTIMONIALS = [
 ]
 
 const FAQS = [
-  { q: 'Is Fanation free to join?',            a: 'Yes — signing up is completely free. You only pay when you earn. There are no monthly platform fees or setup costs.' },
-  { q: 'How and when do I get paid?',           a: 'Fanation processes payouts within 24 hours. No 30-day holds, no delays. Earnings from subscriptions, gifts, and PPV are available quickly.' },
-  { q: 'What types of content can I share?',    a: 'Posts, photos, videos, live streams, audio, behind-the-scenes media, and subscriber-only collections. If you create it, Fanation supports it.' },
-  { q: 'Is there a minimum payout amount?',     a: 'Yes — the minimum payout is $20 (or equivalent in your local currency). Most active creators hit this within their first week.' },
-  { q: 'Can fans follow me for free?',          a: "Yes. Fans can follow your profile for free and see your public content. They subscribe or gift to access premium content and support you directly." },
-  { q: 'What does Fanation charge?',            a: 'Fanation takes a small percentage of transactions — no monthly fees, no setup costs. You only pay when you earn. Early creators will have access to the most competitive rate available.' },
-  { q: 'Do I need a large following to earn?',  a: 'No. Many creators earn consistently with a few hundred dedicated fans. A smaller, engaged audience who subscribes and gifts is often more valuable than a large passive following.' },
+  { q: 'Is Fanation free to join?',            a: 'Yes. Creating an account and setting up your profile costs nothing. Fanation earns when you earn — we take a small percentage of transactions only when money actually moves. You never pay to get started.' },
+  { q: 'When do I get paid?',                   a: 'Withdrawals are processed within 24 hours and hit your bank account within 1–3 business days depending on your region and payment method. There are no 30-day payout windows.' },
+  { q: 'What kind of content can I post?',      a: 'Photos, videos, audio, text posts, and live streams. Fanation supports every format your fans want to engage with, across every creator category — lifestyle, fitness, music, adult content, gaming, education, and more.' },
+  { q: 'Is there a minimum payout amount?',     a: 'Yes — the minimum withdrawal is $20. There is no maximum. As long as your balance is above $20, you can cash out at any time.' },
+  { q: 'Can fans follow me for free?',          a: 'Yes. Fans can follow your public profile and see your free posts at no cost. Subscribers pay to unlock your exclusive content, private messages, and subscriber-only feed. You control what\'s free and what\'s locked.' },
+  { q: 'What does Fanation charge?',            a: 'Full fee details will be confirmed at launch; early creators will have access to the most competitive rate available.' },
+  { q: 'Do I need a large following to earn?',  a: 'No. Many Fanation creators earn consistently with a few hundred dedicated fans. A smaller, engaged audience who subscribes and gifts is often more valuable than a large passive following on traditional social platforms.' },
 ]
 
 const TRUST = [
@@ -189,7 +189,7 @@ export default function Page() {
               <SectionTag>How it works</SectionTag>
               <SectionHead>Start Earning In Three Simple Steps</SectionHead>
               <p className="mt-4 max-w-xl mx-auto leading-[1.75]" style={{ fontSize: 17, color: '#7A8FB8' }}>
-                Whether you&apos;re just starting out or already have a thriving audience, Fanation gets you earning from day one.
+                Whether you&apos;re just starting out or already have a thriving audience, Fanation gets you earning from day one — no agency, no approval, no guesswork.
               </p>
             </div>
             <div className="grid md:grid-cols-[1fr_40px_1fr_40px_1fr] items-center">
@@ -234,7 +234,7 @@ export default function Page() {
                   style={{ border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 40px 100px rgba(0,0,0,0.65)' }}>
                   <div style={{ position: 'relative', paddingBottom: '177.78%' }}>
                     <Image
-                      src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=1080&h=1920&fit=crop&q=90"
+                      src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=1080&h=1920&fit=crop&crop=faces&q=90"
                       alt="Creator live streaming"
                       fill
                       quality={90}
@@ -300,7 +300,7 @@ export default function Page() {
                   Go Live. Connect Instantly.
                 </h2>
                 <p className="mb-8 leading-[1.78]" style={{ fontSize: 17, color: '#7A8FB8' }}>
-                  Start a stream in seconds, watch coins and gifts roll in from your fans, and see your earnings update in real time — all while building real connection with your community.
+                  While you stream, fans send coins and gifts — you see the notifications fly in, they see you react. It&apos;s the TikTok Live experience, built for every type of creator, without the algorithm cutting your reach.
                 </p>
                 <ul className="flex flex-col gap-3.5 mb-10">
                   {LIVE_CHECKS.map(item => (
@@ -328,7 +328,7 @@ export default function Page() {
               <SectionTag>Everything in one place</SectionTag>
               <SectionHead>One platform for posting,<br />streaming, and earning</SectionHead>
               <p className="mt-4 max-w-xl mx-auto leading-[1.75]" style={{ fontSize: 17, color: '#7A8FB8' }}>
-                Whether you&apos;re just starting out or already have a thriving audience, Fanation gives you the tools to grow, engage, and monetize.
+                Fanation brings your feed, live streams, messages, and money together — so you focus on creating, not juggling apps.
               </p>
             </div>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
@@ -366,7 +366,7 @@ export default function Page() {
                 <SectionTag>Built for every creator</SectionTag>
                 <SectionHead>Built For Every Type Of Creator</SectionHead>
                 <p className="mt-3 max-w-[480px] leading-[1.72]" style={{ fontSize: 16, color: '#7A8FB8' }}>
-                  No matter your niche, Fanation helps you connect, engage, and earn from your audience.
+                  No matter your niche, Fanation helps you connect, engage, and earn from your audience. Musicians, coaches, educators, entertainers — all welcome.
                 </p>
               </div>
               <a href="#"
@@ -420,9 +420,6 @@ export default function Page() {
               <p className="mt-4 max-w-xl mx-auto leading-[1.75]" style={{ fontSize: 17, color: '#7A8FB8' }}>
                 Your audience supports you in different ways. Fanation gives you multiple revenue streams — mix and match what fits how you create.
               </p>
-              <p className="mt-3 font-semibold" style={{ fontSize: 14, color: 'rgba(37,153,246,0.7)' }}>
-                🌍 Creators are paid in their local currency — NGN, USD, GBP, EUR, KES, GHS, and more.
-              </p>
             </div>
             <div className="grid md:grid-cols-2 gap-4">
               {EARN.map(e => (
@@ -448,7 +445,7 @@ export default function Page() {
               <SectionTag>Why Fanation</SectionTag>
               <SectionHead>Built for creators,<br />not the platform.</SectionHead>
               <p className="mt-4 max-w-lg mx-auto leading-[1.75]" style={{ fontSize: 17, color: '#7A8FB8' }}>
-                Every other platform forces a trade-off. Fanation is the only platform where live gifting, subscriptions, coins, and content all work together.
+                Most creator tools were designed around the platform&apos;s business model. Fanation is designed around yours.
               </p>
             </div>
             <div className="grid md:grid-cols-2 gap-6">
@@ -544,7 +541,7 @@ export default function Page() {
                   Everything you want to know
                 </h2>
                 <p className="mb-7 leading-[1.75]" style={{ fontSize: 16, color: '#7A8FB8' }}>
-                  Can&apos;t find what you&apos;re looking for? Our team is here to help you get started and keep earning.
+                  Still unsure? These are the questions every creator asks before their first post.
                 </p>
                 <a href="#"
                   className="inline-flex items-center text-white font-semibold"
@@ -580,17 +577,35 @@ export default function Page() {
                          radial-gradient(ellipse 40% 40% at 20% 80%,rgba(245,166,35,0.05) 0%,transparent 55%)`
           }} />
           <div className="max-w-[1180px] mx-auto px-6 relative z-10">
-            <SectionTag>Get started</SectionTag>
             <h2 className="font-black text-white mb-5 leading-[1.06]"
               style={{ fontSize: 'clamp(34px,5vw,68px)', letterSpacing: '-0.04em' }}>
               Ready To Build Something<br />
               <em className="not-italic" style={{ color: '#2599F6' }}>Bigger Than Followers?</em>
             </h2>
             <p className="mb-3 mx-auto max-w-xl" style={{ fontSize: 18, color: '#7A8FB8' }}>
+              Your audience already believes in you. Now give them a place to belong.
+            </p>
+            <p className="mb-12 mx-auto max-w-xl" style={{ fontSize: 18, color: '#7A8FB8' }}>
               Join creators who are building communities, creating meaningful fan relationships, and earning directly from the value they create.
             </p>
-            <p className="mb-12 mx-auto" style={{ fontSize: 13, color: '#7A8FB8' }}>
-              Your audience already believes in you. Now give them a place to belong.
+
+            {/* CTA buttons */}
+            <div className="flex flex-wrap justify-center gap-4 mb-5">
+              <a href="#"
+                className="inline-flex items-center text-white font-bold"
+                style={{ background: '#2599F6', fontSize: 17, padding: '18px 40px', borderRadius: '100px', transition: 'background .2s, box-shadow .2s' }}>
+                Start Creating For Free →
+              </a>
+              <a href="#features"
+                className="inline-flex items-center text-white font-semibold"
+                style={{ fontSize: 17, padding: '18px 40px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.15)', transition: 'border-color .2s, background .2s' }}>
+                Explore Fanation
+              </a>
+            </div>
+
+            {/* Footnote */}
+            <p className="mb-10" style={{ fontSize: 13, color: 'rgba(255,255,255,0.35)' }}>
+              No credit card required. Free to join. No platform lock-in.
             </p>
 
             {/* Trust strip */}
@@ -602,20 +617,6 @@ export default function Page() {
                   {t.text}
                 </div>
               ))}
-            </div>
-
-            {/* CTA buttons */}
-            <div className="flex flex-wrap justify-center gap-4 mb-10">
-              <a href="#"
-                className="inline-flex items-center text-white font-bold"
-                style={{ background: '#2599F6', fontSize: 17, padding: '18px 40px', borderRadius: '100px', transition: 'background .2s, box-shadow .2s' }}>
-                Start Creating For Free →
-              </a>
-              <a href="#features"
-                className="inline-flex items-center text-white font-semibold"
-                style={{ fontSize: 17, padding: '18px 40px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.15)', transition: 'border-color .2s, background .2s' }}>
-                Explore Fanation
-              </a>
             </div>
 
             {/* App badges */}

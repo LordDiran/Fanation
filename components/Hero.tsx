@@ -1,7 +1,14 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
+
+const CAROUSEL_PHOTOS = [
+  'photo-1522556189639-b150ed9c4330',
+  'photo-1531746020798-e6953c6e8e04',
+  'photo-1506794778202-cad84cf45f1d',
+  'photo-1573496359142-b8d87734a5a2',
+]
 
 const AVATARS = [
   { id: 'photo-1531746020798-e6953c6e8e04', name: 'Amara' },
@@ -13,33 +20,85 @@ const AVATARS = [
 
 const GIFTS = [
   { icon: '🎁', text: '+500 coins', user: '@jay_88',    delay: '0s' },
-  { icon: '💎', text: '+$12.00',    user: '@superfan',  delay: '1.2s' },
-  { icon: '⭐', text: '+$5.00',     user: '@priscilia', delay: '2.4s' },
+  { icon: '💎', text: '+$12.00',   user: '@superfan',  delay: '1.2s' },
+  { icon: '⭐', text: '+$5.00',    user: '@priscilia', delay: '2.4s' },
 ]
 
-export default function Hero() {
-  const meshRef = useRef<HTMLDivElement>(null)
+const COINS = ['🪙', '💎', '⭐', '🎁', '💰', '✨']
 
+export default function Hero() {
+  const [slide, setSlide] = useState(0)
+  const slideEls = useRef<(HTMLDivElement | null)[]>([])
+  const particlesRef = useRef<HTMLDivElement>(null)
+
+  // Auto-advance carousel every 5s
   useEffect(() => {
+    const id = setInterval(() => setSlide(s => (s + 1) % CAROUSEL_PHOTOS.length), 5000)
+    return () => clearInterval(id)
+  }, [])
+
+  // Parallax scroll on carousel slides
+  useEffect(() => {
+    let ticking = false
     const onScroll = () => {
-      if (meshRef.current) meshRef.current.style.transform = `translateY(${window.scrollY * 0.15}px)`
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const y = window.scrollY
+          slideEls.current.forEach(s => {
+            if (s) s.style.transform = `translateY(${y * 0.35}px) translateZ(0)`
+          })
+          ticking = false
+        })
+        ticking = true
+      }
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  // Spawn floating particles
+  useEffect(() => {
+    const container = particlesRef.current
+    if (!container) return
+    for (let i = 0; i < 18; i++) {
+      const el = document.createElement('span')
+      el.className = 'particle'
+      el.textContent = COINS[Math.floor(Math.random() * COINS.length)]
+      el.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${8+Math.random()*12}s;--del:${Math.random()*10}s;font-size:${10+Math.random()*10}px;`
+      container.appendChild(el)
+    }
+    return () => { if (container) container.innerHTML = '' }
+  }, [])
+
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden" style={{ padding: '120px 0 80px' }}>
 
-      {/* ── CSS radial-gradient mesh — no photo background ── */}
-      <div ref={meshRef} className="absolute inset-0 pointer-events-none" style={{
+      {/* ── Blurred carousel background ── */}
+      <div className="hero-carousel-bg">
+        {CAROUSEL_PHOTOS.map((photo, i) => (
+          <div
+            key={photo}
+            ref={el => { slideEls.current[i] = el }}
+            className={`hero-slide${i === slide ? ' active' : ''}`}
+            style={{ backgroundImage: `url('https://images.unsplash.com/${photo}?w=1600&h=900&fit=crop&q=80')` }}
+          />
+        ))}
+        <div className="hero-carousel-overlay" />
+      </div>
+
+      {/* ── CSS gradient mesh ── */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        zIndex: 1,
         background: `radial-gradient(ellipse 60% 55% at 65% 45%,rgba(37,153,246,.09) 0%,transparent 60%),
                      radial-gradient(ellipse 50% 45% at 20% 70%,rgba(245,166,35,.05) 0%,transparent 55%),
                      radial-gradient(ellipse 40% 40% at 80% 10%,rgba(34,197,94,.04) 0%,transparent 50%)`
       }} />
 
-      <div className="max-w-[1180px] mx-auto px-6 relative z-10 w-full">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+      {/* ── Floating particles ── */}
+      <div ref={particlesRef} className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1 }} />
+
+      <div className="max-w-[1180px] mx-auto px-6 relative w-full" style={{ zIndex: 2 }}>
+        <div className="grid lg:grid-cols-2 items-center" style={{ gap: 60 }}>
 
           {/* ── Left copy ── */}
           <div>
@@ -128,7 +187,7 @@ export default function Hero() {
           <div className="relative hidden lg:block" style={{ paddingBottom: 32 }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
 
-              {/* Card 1: Elena LIVE — left col, row 1 */}
+              {/* Card 1: Elena LIVE — col1 row1 */}
               <div className="relative rounded-[18px] overflow-hidden"
                 style={{ aspectRatio: '4/5', gridRow: 1, gridColumn: 1, background: 'linear-gradient(135deg,#111830,#18223C)' }}>
                 <Image
@@ -150,7 +209,7 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* Card 2: Sofia — right col, spans both rows */}
+              {/* Card 2: Sofia — col2 rows1-2 */}
               <div className="relative rounded-[18px] overflow-hidden"
                 style={{ gridRow: '1/span 2', gridColumn: 2, background: 'linear-gradient(135deg,#111830,#18223C)' }}>
                 <Image
@@ -184,7 +243,7 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* Card 3: Marcus — left col, row 2 */}
+              {/* Card 3: Marcus — col1 row2 */}
               <div className="relative rounded-[18px] overflow-hidden"
                 style={{ aspectRatio: '16/9', gridRow: 2, gridColumn: 1, background: 'linear-gradient(135deg,#111830,#18223C)' }}>
                 <Image
