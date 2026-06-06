@@ -5,21 +5,21 @@ import Hero from '@/components/Hero'
 // ─── Data ────────────────────────────────────────────────────────────────────
 
 const TICKER = [
-  { dot: '#22C55E', text: '@sofia earned ', bold: '₦2,480', rest: ' this month' },
+  { dot: '#22C55E', text: '@sofia earned ', bold: '$2,480', rest: ' this month' },
   { dot: '#2599F6', text: '', bold: '8,247 fans', rest: ' watching live right now' },
-  { dot: '#F5A623', text: '@marcusbeats unlocked ', bold: '₦1,800', rest: ' in 48 hrs' },
+  { dot: '#F5A623', text: '@marcusbeats unlocked ', bold: '$1,800', rest: ' in 48 hrs' },
   { dot: '#22C55E', text: '', bold: '2.4M coins', rest: ' gifted today' },
   { dot: '#2599F6', text: '@priscilia hit ', bold: '10K subscribers', rest: '' },
-  { dot: '#F5A623', text: '', bold: '₦4.2M+', rest: ' paid out to creators' },
+  { dot: '#F5A623', text: '', bold: '$4.2M+', rest: ' paid out to creators' },
   { dot: '#22C55E', text: 'New creator joined every ', bold: '4 minutes', rest: '' },
-  { dot: '#2599F6', text: '@dembe earned ', bold: '₦3,100', rest: ' from one live stream' },
+  { dot: '#2599F6', text: '@dembe earned ', bold: '$3,100', rest: ' from one live stream' },
 ]
 
 const STATS = [
-  { val: '₦6.7B+', label: 'Paid to creators',    sub: 'and growing daily' },
-  { val: '12K+',   label: 'Active creators',      sub: 'across 180+ countries' },
-  { val: '2.4M',   label: 'Coins gifted daily',   sub: 'real-time gifting economy' },
-  { val: '24h',    label: 'Payout turnaround',    sub: 'no 30-day holds' },
+  { val: '$4.2M+', label: 'Paid out to creators', sub: 'and growing daily' },
+  { val: '12K+',   label: 'Active creators',       sub: 'across 180+ countries' },
+  { val: '2.4M',   label: 'Coins gifted daily',    sub: 'real-time gifting economy' },
+  { val: '24h',    label: 'Payout turnaround',     sub: 'no 30-day holds' },
 ]
 
 const STEPS = [
@@ -30,7 +30,7 @@ const STEPS = [
 
 const LIVE_GIFTS = [
   { user: '@jayden', text: 'sent 500 coins' },
-  { user: '@priscilia', text: 'sent ₦25 gift' },
+  { user: '@priscilia', text: 'sent $25 gift' },
   { user: '@marcus_t', text: 'sent 200 coins' },
 ]
 
@@ -51,12 +51,12 @@ const FEATURES = [
 ]
 
 const CREATORS = [
-  { name: 'Marcus', role: 'Podcaster',        avg: '₦4.5M avg/mo', photo: 'photo-1506794778202-cad84cf45f1d' },
-  { name: 'Dembe',  role: 'Fitness Coach',    avg: '₦3.0M avg/mo', photo: 'photo-1549476464-37392f717541' },
-  { name: 'Sofia',  role: 'Model · Creator',  avg: '₦8.3M avg/mo', photo: 'photo-1529626455594-4ff0802cfb7e' },
-  { name: 'Aisha',  role: 'Travel Creator',   avg: '₦4.9M avg/mo', photo: 'photo-1573496359142-b8d87734a5a2' },
-  { name: 'Tobi',   role: 'Vlogger',          avg: '₦3.8M avg/mo', photo: 'photo-1507003211169-0a1dd7228f2d' },
-  { name: 'Nadia',  role: 'Lifestyle Creator',avg: '₦6.4M avg/mo', photo: 'photo-1517841905240-472988babdf9' },
+  { name: 'Marcus', role: 'Podcaster',        avg: '$2.8K avg/mo', photo: 'photo-1506794778202-cad84cf45f1d' },
+  { name: 'Dembe',  role: 'Fitness Coach',    avg: '$1.9K avg/mo', photo: 'photo-1549476464-37392f717541' },
+  { name: 'Sofia',  role: 'Model · Creator',  avg: '$5.2K avg/mo', photo: 'photo-1529626455594-4ff0802cfb7e' },
+  { name: 'Aisha',  role: 'Travel Creator',   avg: '$3.1K avg/mo', photo: 'photo-1573496359142-b8d87734a5a2' },
+  { name: 'Tobi',   role: 'Vlogger',          avg: '$2.4K avg/mo', photo: 'photo-1507003211169-0a1dd7228f2d' },
+  { name: 'Nadia',  role: 'Lifestyle Creator',avg: '$4.0K avg/mo', photo: 'photo-1517841905240-472988babdf9' },
 ]
 
 const EARN = [
@@ -85,16 +85,16 @@ const COMPARE_FANATION = [
 ]
 
 const TESTIMONIALS = [
-  { name: 'Priscilia O.', handle: '@yummychill54', role: 'Lifestyle Creator', stat: '+₦3.9M this month', photo: 'photo-1531746020798-e6953c6e8e04', quote: "I left my old platform after three years of watching fees eat my income. Two months on Fanation and I've tripled what I made there — the live gifting alone covered my rent in one stream." },
-  { name: 'Marcus T.',    handle: '@marcusbeats',  role: 'Verified Creator',  stat: 'PPV drop earner',   photo: 'photo-1506794778202-cad84cf45f1d', quote: "Pay-per-view drops changed everything. I put a track behind a paywall, promoted it once, and woke up to eight figures. I'd been leaving money on the table for years." },
-  { name: 'Lara K.',      handle: '@laracreates',  role: 'Verified Creator',  stat: 'Community builder', photo: 'photo-1573496359142-b8d87734a5a2', quote: 'The DMs and group chats keep my fans close. It feels personal, and the payouts are fast and reliable.' },
+  { name: 'Priscilia O.', handle: '@yummychill54', role: 'Lifestyle Creator', stat: '+$2,480', stat2: 'this month',   photo: 'photo-1531746020798-e6953c6e8e04', quote: "I left my old platform after three years of watching fees eat my income. Two months on Fanation and I've tripled what I made there — the live gifting alone covered my rent in one stream." },
+  { name: 'Marcus T.',    handle: '@marcusbeats',  role: 'Musician',          stat: '+$1,800', stat2: 'in 48 hours',  photo: 'photo-1506794778202-cad84cf45f1d', quote: "Pay-per-view drops changed everything. I put a track behind a paywall, promoted it on my feed, and made $1,800 in 48 hours. I was giving that music away for free before." },
+  { name: 'Lara K.',      handle: '@laracreates',  role: 'Vlogger',           stat: '+$3,100', stat2: 'last month',   photo: 'photo-1573496359142-b8d87734a5a2', quote: "My fans feel genuinely close to me here — the DMs and group chats feel different. And the payouts are fast. First withdrawal hit my account within 24 hours of signing up." },
 ]
 
 const FAQS = [
   { q: 'Is Fanation free to join?',            a: 'Yes — signing up is completely free. You only pay when you earn. There are no monthly platform fees or setup costs.' },
   { q: 'How and when do I get paid?',           a: 'Fanation processes payouts within 24 hours. No 30-day holds, no delays. Earnings from subscriptions, gifts, and PPV are available quickly.' },
   { q: 'What types of content can I share?',    a: 'Posts, photos, videos, live streams, audio, behind-the-scenes media, and subscriber-only collections. If you create it, Fanation supports it.' },
-  { q: 'Is there a minimum payout amount?',     a: 'Yes — the minimum payout is ₦20,000 (or equivalent in your local currency). Most active creators hit this within their first week.' },
+  { q: 'Is there a minimum payout amount?',     a: 'Yes — the minimum payout is $20 (or equivalent in your local currency). Most active creators hit this within their first week.' },
   { q: 'Can fans follow me for free?',          a: "Yes. Fans can follow your profile for free and see your public content. They subscribe or gift to access premium content and support you directly." },
   { q: 'What does Fanation charge?',            a: 'Fanation takes a small percentage of transactions — no monthly fees, no setup costs. You only pay when you earn. Early creators will have access to the most competitive rate available.' },
   { q: 'Do I need a large following to earn?',  a: 'No. Many creators earn consistently with a few hundred dedicated fans. A smaller, engaged audience who subscribes and gifts is often more valuable than a large passive following.' },
@@ -193,27 +193,31 @@ export default function Page() {
               </p>
             </div>
             <div className="grid md:grid-cols-[1fr_40px_1fr_40px_1fr] items-center">
-              {STEPS.map((s, i) => (
-                <>
-                  <div key={s.n} className="how-step rounded-[22px] p-9 relative"
-                    style={{ background: '#111830', border: `1px solid ${BORDER}` }}>
-                    <div className="text-xs font-black tracking-[0.1em] mb-5" style={{ color: '#2599F6', textTransform: 'uppercase' }}>
-                      Step {s.n}
-                    </div>
-                    <div className="flex items-center justify-center rounded-2xl mb-5 text-[26px]"
-                      style={{ width: 56, height: 56, background: 'rgba(37,153,246,0.1)', border: '1px solid rgba(37,153,246,0.18)' }}>
-                      {s.icon}
-                    </div>
-                    <h3 className="font-black text-white mb-2.5" style={{ fontSize: 19, letterSpacing: '-0.02em' }}>{s.title}</h3>
-                    <p style={{ fontSize: 14, color: '#7A8FB8', lineHeight: 1.72 }}>{s.body}</p>
-                  </div>
-                  {i < STEPS.length - 1 && (
-                    <div key={`arrow-${i}`} className="hidden md:flex items-center justify-center" style={{ color: 'rgba(37,153,246,0.3)', fontSize: 24 }}>
-                      →
-                    </div>
-                  )}
-                </>
-              ))}
+              {/* Step 01 */}
+              <div className="how-step rounded-[22px] p-9 relative" style={{ background: '#111830', border: `1px solid ${BORDER}` }}>
+                <div className="text-xs font-black tracking-[0.1em] mb-5" style={{ color: '#2599F6', textTransform: 'uppercase' }}>Step {STEPS[0].n}</div>
+                <div className="flex items-center justify-center rounded-2xl mb-5 text-[26px]" style={{ width: 56, height: 56, background: 'rgba(37,153,246,0.1)', border: '1px solid rgba(37,153,246,0.18)' }}>{STEPS[0].icon}</div>
+                <h3 className="font-black text-white mb-2.5" style={{ fontSize: 19, letterSpacing: '-0.02em' }}>{STEPS[0].title}</h3>
+                <p style={{ fontSize: 14, color: '#7A8FB8', lineHeight: 1.72 }}>{STEPS[0].body}</p>
+              </div>
+              {/* Arrow */}
+              <div className="hidden md:flex items-center justify-center" style={{ color: 'rgba(37,153,246,0.3)', fontSize: 24 }}>→</div>
+              {/* Step 02 */}
+              <div className="how-step rounded-[22px] p-9 relative" style={{ background: '#111830', border: `1px solid ${BORDER}` }}>
+                <div className="text-xs font-black tracking-[0.1em] mb-5" style={{ color: '#2599F6', textTransform: 'uppercase' }}>Step {STEPS[1].n}</div>
+                <div className="flex items-center justify-center rounded-2xl mb-5 text-[26px]" style={{ width: 56, height: 56, background: 'rgba(37,153,246,0.1)', border: '1px solid rgba(37,153,246,0.18)' }}>{STEPS[1].icon}</div>
+                <h3 className="font-black text-white mb-2.5" style={{ fontSize: 19, letterSpacing: '-0.02em' }}>{STEPS[1].title}</h3>
+                <p style={{ fontSize: 14, color: '#7A8FB8', lineHeight: 1.72 }}>{STEPS[1].body}</p>
+              </div>
+              {/* Arrow */}
+              <div className="hidden md:flex items-center justify-center" style={{ color: 'rgba(37,153,246,0.3)', fontSize: 24 }}>→</div>
+              {/* Step 03 */}
+              <div className="how-step rounded-[22px] p-9 relative" style={{ background: '#111830', border: `1px solid ${BORDER}` }}>
+                <div className="text-xs font-black tracking-[0.1em] mb-5" style={{ color: '#2599F6', textTransform: 'uppercase' }}>Step {STEPS[2].n}</div>
+                <div className="flex items-center justify-center rounded-2xl mb-5 text-[26px]" style={{ width: 56, height: 56, background: 'rgba(37,153,246,0.1)', border: '1px solid rgba(37,153,246,0.18)' }}>{STEPS[2].icon}</div>
+                <h3 className="font-black text-white mb-2.5" style={{ fontSize: 19, letterSpacing: '-0.02em' }}>{STEPS[2].title}</h3>
+                <p style={{ fontSize: 14, color: '#7A8FB8', lineHeight: 1.72 }}>{STEPS[2].body}</p>
+              </div>
             </div>
           </div>
         </section>
@@ -271,7 +275,7 @@ export default function Page() {
                           <span className="text-xl">💰</span>
                           <div>
                             <p style={{ fontSize: 11, color: '#7A8FB8' }}>Earned this stream</p>
-                            <p className="font-black" style={{ fontSize: 24, color: '#22C55E', letterSpacing: '-0.02em' }}>₦1,240,000</p>
+                            <p className="font-black" style={{ fontSize: 24, color: '#22C55E', letterSpacing: '-0.02em' }}>$1,240.00</p>
                           </div>
                         </div>
                       </div>
@@ -513,6 +517,7 @@ export default function Page() {
                     </div>
                     <div className="ml-auto text-right flex-shrink-0">
                       <p className="font-black" style={{ fontSize: 15, color: '#22C55E' }}>{t.stat}</p>
+                      <p style={{ fontSize: 11, color: '#7A8FB8' }}>{t.stat2}</p>
                     </div>
                   </div>
                 </div>

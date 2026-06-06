@@ -41,7 +41,7 @@
 
 /* ── Utility classes ─────────────────────────────────────────── */
 .marquee-track         { animation: marquee 32s linear infinite; }
-.marquee-ticker-track  { animation: marquee 40s linear infinite; }
+.marquee-ticker-track  { animation: marquee 35s linear infinite; }
 .marquee-ticker-track:hover { animation-play-state: paused; }
 .pulse-dot             { animation: pulse-dot 2s ease-in-out infinite; }
 details[open] .faq-body { animation: slide-down 0.2s ease; }

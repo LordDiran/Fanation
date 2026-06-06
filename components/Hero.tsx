@@ -1,14 +1,7 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import Image from 'next/image'
-
-const BG = [
-  'photo-1514525253161-7a46d19cd819',
-  'photo-1516280440614-37939bbacd81',
-  'photo-1493225457124-a3eb161ffa5f',
-  'photo-1598488035139-bdbb2231ce04',
-]
 
 const AVATARS = [
   { id: 'photo-1531746020798-e6953c6e8e04', name: 'Amara' },
@@ -19,23 +12,17 @@ const AVATARS = [
 ]
 
 const GIFTS = [
-  { icon: '🎁', text: '+500 coins', user: '@jay_88',   delay: '0s' },
-  { icon: '💎', text: '+₦12.00',   user: '@superfan', delay: '1.2s' },
-  { icon: '⭐', text: '+₦5.00',    user: '@priscilia', delay: '2.4s' },
+  { icon: '🎁', text: '+500 coins',  user: '@jay_88',    delay: '0s' },
+  { icon: '💎', text: '+$5.00',     user: '@superfan',  delay: '1.2s' },
+  { icon: '⭐', text: '+200 coins', user: '@priscilia', delay: '2.4s' },
 ]
 
 export default function Hero() {
-  const [slide, setSlide] = useState(0)
-  const bgRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const t = setInterval(() => setSlide(s => (s + 1) % BG.length), 5000)
-    return () => clearInterval(t)
-  }, [])
+  const meshRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const onScroll = () => {
-      if (bgRef.current) bgRef.current.style.transform = `translateY(${window.scrollY * 0.35}px)`
+      if (meshRef.current) meshRef.current.style.transform = `translateY(${window.scrollY * 0.15}px)`
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
@@ -44,30 +31,8 @@ export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center overflow-hidden" style={{ padding: '120px 0 80px' }}>
 
-      {/* ── Carousel parallax background ── */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div ref={bgRef} className="absolute" style={{ top: '-40%', left: 0, right: 0, height: '180%' }}>
-          {BG.map((id, i) => (
-            <div
-              key={id}
-              className="absolute inset-0 transition-opacity duration-[2000ms]"
-              style={{
-                opacity: i === slide ? 1 : 0,
-                backgroundImage: `url(https://images.unsplash.com/${id}?w=1440&q=80&fit=crop)`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center top',
-                filter: 'blur(20px) brightness(0.32) saturate(1.6)',
-              }}
-            />
-          ))}
-        </div>
-        <div className="absolute inset-0" style={{
-          background: 'linear-gradient(180deg,rgba(7,9,26,0.35) 0%,rgba(7,9,26,0.08) 45%,rgba(7,9,26,0.5) 100%)'
-        }} />
-      </div>
-
-      {/* ── Gradient mesh ── */}
-      <div className="absolute inset-0 pointer-events-none" style={{
+      {/* ── CSS radial-gradient mesh — no photo background ── */}
+      <div ref={meshRef} className="absolute inset-0 pointer-events-none" style={{
         background: `radial-gradient(ellipse 60% 55% at 65% 45%,rgba(37,153,246,.09) 0%,transparent 60%),
                      radial-gradient(ellipse 50% 45% at 20% 70%,rgba(245,166,35,.05) 0%,transparent 55%),
                      radial-gradient(ellipse 40% 40% at 80% 10%,rgba(34,197,94,.04) 0%,transparent 50%)`
@@ -153,7 +118,7 @@ export default function Hero() {
               </div>
               <div>
                 <p className="text-sm font-bold text-white leading-tight">12,000+ creators</p>
-                <p className="text-xs" style={{ color: '#7A8FB8' }}>influencers, educators, coaches &amp; entertainers</p>
+                <p className="text-xs" style={{ color: '#7A8FB8' }}>creators, influencers, educators, coaches &amp; entertainers</p>
               </div>
             </div>
           </div>
@@ -176,7 +141,7 @@ export default function Hero() {
                 </div>
                 <div className="absolute top-3 right-3 font-bold rounded-full px-2.5 py-1"
                   style={{ fontSize: 11, background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.3)', color: '#22C55E' }}>
-                  +₦340 today
+                  +$340 today
                 </div>
                 <div className="absolute bottom-3 left-3 right-3 z-10">
                   <p className="font-bold text-white" style={{ fontSize: 13 }}>Elena</p>
@@ -240,7 +205,7 @@ export default function Hero() {
             {/* Earnings widget */}
             <div className="absolute flex items-center gap-3"
               style={{
-                bottom: -4, left: 0, zIndex: 10,
+                bottom: -16, left: 0, zIndex: 10,
                 background: '#18223C',
                 border: '1px solid rgba(34,197,94,0.28)',
                 borderRadius: 14,
@@ -251,7 +216,7 @@ export default function Hero() {
               <span className="text-2xl leading-none">💰</span>
               <div>
                 <p className="mb-0.5" style={{ fontSize: 11, color: '#7A8FB8' }}>This month&apos;s earnings</p>
-                <p className="font-black leading-none" style={{ fontSize: 22, color: '#22C55E', letterSpacing: '-0.02em' }}>₦7.1M</p>
+                <p className="font-black leading-none" style={{ fontSize: 22, color: '#22C55E', letterSpacing: '-0.02em' }}>$4,280.00</p>
               </div>
             </div>
           </div>
