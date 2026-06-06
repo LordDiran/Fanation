@@ -191,7 +191,7 @@ export default function Hero() {
                 Col 1 (LEFT): Sofia — tall, spans both rows
                 Col 2 (RIGHT): Elena (top) + Marcus (bottom)
           ── */}
-          <div className="relative hidden lg:block" style={{ paddingBottom: 32 }}>
+          <div className="relative hidden lg:block" style={{ paddingBottom: 72 }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
 
               {/* Card A: Sofia — col1, rows 1-2 (LEFT TALL) */}
@@ -286,7 +286,7 @@ export default function Hero() {
             {/* Earnings widget — bottom left, overlaps Sofia card */}
             <div className="absolute flex items-center gap-3"
               style={{
-                bottom: -16, left: 0, zIndex: 10,
+                bottom: 8, left: 0, zIndex: 10,
                 background: '#18223C',
                 border: '1px solid rgba(34,197,94,0.28)',
                 borderRadius: 14,

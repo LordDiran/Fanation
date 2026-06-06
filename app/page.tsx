@@ -231,55 +231,58 @@ export default function Page() {
               {/* Left: phone mockup */}
               <div className="relative hidden lg:block" style={{ maxWidth: 340, margin: '0 auto' }}>
                 <div className="relative rounded-[28px] overflow-hidden"
-                  style={{ border: '1px solid rgba(255,255,255,0.08)', boxShadow: '0 40px 100px rgba(0,0,0,0.65)' }}>
-                  <div style={{ position: 'relative', paddingBottom: '177.78%' }}>
-                    <Image
-                      src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=1080&h=1920&fit=crop&crop=faces&q=90"
-                      alt="Creator live streaming"
-                      fill
-                      quality={90}
-                      sizes="340px"
-                      className="object-cover"
-                    />
-                    <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0.1) 0%,rgba(7,9,26,0.7) 100%)' }} />
-                    {/* Phone UI */}
-                    <div className="absolute inset-0 flex flex-col justify-between" style={{ padding: '20px 16px' }}>
-                      {/* Top row */}
-                      <div className="flex justify-between items-center">
-                        <div className="flex items-center gap-1 text-white font-black rounded-full px-3 py-1"
-                          style={{ fontSize: 12, background: '#EF4444', letterSpacing: '0.06em' }}>
-                          <span style={{ fontSize: 8 }}>●</span> LIVE
-                        </div>
-                        <div className="flex items-center gap-1.5 text-white rounded-full px-3 py-1"
-                          style={{ fontSize: 12, fontWeight: 600, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)' }}>
-                          <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#22C55E' }} />
-                          8,247 watching
-                        </div>
+                  style={{
+                    border: '1px solid rgba(255,255,255,0.08)',
+                    boxShadow: '0 40px 100px rgba(0,0,0,0.65)',
+                    aspectRatio: '9/16',
+                  }}>
+                  <Image
+                    src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=1080&h=1920&fit=crop&crop=faces&q=90"
+                    alt="Creator live streaming"
+                    fill
+                    quality={90}
+                    sizes="340px"
+                    className="object-cover"
+                    priority
+                  />
+                  <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0.1) 0%,rgba(7,9,26,0.7) 100%)' }} />
+                  {/* Phone UI */}
+                  <div className="absolute inset-0 flex flex-col justify-between" style={{ padding: '20px 16px' }}>
+                    {/* Top row */}
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-1 text-white font-black rounded-full px-3 py-1"
+                        style={{ fontSize: 12, background: '#EF4444', letterSpacing: '0.06em' }}>
+                        <span style={{ fontSize: 8 }}>●</span> LIVE
                       </div>
-                      {/* Bottom: gifts + earnings */}
-                      <div>
-                        <div className="flex flex-col gap-2 mb-2">
-                          {LIVE_GIFTS.map((g, i) => (
-                            <div key={i} className="flex items-center gap-2 text-white rounded-full px-3.5 py-2"
-                              style={{
-                                fontSize: 12, fontWeight: 600,
-                                background: 'rgba(255,255,255,0.1)',
-                                backdropFilter: 'blur(10px)',
-                                border: '1px solid rgba(255,255,255,0.12)',
-                                animation: `giftPop 4s ease-in-out ${i * 1.4}s infinite`,
-                              }}>
-                              <span className="font-black" style={{ color: '#F5A623' }}>{g.user}</span>
-                              <span style={{ color: 'rgba(255,255,255,0.7)' }}>{g.text}</span>
-                            </div>
-                          ))}
-                        </div>
-                        <div className="flex items-center gap-2.5 rounded-[14px] p-3.5"
-                          style={{ background: 'rgba(7,9,26,0.8)', backdropFilter: 'blur(12px)', border: '1px solid rgba(34,197,94,0.25)' }}>
-                          <span className="text-xl">💰</span>
-                          <div>
-                            <p style={{ fontSize: 11, color: '#7A8FB8' }}>Earned this stream</p>
-                            <p className="font-black" style={{ fontSize: 24, color: '#22C55E', letterSpacing: '-0.02em' }}>$1,240.00</p>
+                      <div className="flex items-center gap-1.5 text-white rounded-full px-3 py-1"
+                        style={{ fontSize: 12, fontWeight: 600, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)' }}>
+                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#22C55E' }} />
+                        8,247 watching
+                      </div>
+                    </div>
+                    {/* Bottom: gifts + earnings */}
+                    <div>
+                      <div className="flex flex-col gap-2 mb-2">
+                        {LIVE_GIFTS.map((g, i) => (
+                          <div key={i} className="flex items-center gap-2 text-white rounded-full px-3.5 py-2"
+                            style={{
+                              fontSize: 12, fontWeight: 600,
+                              background: 'rgba(255,255,255,0.1)',
+                              backdropFilter: 'blur(10px)',
+                              border: '1px solid rgba(255,255,255,0.12)',
+                              animation: `giftPop 4s ease-in-out ${i * 1.4}s infinite`,
+                            }}>
+                            <span className="font-black" style={{ color: '#F5A623' }}>{g.user}</span>
+                            <span style={{ color: 'rgba(255,255,255,0.7)' }}>{g.text}</span>
                           </div>
+                        ))}
+                      </div>
+                      <div className="flex items-center gap-2.5 rounded-[14px] p-3.5"
+                        style={{ background: 'rgba(7,9,26,0.8)', backdropFilter: 'blur(12px)', border: '1px solid rgba(34,197,94,0.25)' }}>
+                        <span className="text-xl">💰</span>
+                        <div>
+                          <p style={{ fontSize: 11, color: '#7A8FB8' }}>Earned this stream</p>
+                          <p className="font-black" style={{ fontSize: 24, color: '#22C55E', letterSpacing: '-0.02em' }}>$1,240.00</p>
                         </div>
                       </div>
                     </div>
