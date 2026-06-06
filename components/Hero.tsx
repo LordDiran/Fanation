@@ -3,11 +3,13 @@
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 
+// Carousel: platform-consistent photos that look dramatic blurred
+// Uses creators-section photos (different from hero mosaic) + atmospheric new additions
 const CAROUSEL_PHOTOS = [
-  'photo-1522556189639-b150ed9c4330',
-  'photo-1531746020798-e6953c6e8e04',
-  'photo-1506794778202-cad84cf45f1d',
-  'photo-1573496359142-b8d87734a5a2',
+  { id: 'photo-1549476464-37392f717541', q: 60 }, // Dembe – dark, dramatic
+  { id: 'photo-1517841905240-472988babdf9', q: 60 }, // Nadia – warm lifestyle
+  { id: 'photo-1507003211169-0a1dd7228f2d', q: 60 }, // Tobi – warm natural
+  { id: 'photo-1529626455594-4ff0802cfb7e', q: 60 }, // Sofia model – close-up dramatic
 ]
 
 const AVATARS = [
@@ -37,7 +39,7 @@ export default function Hero() {
     return () => clearInterval(id)
   }, [])
 
-  // Parallax scroll on carousel slides
+  // Parallax on scroll
   useEffect(() => {
     let ticking = false
     const onScroll = () => {
@@ -56,7 +58,7 @@ export default function Hero() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  // Spawn floating particles
+  // Floating particles
   useEffect(() => {
     const container = particlesRef.current
     if (!container) return
@@ -77,16 +79,18 @@ export default function Hero() {
       <div className="hero-carousel-bg">
         {CAROUSEL_PHOTOS.map((photo, i) => (
           <div
-            key={photo}
+            key={photo.id}
             ref={el => { slideEls.current[i] = el }}
             className={`hero-slide${i === slide ? ' active' : ''}`}
-            style={{ backgroundImage: `url('https://images.unsplash.com/${photo}?w=1600&h=900&fit=crop&q=80')` }}
+            style={{
+              backgroundImage: `url('https://images.unsplash.com/${photo.id}?w=800&h=600&fit=crop&q=${photo.q}')`,
+            }}
           />
         ))}
         <div className="hero-carousel-overlay" />
       </div>
 
-      {/* ── CSS gradient mesh ── */}
+      {/* ── Mesh gradient ── */}
       <div className="absolute inset-0 pointer-events-none" style={{
         zIndex: 1,
         background: `radial-gradient(ellipse 60% 55% at 65% 45%,rgba(37,153,246,.09) 0%,transparent 60%),
@@ -102,7 +106,6 @@ export default function Hero() {
 
           {/* ── Left copy ── */}
           <div>
-            {/* Badge */}
             <div className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-bold mb-7"
               style={{ background: 'rgba(37,153,246,0.1)', border: '1px solid rgba(37,153,246,0.22)', color: '#60B8FA' }}>
               <span className="w-1.5 h-1.5 rounded-full bg-brand" style={{ animation: 'blink 2s ease-in-out infinite' }} />
@@ -166,11 +169,11 @@ export default function Hero() {
                   <div key={i} className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0"
                     style={{ border: '2px solid #07091A', marginLeft: i === 0 ? 0 : -9 }}>
                     <Image
-                      src={`https://images.unsplash.com/${a.id}?w=160&h=160&fit=crop&crop=faces&q=90`}
+                      src={`https://images.unsplash.com/${a.id}?w=72&h=72&fit=crop&crop=faces&q=70`}
                       alt={a.name}
                       width={36}
                       height={36}
-                      quality={90}
+                      quality={70}
                       className="object-cover w-full h-full"
                     />
                   </div>
@@ -183,38 +186,25 @@ export default function Hero() {
             </div>
           </div>
 
-          {/* ── Right: creator mosaic grid ── */}
+          {/* ── Right: creator mosaic grid ──
+              Layout matches HTML exactly:
+                Col 1 (LEFT): Sofia — tall, spans both rows
+                Col 2 (RIGHT): Elena (top) + Marcus (bottom)
+          ── */}
           <div className="relative hidden lg:block" style={{ paddingBottom: 32 }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
 
-              {/* Card 1: Elena LIVE — col1 row1 */}
+              {/* Card A: Sofia — col1, rows 1-2 (LEFT TALL) */}
               <div className="relative rounded-[18px] overflow-hidden"
-                style={{ aspectRatio: '4/5', gridRow: 1, gridColumn: 1, background: 'linear-gradient(135deg,#111830,#18223C)' }}>
+                style={{ gridRow: '1/span 2', gridColumn: 1, background: 'linear-gradient(135deg,#111830,#18223C)' }}>
                 <Image
-                  src="https://images.unsplash.com/photo-1522556189639-b150ed9c4330?w=1080&h=1350&fit=crop&crop=faces&q=90"
-                  alt="Creator streaming" fill quality={90} sizes="25vw" className="object-cover"
-                />
-                <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 30%,rgba(7,9,26,0.9) 100%)' }} />
-                <div className="absolute top-3 left-3 flex items-center gap-1 text-white font-black rounded-full px-2.5 py-1"
-                  style={{ fontSize: 11, background: '#EF4444' }}>
-                  <span style={{ fontSize: 8 }}>●</span>LIVE
-                </div>
-                <div className="absolute top-3 right-3 font-bold rounded-full px-2.5 py-1"
-                  style={{ fontSize: 11, background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.3)', color: '#22C55E' }}>
-                  +$340 today
-                </div>
-                <div className="absolute bottom-3 left-3 right-3 z-10">
-                  <p className="font-bold text-white" style={{ fontSize: 13 }}>Elena</p>
-                  <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)' }}>Streamer · 4.2K watching</p>
-                </div>
-              </div>
-
-              {/* Card 2: Sofia — col2 rows1-2 */}
-              <div className="relative rounded-[18px] overflow-hidden"
-                style={{ gridRow: '1/span 2', gridColumn: 2, background: 'linear-gradient(135deg,#111830,#18223C)' }}>
-                <Image
-                  src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=1080&h=1800&fit=crop&crop=faces&q=90"
-                  alt="Lifestyle creator" fill quality={90} sizes="25vw" className="object-cover"
+                  src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=1080&h=1620&fit=crop&crop=faces&q=90"
+                  alt="Lifestyle creator"
+                  fill
+                  quality={90}
+                  sizes="25vw"
+                  priority
+                  className="object-cover"
                 />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 40%,rgba(7,9,26,0.92) 100%)' }} />
                 <div className="absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"
@@ -243,12 +233,43 @@ export default function Hero() {
                 </div>
               </div>
 
-              {/* Card 3: Marcus — col1 row2 */}
+              {/* Card B: Elena LIVE — col2, row 1 (RIGHT TOP) */}
               <div className="relative rounded-[18px] overflow-hidden"
-                style={{ aspectRatio: '16/9', gridRow: 2, gridColumn: 1, background: 'linear-gradient(135deg,#111830,#18223C)' }}>
+                style={{ aspectRatio: '4/5', gridRow: 1, gridColumn: 2, background: 'linear-gradient(135deg,#111830,#18223C)' }}>
+                <Image
+                  src="https://images.unsplash.com/photo-1522556189639-b150ed9c4330?w=1080&h=1350&fit=crop&crop=faces&q=90"
+                  alt="Creator streaming"
+                  fill
+                  quality={90}
+                  sizes="25vw"
+                  priority
+                  className="object-cover"
+                />
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 30%,rgba(7,9,26,0.9) 100%)' }} />
+                <div className="absolute top-3 left-3 flex items-center gap-1 text-white font-black rounded-full px-2.5 py-1"
+                  style={{ fontSize: 11, background: '#EF4444' }}>
+                  <span style={{ fontSize: 8 }}>●</span>LIVE
+                </div>
+                <div className="absolute top-3 right-3 font-bold rounded-full px-2.5 py-1"
+                  style={{ fontSize: 11, background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.3)', color: '#22C55E' }}>
+                  +$340 today
+                </div>
+                <div className="absolute bottom-3 left-3 right-3 z-10">
+                  <p className="font-bold text-white" style={{ fontSize: 13 }}>Elena</p>
+                  <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)' }}>Streamer · 4.2K watching</p>
+                </div>
+              </div>
+
+              {/* Card C: Marcus — col2, row 2 (RIGHT BOTTOM) */}
+              <div className="relative rounded-[18px] overflow-hidden"
+                style={{ aspectRatio: '16/9', gridRow: 2, gridColumn: 2, background: 'linear-gradient(135deg,#111830,#18223C)' }}>
                 <Image
                   src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=1080&h=608&fit=crop&crop=faces&q=90"
-                  alt="Podcaster" fill quality={90} sizes="25vw" className="object-cover"
+                  alt="Podcaster"
+                  fill
+                  quality={90}
+                  sizes="25vw"
+                  className="object-cover"
                 />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 30%,rgba(7,9,26,0.9) 100%)' }} />
                 <div className="absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"
@@ -262,7 +283,7 @@ export default function Hero() {
               </div>
             </div>
 
-            {/* Earnings widget */}
+            {/* Earnings widget — bottom left, overlaps Sofia card */}
             <div className="absolute flex items-center gap-3"
               style={{
                 bottom: -16, left: 0, zIndex: 10,
