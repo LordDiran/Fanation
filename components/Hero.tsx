@@ -10,19 +10,18 @@ const BG = [
   'photo-1598488035139-bdbb2231ce04',
 ]
 
-const STATS = [
-  { val: '12,000+', label: 'Active creators' },
-  { val: '₦6.7B+', label: 'Paid to creators' },
-  { val: '180+', label: 'Countries' },
-  { val: '4.9/5', label: 'Creator rating' },
+const AVATARS = [
+  { id: 'photo-1531746020798-e6953c6e8e04', name: 'Amara' },
+  { id: 'photo-1506794778202-cad84cf45f1d', name: 'James' },
+  { id: 'photo-1573496359142-b8d87734a5a2', name: 'Priscilia' },
+  { id: 'photo-1517841905240-472988babdf9', name: 'David' },
+  { id: 'photo-1507003211169-0a1dd7228f2d', name: 'Sofia' },
 ]
 
-const AVATARS = [
-  'photo-1531746020798-e6953c6e8e04',
-  'photo-1506794778202-cad84cf45f1d',
-  'photo-1573496359142-b8d87734a5a2',
-  'photo-1517841905240-472988babdf9',
-  'photo-1507003211169-0a1dd7228f2d',
+const GIFTS = [
+  { icon: '🎁', text: '+500 coins', user: '@jay_88',   delay: '0s' },
+  { icon: '💎', text: '+₦12.00',   user: '@superfan', delay: '1.2s' },
+  { icon: '⭐', text: '+₦5.00',    user: '@priscilia', delay: '2.4s' },
 ]
 
 export default function Hero() {
@@ -43,10 +42,11 @@ export default function Hero() {
   }, [])
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden pt-24 pb-24">
-      {/* Carousel parallax background */}
+    <section className="relative min-h-screen flex items-center overflow-hidden" style={{ padding: '120px 0 80px' }}>
+
+      {/* ── Carousel parallax background ── */}
       <div className="absolute inset-0 overflow-hidden">
-        <div ref={bgRef} className="absolute" style={{ inset: '-40% 0', height: '180%' }}>
+        <div ref={bgRef} className="absolute" style={{ top: '-40%', left: 0, right: 0, height: '180%' }}>
           {BG.map((id, i) => (
             <div
               key={id}
@@ -55,57 +55,95 @@ export default function Hero() {
                 opacity: i === slide ? 1 : 0,
                 backgroundImage: `url(https://images.unsplash.com/${id}?w=1440&q=80&fit=crop)`,
                 backgroundSize: 'cover',
-                backgroundPosition: 'center',
+                backgroundPosition: 'center top',
                 filter: 'blur(20px) brightness(0.32) saturate(1.6)',
               }}
             />
           ))}
         </div>
-        {/* Dark gradient overlay */}
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,.45) 0%,rgba(7,9,26,.1) 45%,rgba(7,9,26,.55) 100%)' }} />
+        <div className="absolute inset-0" style={{
+          background: 'linear-gradient(180deg,rgba(7,9,26,0.35) 0%,rgba(7,9,26,0.08) 45%,rgba(7,9,26,0.5) 100%)'
+        }} />
       </div>
 
-      {/* Radial brand glow */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse at 55% 40%,rgba(37,153,246,.14) 0%,transparent 60%)' }} />
+      {/* ── Gradient mesh ── */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        background: `radial-gradient(ellipse 60% 55% at 65% 45%,rgba(37,153,246,.09) 0%,transparent 60%),
+                     radial-gradient(ellipse 50% 45% at 20% 70%,rgba(245,166,35,.05) 0%,transparent 55%),
+                     radial-gradient(ellipse 40% 40% at 80% 10%,rgba(34,197,94,.04) 0%,transparent 50%)`
+      }} />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
+      <div className="max-w-[1180px] mx-auto px-6 relative z-10 w-full">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
 
           {/* ── Left copy ── */}
           <div>
-            <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-brand mb-8">
-              <span className="w-2 h-2 rounded-full bg-brand pulse-dot" />
+            {/* Badge */}
+            <div className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-bold mb-7"
+              style={{ background: 'rgba(37,153,246,0.1)', border: '1px solid rgba(37,153,246,0.22)', color: '#60B8FA' }}>
+              <span className="w-1.5 h-1.5 rounded-full bg-brand" style={{ animation: 'blink 2s ease-in-out infinite' }} />
               Turn followers into fans. Turn fans into income.
             </div>
 
-            <h1 className="text-5xl lg:text-6xl font-black leading-[1.08] tracking-tight mb-6">
+            <h1 className="font-black leading-[1.04] mb-6"
+              style={{ fontSize: 'clamp(40px,5vw,72px)', letterSpacing: '-0.04em' }}>
               Turn Your Audience Into<br />
-              <span className="text-brand italic">a Community</span><br />
+              <em className="not-italic" style={{ color: '#2599F6' }}>a Community</em><br />
               That Pays You Back.
             </h1>
 
-            <p className="text-muted text-lg leading-relaxed mb-10 max-w-md">
+            <p className="leading-[1.78] mb-10 max-w-[440px]" style={{ fontSize: 17, color: '#7A8FB8' }}>
               Build a loyal fan community, earn recurring income, share exclusive content, host live experiences,
               and own your relationship with your audience — all from one platform.
             </p>
 
-            <div className="flex flex-wrap gap-4 mb-12">
-              <a href="#" className="bg-brand text-white px-8 py-4 rounded-xl font-semibold hover:bg-blue-500 transition-colors">
+            <div className="flex flex-wrap gap-4 mb-10">
+              <a href="#"
+                className="inline-flex items-center text-white font-bold"
+                style={{ background: '#2599F6', fontSize: 16, padding: '17px 34px', borderRadius: '100px', transition: 'background .2s, box-shadow .2s, transform .15s' }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background='#1A80D8'; el.style.boxShadow='0 8px 32px rgba(37,153,246,0.4)'; el.style.transform='translateY(-2px)'; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background='#2599F6'; el.style.boxShadow=''; el.style.transform=''; }}>
                 Start Creating Today →
               </a>
-              <a href="#features" className="border border-white/20 text-white px-8 py-4 rounded-xl font-semibold hover:border-white/40 transition-colors">
+              <a href="#features"
+                className="inline-flex items-center text-white font-semibold"
+                style={{ fontSize: 16, padding: '17px 34px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.15)', transition: 'border-color .2s, background .2s' }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor='rgba(255,255,255,0.35)'; el.style.background='rgba(255,255,255,0.05)'; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor='rgba(255,255,255,0.15)'; el.style.background=''; }}>
                 See How It Works
               </a>
             </div>
 
+            {/* App store badges */}
+            <div className="hidden sm:flex items-center gap-3 flex-wrap mb-10">
+              <span className="text-xs mr-1" style={{ color: '#7A8FB8' }}>Available on</span>
+              {[
+                { icon: '🍎', sub: 'Download on the', name: 'App Store' },
+                { icon: '▶', sub: 'Get it on', name: 'Google Play' },
+              ].map(b => (
+                <a key={b.name} href="#"
+                  className="inline-flex items-center gap-2.5"
+                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '9px 16px', borderRadius: 12, transition: 'background .2s, border-color .2s' }}
+                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background='rgba(255,255,255,0.1)'; el.style.borderColor='rgba(255,255,255,0.22)'; }}
+                  onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background='rgba(255,255,255,0.06)'; el.style.borderColor='rgba(255,255,255,0.1)'; }}>
+                  <span className="text-xl leading-none">{b.icon}</span>
+                  <span>
+                    <p className="leading-none mb-0.5" style={{ fontSize: 10, color: '#7A8FB8' }}>{b.sub}</p>
+                    <p className="font-bold text-white leading-none" style={{ fontSize: 14 }}>{b.name}</p>
+                  </span>
+                </a>
+              ))}
+            </div>
+
             {/* Social proof */}
-            <div className="flex items-center gap-4">
-              <div className="flex -space-x-2">
-                {AVATARS.map((id, i) => (
-                  <div key={i} className="w-9 h-9 rounded-full border-2 border-navy overflow-hidden">
+            <div className="flex items-center gap-4 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+              <div className="flex">
+                {AVATARS.map((a, i) => (
+                  <div key={i} className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0"
+                    style={{ border: '2px solid #07091A', marginLeft: i === 0 ? 0 : -9 }}>
                     <Image
-                      src={`https://images.unsplash.com/${id}?w=80&h=80&fit=crop&crop=faces`}
-                      alt="Creator"
+                      src={`https://images.unsplash.com/${a.id}?w=80&h=80&fit=crop&crop=faces`}
+                      alt={a.name}
                       width={36}
                       height={36}
                       className="object-cover w-full h-full"
@@ -114,88 +152,110 @@ export default function Hero() {
                 ))}
               </div>
               <div>
-                <p className="text-sm font-semibold text-white">12,000+ creators</p>
-                <p className="text-xs text-muted">influencers, educators, coaches &amp; entertainers</p>
+                <p className="text-sm font-bold text-white leading-tight">12,000+ creators</p>
+                <p className="text-xs" style={{ color: '#7A8FB8' }}>influencers, educators, coaches &amp; entertainers</p>
               </div>
             </div>
           </div>
 
-          {/* ── Right: floating creator cards ── */}
-          <div className="relative hidden lg:block h-[500px]">
-            {/* Card: Sofia */}
-            <div className="absolute top-0 left-0 w-44 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-surface">
-              <div className="relative h-52">
-                <Image
-                  src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=360&h=450&fit=crop&crop=faces"
-                  alt="Sofia" fill className="object-cover"
-                />
-                <div className="absolute top-2 left-2 bg-black/50 text-white text-xs px-2 py-0.5 rounded-full backdrop-blur-sm">
-                  👥 478 subscribers
-                </div>
-              </div>
-              <div className="p-3">
-                <p className="text-sm font-bold text-white">Sofia</p>
-                <p className="text-xs text-muted">Lifestyle · Creator</p>
-                <p className="text-xs text-emerald-400 mt-1">+₦8,000 from @priscilia</p>
-              </div>
-            </div>
+          {/* ── Right: creator mosaic grid ── */}
+          <div className="relative hidden lg:block" style={{ paddingBottom: 32 }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
 
-            {/* Card: Elena LIVE */}
-            <div className="absolute top-0 right-0 w-44 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-surface">
-              <div className="relative h-52">
+              {/* Card 1: Elena LIVE — left col, row 1 */}
+              <div className="relative rounded-[18px] overflow-hidden"
+                style={{ aspectRatio: '4/5', gridRow: 1, gridColumn: 1, background: 'linear-gradient(135deg,#111830,#18223C)' }}>
                 <Image
                   src="https://images.unsplash.com/photo-1522556189639-b150ed9c4330?w=360&h=450&fit=crop&crop=faces"
-                  alt="Elena" fill className="object-cover"
+                  alt="Creator streaming" fill className="object-cover"
                 />
-                <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-white" />LIVE
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 30%,rgba(7,9,26,0.9) 100%)' }} />
+                <div className="absolute top-3 left-3 flex items-center gap-1 text-white font-black rounded-full px-2.5 py-1"
+                  style={{ fontSize: 11, background: '#EF4444' }}>
+                  <span style={{ fontSize: 8 }}>●</span>LIVE
                 </div>
-                <div className="absolute top-2 right-2 bg-black/50 text-white text-xs px-2 py-0.5 rounded-full backdrop-blur-sm">
-                  4.2K watching
+                <div className="absolute top-3 right-3 font-bold rounded-full px-2.5 py-1"
+                  style={{ fontSize: 11, background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.3)', color: '#22C55E' }}>
+                  +₦340 today
+                </div>
+                <div className="absolute bottom-3 left-3 right-3 z-10">
+                  <p className="font-bold text-white" style={{ fontSize: 13 }}>Elena</p>
+                  <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)' }}>Streamer · 4.2K watching</p>
                 </div>
               </div>
-              <div className="p-3">
-                <p className="text-sm font-bold text-white">Elena</p>
-                <p className="text-xs text-muted">Streamer · 4.2K watching</p>
-              </div>
-            </div>
 
-            {/* Earnings badge */}
-            <div className="absolute top-[230px] left-1/2 -translate-x-1/2 w-44 bg-surface border border-white/10 rounded-2xl p-4 text-center shadow-2xl">
-              <p className="text-xs text-muted">💰 This month</p>
-              <p className="text-2xl font-black text-white mt-1">₦7.1M</p>
-              <p className="text-xs text-emerald-400 mt-0.5">↑ +31% vs last month</p>
-            </div>
-
-            {/* Card: Marcus */}
-            <div className="absolute bottom-0 right-2 w-40 rounded-2xl overflow-hidden border border-white/10 shadow-2xl bg-surface">
-              <div className="relative h-44">
+              {/* Card 2: Sofia — right col, spans both rows */}
+              <div className="relative rounded-[18px] overflow-hidden"
+                style={{ gridRow: '1/span 2', gridColumn: 2, background: 'linear-gradient(135deg,#111830,#18223C)' }}>
                 <Image
-                  src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=280&h=373&fit=crop&crop=faces"
-                  alt="Marcus" fill className="object-cover"
+                  src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=360&h=600&fit=crop&crop=faces"
+                  alt="Lifestyle creator" fill className="object-cover"
                 />
-                <div className="absolute top-2 left-2 bg-black/50 text-white text-xs px-2 py-0.5 rounded-full backdrop-blur-sm">
-                  🎙️ Pay-per-view
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 40%,rgba(7,9,26,0.92) 100%)' }} />
+                <div className="absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"
+                  style={{ fontSize: 11, background: 'rgba(37,153,246,0.15)', border: '1px solid rgba(37,153,246,0.3)', color: '#60B8FA' }}>
+                  8,400 subscribers
+                </div>
+                {/* Gift stream */}
+                <div className="absolute flex flex-col gap-2 items-end z-10" style={{ right: 10, bottom: 56 }}>
+                  {GIFTS.map((g, i) => (
+                    <div key={i}
+                      className="flex items-center gap-1.5 text-white font-bold whitespace-nowrap rounded-full px-2.5 py-1.5"
+                      style={{
+                        fontSize: 11,
+                        background: 'rgba(245,166,35,0.18)',
+                        border: '1px solid rgba(245,166,35,.35)',
+                        backdropFilter: 'blur(6px)',
+                        animation: `giftPop 3.6s ease-in-out ${g.delay} infinite`,
+                      }}>
+                      {g.icon} {g.text} <span style={{ color: '#F5A623' }}>{g.user}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="absolute bottom-3 left-3 right-3 z-10">
+                  <p className="font-bold text-white" style={{ fontSize: 13 }}>Sofia</p>
+                  <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)' }}>Lifestyle · Creator</p>
                 </div>
               </div>
-              <div className="p-3">
-                <p className="text-sm font-bold text-white">Marcus</p>
-                <p className="text-xs text-muted">Podcaster</p>
+
+              {/* Card 3: Marcus — left col, row 2 */}
+              <div className="relative rounded-[18px] overflow-hidden"
+                style={{ aspectRatio: '16/9', gridRow: 2, gridColumn: 1, background: 'linear-gradient(135deg,#111830,#18223C)' }}>
+                <Image
+                  src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=360&h=203&fit=crop&crop=faces"
+                  alt="Podcaster" fill className="object-cover"
+                />
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 30%,rgba(7,9,26,0.9) 100%)' }} />
+                <div className="absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"
+                  style={{ fontSize: 11, background: 'rgba(245,166,35,0.15)', border: '1px solid rgba(245,166,35,0.3)', color: '#F5A623' }}>
+                  🪙 12,400 coins earned
+                </div>
+                <div className="absolute bottom-3 left-3 right-3 z-10">
+                  <p className="font-bold text-white" style={{ fontSize: 13 }}>Marcus</p>
+                  <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.55)' }}>Podcaster · Pay-per-view drops</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Earnings widget */}
+            <div className="absolute flex items-center gap-3"
+              style={{
+                bottom: -4, left: 0, zIndex: 10,
+                background: '#18223C',
+                border: '1px solid rgba(34,197,94,0.28)',
+                borderRadius: 14,
+                padding: '14px 18px',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
+                minWidth: 200,
+              }}>
+              <span className="text-2xl leading-none">💰</span>
+              <div>
+                <p className="mb-0.5" style={{ fontSize: 11, color: '#7A8FB8' }}>This month&apos;s earnings</p>
+                <p className="font-black leading-none" style={{ fontSize: 22, color: '#22C55E', letterSpacing: '-0.02em' }}>₦7.1M</p>
               </div>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Stats bar */}
-      <div className="absolute bottom-0 inset-x-0 border-t border-white/5 bg-white/[0.03] backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-6 py-5 grid grid-cols-2 md:grid-cols-4 gap-4">
-          {STATS.map(s => (
-            <div key={s.val} className="text-center">
-              <p className="text-xl font-black text-white">{s.val}</p>
-              <p className="text-xs text-muted mt-0.5">{s.label}</p>
-            </div>
-          ))}
         </div>
       </div>
     </section>
