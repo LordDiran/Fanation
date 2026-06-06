@@ -12,9 +12,9 @@ const AVATARS = [
 ]
 
 const GIFTS = [
-  { icon: '🎁', text: '+500 coins',  user: '@jay_88',    delay: '0s' },
-  { icon: '💎', text: '+$5.00',     user: '@superfan',  delay: '1.2s' },
-  { icon: '⭐', text: '+200 coins', user: '@priscilia', delay: '2.4s' },
+  { icon: '🎁', text: '+500 coins', user: '@jay_88',    delay: '0s' },
+  { icon: '💎', text: '+$12.00',    user: '@superfan',  delay: '1.2s' },
+  { icon: '⭐', text: '+$5.00',     user: '@priscilia', delay: '2.4s' },
 ]
 
 export default function Hero() {
@@ -107,10 +107,11 @@ export default function Hero() {
                   <div key={i} className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0"
                     style={{ border: '2px solid #07091A', marginLeft: i === 0 ? 0 : -9 }}>
                     <Image
-                      src={`https://images.unsplash.com/${a.id}?w=80&h=80&fit=crop&crop=faces`}
+                      src={`https://images.unsplash.com/${a.id}?w=160&h=160&fit=crop&crop=faces&q=90`}
                       alt={a.name}
                       width={36}
                       height={36}
+                      quality={90}
                       className="object-cover w-full h-full"
                     />
                   </div>
@@ -131,8 +132,8 @@ export default function Hero() {
               <div className="relative rounded-[18px] overflow-hidden"
                 style={{ aspectRatio: '4/5', gridRow: 1, gridColumn: 1, background: 'linear-gradient(135deg,#111830,#18223C)' }}>
                 <Image
-                  src="https://images.unsplash.com/photo-1522556189639-b150ed9c4330?w=360&h=450&fit=crop&crop=faces"
-                  alt="Creator streaming" fill className="object-cover"
+                  src="https://images.unsplash.com/photo-1522556189639-b150ed9c4330?w=1080&h=1350&fit=crop&crop=faces&q=90"
+                  alt="Creator streaming" fill quality={90} sizes="25vw" className="object-cover"
                 />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 30%,rgba(7,9,26,0.9) 100%)' }} />
                 <div className="absolute top-3 left-3 flex items-center gap-1 text-white font-black rounded-full px-2.5 py-1"
@@ -153,8 +154,8 @@ export default function Hero() {
               <div className="relative rounded-[18px] overflow-hidden"
                 style={{ gridRow: '1/span 2', gridColumn: 2, background: 'linear-gradient(135deg,#111830,#18223C)' }}>
                 <Image
-                  src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=360&h=600&fit=crop&crop=faces"
-                  alt="Lifestyle creator" fill className="object-cover"
+                  src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=1080&h=1800&fit=crop&crop=faces&q=90"
+                  alt="Lifestyle creator" fill quality={90} sizes="25vw" className="object-cover"
                 />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 40%,rgba(7,9,26,0.92) 100%)' }} />
                 <div className="absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"
@@ -173,7 +174,7 @@ export default function Hero() {
                         backdropFilter: 'blur(6px)',
                         animation: `giftPop 3.6s ease-in-out ${g.delay} infinite`,
                       }}>
-                      {g.icon} {g.text} <span style={{ color: '#F5A623' }}>{g.user}</span>
+                      {g.icon} {g.text} from <span style={{ color: '#F5A623' }}>{g.user}</span>
                     </div>
                   ))}
                 </div>
@@ -187,8 +188,8 @@ export default function Hero() {
               <div className="relative rounded-[18px] overflow-hidden"
                 style={{ aspectRatio: '16/9', gridRow: 2, gridColumn: 1, background: 'linear-gradient(135deg,#111830,#18223C)' }}>
                 <Image
-                  src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=360&h=203&fit=crop&crop=faces"
-                  alt="Podcaster" fill className="object-cover"
+                  src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=1080&h=608&fit=crop&crop=faces&q=90"
+                  alt="Podcaster" fill quality={90} sizes="25vw" className="object-cover"
                 />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 30%,rgba(7,9,26,0.9) 100%)' }} />
                 <div className="absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"
