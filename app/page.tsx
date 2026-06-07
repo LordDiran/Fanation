@@ -231,12 +231,13 @@ export default function Page() {
 
               {/* Left: phone mockup */}
               <div className="relative" style={{ maxWidth: 320, margin: '0 auto' }}>
-                <div className="relative rounded-[28px] overflow-hidden"
+                {/* Padding-bottom trick: guarantees 9:16 height regardless of layout context */}
+                <div style={{ position: 'relative', paddingBottom: '177.78%' }}>
+                <div className="absolute inset-0 rounded-[28px] overflow-hidden"
                   style={{
                     border: '1px solid rgba(255,255,255,0.08)',
                     boxShadow: '0 40px 100px rgba(0,0,0,0.65)',
-                    aspectRatio: '9/16',
-                    backgroundImage: "url('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&h=1422&fit=crop&crop=faces&q=85')",
+                    backgroundImage: "url('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600&h=1067&fit=crop&crop=faces&q=85')",
                     backgroundSize: 'cover',
                     backgroundPosition: 'center top',
                   }}>
@@ -284,7 +285,8 @@ export default function Page() {
                     </div>
                   </div>
                 </div>
-                {/* Float stat badge */}
+                </div>{/* closes padding-bottom wrapper */}
+                {/* Float stat badge — positioned relative to outer container */}
                 <div className="absolute text-center rounded-[14px] px-4 py-3.5"
                   style={{ top: 20, right: 12, background: '#18223C', border: '1px solid rgba(245,166,35,0.3)', boxShadow: '0 20px 50px rgba(0,0,0,0.4)', minWidth: 130 }}>
                   <p style={{ fontSize: 11, color: '#7A8FB8', marginBottom: 4 }}>Coins sent today</p>
