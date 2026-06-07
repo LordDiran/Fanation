@@ -238,7 +238,7 @@ export default function Page() {
                   }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600&h=1067&fit=crop&q=85"
+                    src="/images/creator-live.jpg"
                     alt=""
                     style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
                   />

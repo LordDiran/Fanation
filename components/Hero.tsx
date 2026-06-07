@@ -198,7 +198,7 @@ export default function Hero() {
               <div className="relative rounded-[18px] overflow-hidden"
                 style={{ gridRow: '1/span 2', gridColumn: 1 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&h=900&fit=crop&q=85" alt=""
+                <img src="/images/creator-amara.jpg" alt=""
                   style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 40%,rgba(7,9,26,0.92) 100%)' }} />
                 <div className="absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"
@@ -231,7 +231,7 @@ export default function Hero() {
               <div className="relative rounded-[18px] overflow-hidden"
                 style={{ gridRow: 1, gridColumn: 2, height: 250 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="https://images.unsplash.com/photo-1522556189639-b150ed9c4330?w=480&h=600&fit=crop&q=85" alt=""
+                <img src="/images/creator-elena.jpg" alt=""
                   style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 30%,rgba(7,9,26,0.9) 100%)' }} />
                 <div className="absolute top-3 left-3 flex items-center gap-1 text-white font-black rounded-full px-2.5 py-1"
@@ -252,7 +252,7 @@ export default function Hero() {
               <div className="relative rounded-[18px] overflow-hidden"
                 style={{ gridRow: 2, gridColumn: 2, height: 200 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=480&h=270&fit=crop&q=85" alt=""
+                <img src="/images/creator-marcus.jpg" alt=""
                   style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 30%,rgba(7,9,26,0.9) 100%)' }} />
                 <div className="absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"
