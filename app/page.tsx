@@ -230,17 +230,18 @@ export default function Page() {
             <div className="grid lg:grid-cols-2 gap-20 items-center">
 
               {/* Left: phone mockup */}
-              <div className="relative" style={{ maxWidth: 320, margin: '0 auto' }}>
-                {/* Padding-bottom trick: guarantees 9:16 height regardless of layout context */}
-                <div style={{ position: 'relative', paddingBottom: '177.78%' }}>
+              <div className="relative" style={{ width: '100%', maxWidth: 320, margin: '0 auto', height: 560 }}>
                 <div className="absolute inset-0 rounded-[28px] overflow-hidden"
                   style={{
                     border: '1px solid rgba(255,255,255,0.08)',
                     boxShadow: '0 40px 100px rgba(0,0,0,0.65)',
-                    backgroundImage: "url('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600&h=1067&fit=crop&crop=faces&q=85')",
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center top',
                   }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600&h=1067&fit=crop&q=85"
+                    alt=""
+                    style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
+                  />
                   <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0.1) 0%,rgba(7,9,26,0.7) 100%)' }} />
                   {/* Phone UI */}
                   <div className="absolute inset-0 flex flex-col justify-between" style={{ padding: '20px 16px' }}>
@@ -285,7 +286,6 @@ export default function Page() {
                     </div>
                   </div>
                 </div>
-                </div>{/* closes padding-bottom wrapper */}
                 {/* Float stat badge — positioned relative to outer container */}
                 <div className="absolute text-center rounded-[14px] px-4 py-3.5"
                   style={{ top: 20, right: 12, background: '#18223C', border: '1px solid rgba(245,166,35,0.3)', boxShadow: '0 20px 50px rgba(0,0,0,0.4)', minWidth: 130 }}>

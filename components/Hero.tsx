@@ -196,11 +196,10 @@ export default function Hero() {
 
               {/* Card A: Sofia — col1, rows 1-2 (LEFT TALL) */}
               <div className="relative rounded-[18px] overflow-hidden"
-                style={{
-                  gridRow: '1/span 2', gridColumn: 1,
-                  backgroundImage: "url('https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&h=900&fit=crop&crop=faces&q=85')",
-                  backgroundSize: 'cover', backgroundPosition: 'center top',
-                }}>
+                style={{ gridRow: '1/span 2', gridColumn: 1 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=600&h=900&fit=crop&q=85" alt=""
+                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 40%,rgba(7,9,26,0.92) 100%)' }} />
                 <div className="absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"
                   style={{ fontSize: 11, background: 'rgba(37,153,246,0.15)', border: '1px solid rgba(37,153,246,0.3)', color: '#60B8FA' }}>
@@ -230,11 +229,10 @@ export default function Hero() {
 
               {/* Card B: Elena LIVE — col2, row 1 (RIGHT TOP) */}
               <div className="relative rounded-[18px] overflow-hidden"
-                style={{
-                  aspectRatio: '4/5', gridRow: 1, gridColumn: 2,
-                  backgroundImage: "url('https://images.unsplash.com/photo-1522556189639-b150ed9c4330?w=480&h=600&fit=crop&crop=faces&q=85')",
-                  backgroundSize: 'cover', backgroundPosition: 'center top',
-                }}>
+                style={{ gridRow: 1, gridColumn: 2, height: 250 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="https://images.unsplash.com/photo-1522556189639-b150ed9c4330?w=480&h=600&fit=crop&q=85" alt=""
+                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 30%,rgba(7,9,26,0.9) 100%)' }} />
                 <div className="absolute top-3 left-3 flex items-center gap-1 text-white font-black rounded-full px-2.5 py-1"
                   style={{ fontSize: 11, background: '#EF4444' }}>
@@ -252,11 +250,10 @@ export default function Hero() {
 
               {/* Card C: Marcus — col2, row 2 (RIGHT BOTTOM) */}
               <div className="relative rounded-[18px] overflow-hidden"
-                style={{
-                  aspectRatio: '16/9', gridRow: 2, gridColumn: 2,
-                  backgroundImage: "url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=480&h=270&fit=crop&crop=faces&q=85')",
-                  backgroundSize: 'cover', backgroundPosition: 'center',
-                }}>
+                style={{ gridRow: 2, gridColumn: 2, height: 200 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=480&h=270&fit=crop&q=85" alt=""
+                  style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 30%,rgba(7,9,26,0.9) 100%)' }} />
                 <div className="absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"
                   style={{ fontSize: 11, background: 'rgba(245,166,35,0.15)', border: '1px solid rgba(245,166,35,0.3)', color: '#F5A623' }}>
