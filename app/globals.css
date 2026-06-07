@@ -80,6 +80,64 @@ details[open] .faq-body { animation: slide-down 0.2s ease; }
   background-clip: text;
 }
 
+/* ── Responsive section padding ─────────────────────────────── */
+.section-pad       { padding: 64px 0; }
+.section-pad-stats { padding: 40px 0; }
+.section-pad-cta   { padding: 80px 0; text-align: center; position: relative; overflow: hidden; }
+
+@media (min-width: 768px) {
+  .section-pad       { padding: 100px 0; }
+  .section-pad-stats { padding: 64px 0; }
+  .section-pad-cta   { padding: 130px 0; }
+}
+
+/* ── Hero responsive padding ─────────────────────────────────── */
+.hero-section { padding: 80px 0 60px; }
+@media (min-width: 1024px) { .hero-section { padding: 120px 0 80px; } }
+
+/* ── Mobile overrides ────────────────────────────────────────── */
+@media (max-width: 767px) {
+  /* Stats: hide right border on even items in mobile 2-col layout */
+  [data-stat-idx="1"],
+  [data-stat-idx="3"] { border-right: none !important; }
+
+  /* Ticker: tighter on small screens */
+  .marquee-ticker-track > div { padding: 0 16px !important; }
+
+  /* Hero mosaic earnings widget: prevent edge overflow */
+  .hero-earnings { min-width: 160px; left: 0 !important; }
+
+  /* How It Works: step cards full-width stack */
+  .how-step { margin-bottom: 16px; }
+
+  /* Section heads — make main h2 tighter on mobile */
+  .section-head-resp { font-size: clamp(26px, 7vw, 52px) !important; }
+
+  /* FAQ sidebar stacks nicely — no change needed */
+
+  /* Footer: nav cols in 3-col row on small screens */
+  .footer-nav-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  /* CTA buttons: stack on very small screens */
+  .cta-buttons { flex-direction: column; align-items: center; }
+  .cta-buttons a { width: 100%; text-align: center; justify-content: center; }
+}
+
+/* ── Chrome / WebKit compatibility ───────────────────────────── */
+/* All backdrop-filter elements also get -webkit- via React's WebkitBackdropFilter inline prop */
+/* Stat gradient text — ensure cross-browser */
+.stat-gradient-text {
+  background: linear-gradient(135deg, #fff 30%, #60B8FA 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent; /* fallback */
+}
+
 /* ── Hero carousel ───────────────────────────────────────── */
 .hero-carousel-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
 .hero-slide {

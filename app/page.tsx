@@ -164,11 +164,12 @@ export default function Page() {
         </div>
 
         {/* ── Stats Section ─────────────────────────────────────────────── */}
-        <section style={{ padding: '64px 0' }}>
+        <section className="section-pad-stats">
           <div className="max-w-[1180px] mx-auto px-6">
             <div className="grid grid-cols-2 md:grid-cols-4">
               {STATS.map((s, i) => (
                 <div key={s.val} className="text-center px-5"
+                  data-stat-idx={i}
                   style={{ borderRight: i < STATS.length - 1 ? `1px solid ${BORDER}` : 'none' }}>
                   <p className="stat-gradient-text font-black leading-none mb-2"
                     style={{ fontSize: 'clamp(40px,4.5vw,56px)', letterSpacing: '-0.04em' }}>
@@ -183,7 +184,7 @@ export default function Page() {
         </section>
 
         {/* ── How It Works ──────────────────────────────────────────────── */}
-        <section id="features" style={{ padding: '100px 0', background: '#0C1121' }}>
+        <section id="features" className="section-pad" style={{ background: '#0C1121' }}>
           <div className="max-w-[1180px] mx-auto px-6">
             <div className="text-center mb-16">
               <SectionTag>How it works</SectionTag>
@@ -192,7 +193,7 @@ export default function Page() {
                 Whether you&apos;re just starting out or already have a thriving audience, Fanation gets you earning from day one — no agency, no approval, no guesswork.
               </p>
             </div>
-            <div className="grid md:grid-cols-[1fr_40px_1fr_40px_1fr] items-center">
+            <div className="grid gap-4 md:gap-0 md:grid-cols-[1fr_40px_1fr_40px_1fr] items-center">
               {/* Step 01 */}
               <div className="how-step rounded-[22px] p-9 relative" style={{ background: '#111830', border: `1px solid ${BORDER}` }}>
                 <div className="text-xs font-black tracking-[0.1em] mb-5" style={{ color: '#2599F6', textTransform: 'uppercase' }}>Step {STEPS[0].n}</div>
@@ -223,7 +224,7 @@ export default function Page() {
         </section>
 
         {/* ── Live Gifting Section ───────────────────────────────────────── */}
-        <section style={{ padding: '110px 0', position: 'relative', overflow: 'hidden' }}>
+        <section className="section-pad" style={{ position: 'relative', overflow: 'hidden' }}>
           <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(ellipse 70% 70% at 20% 50%,rgba(37,153,246,0.06) 0%,transparent 60%)' }} />
           <div className="max-w-[1180px] mx-auto px-6 relative z-10">
             <div className="grid lg:grid-cols-2 gap-20 items-center">
@@ -235,16 +236,10 @@ export default function Page() {
                     border: '1px solid rgba(255,255,255,0.08)',
                     boxShadow: '0 40px 100px rgba(0,0,0,0.65)',
                     aspectRatio: '9/16',
+                    backgroundImage: "url('https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=800&h=1422&fit=crop&crop=faces&q=85')",
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center top',
                   }}>
-                  <Image
-                    src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=1080&h=1920&fit=crop&crop=faces&q=90"
-                    alt="Creator live streaming"
-                    fill
-                    quality={90}
-                    sizes="340px"
-                    className="object-cover"
-                    priority
-                  />
                   <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0.1) 0%,rgba(7,9,26,0.7) 100%)' }} />
                   {/* Phone UI */}
                   <div className="absolute inset-0 flex flex-col justify-between" style={{ padding: '20px 16px' }}>
@@ -255,7 +250,7 @@ export default function Page() {
                         <span style={{ fontSize: 8 }}>●</span> LIVE
                       </div>
                       <div className="flex items-center gap-1.5 text-white rounded-full px-3 py-1"
-                        style={{ fontSize: 12, fontWeight: 600, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)' }}>
+                        style={{ fontSize: 12, fontWeight: 600, background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)', WebkitBackdropFilter: 'blur(6px)' }}>
                         <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#22C55E' }} />
                         8,247 watching
                       </div>
@@ -269,6 +264,7 @@ export default function Page() {
                               fontSize: 12, fontWeight: 600,
                               background: 'rgba(255,255,255,0.1)',
                               backdropFilter: 'blur(10px)',
+                              WebkitBackdropFilter: 'blur(10px)',
                               border: '1px solid rgba(255,255,255,0.12)',
                               animation: `giftPop 4s ease-in-out ${i * 1.4}s infinite`,
                             }}>
@@ -278,7 +274,7 @@ export default function Page() {
                         ))}
                       </div>
                       <div className="flex items-center gap-2.5 rounded-[14px] p-3.5"
-                        style={{ background: 'rgba(7,9,26,0.8)', backdropFilter: 'blur(12px)', border: '1px solid rgba(34,197,94,0.25)' }}>
+                        style={{ background: 'rgba(7,9,26,0.8)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)', border: '1px solid rgba(34,197,94,0.25)' }}>
                         <span className="text-xl">💰</span>
                         <div>
                           <p style={{ fontSize: 11, color: '#7A8FB8' }}>Earned this stream</p>
@@ -325,7 +321,7 @@ export default function Page() {
         </section>
 
         {/* ── Feature Cards ─────────────────────────────────────────────── */}
-        <section style={{ padding: '100px 0', background: '#0C1121' }}>
+        <section className="section-pad" style={{ background: '#0C1121' }}>
           <div className="max-w-[1180px] mx-auto px-6">
             <div className="text-center mb-16">
               <SectionTag>Everything in one place</SectionTag>
@@ -361,7 +357,7 @@ export default function Page() {
         </section>
 
         {/* ── Creator Types — static mosaic grid ────────────────────────── */}
-        <section id="creators" style={{ padding: '100px 0' }}>
+        <section id="creators" className="section-pad">
           <div className="max-w-[1180px] mx-auto px-6">
             {/* Header: left-aligned heading + right-side CTA */}
             <div className="flex items-end justify-between flex-wrap gap-5 mb-12">
@@ -415,7 +411,7 @@ export default function Page() {
         </section>
 
         {/* ── Earn ──────────────────────────────────────────────────────── */}
-        <section id="earn" style={{ padding: '100px 0', background: '#0C1121' }}>
+        <section id="earn" className="section-pad" style={{ background: '#0C1121' }}>
           <div className="max-w-[1180px] mx-auto px-6">
             <div className="text-center mb-16">
               <SectionTag>Monetize your work</SectionTag>
@@ -442,7 +438,7 @@ export default function Page() {
         </section>
 
         {/* ── Comparison ────────────────────────────────────────────────── */}
-        <section style={{ padding: '100px 0' }}>
+        <section className="section-pad">
           <div className="max-w-[1180px] mx-auto px-6">
             <div className="text-center mb-16">
               <SectionTag>Why Fanation</SectionTag>
@@ -491,7 +487,7 @@ export default function Page() {
         </section>
 
         {/* ── Testimonials ──────────────────────────────────────────────── */}
-        <section style={{ padding: '100px 0', background: '#0C1121' }}>
+        <section className="section-pad" style={{ background: '#0C1121' }}>
           <div className="max-w-[1180px] mx-auto px-6">
             <div className="text-center mb-16">
               <SectionTag>Real creators, real income</SectionTag>
@@ -533,7 +529,7 @@ export default function Page() {
         </section>
 
         {/* ── FAQ — sidebar layout ───────────────────────────────────────── */}
-        <section id="faq" style={{ padding: '100px 0' }}>
+        <section id="faq" className="section-pad">
           <div className="max-w-[1180px] mx-auto px-6">
             <div className="grid lg:grid-cols-[1fr_1.6fr] gap-20 items-start">
               {/* Sidebar */}
@@ -574,7 +570,7 @@ export default function Page() {
         </section>
 
         {/* ── CTA ───────────────────────────────────────────────────────── */}
-        <section style={{ padding: '130px 0', textAlign: 'center', position: 'relative', overflow: 'hidden' }}>
+        <section className="section-pad-cta">
           <div className="absolute inset-0 pointer-events-none" style={{
             background: `radial-gradient(ellipse 60% 50% at 50% 50%,rgba(37,153,246,0.1) 0%,transparent 65%),
                          radial-gradient(ellipse 40% 40% at 20% 80%,rgba(245,166,35,0.05) 0%,transparent 55%)`
@@ -593,7 +589,7 @@ export default function Page() {
             </p>
 
             {/* CTA buttons */}
-            <div className="flex flex-wrap justify-center gap-4 mb-5">
+            <div className="cta-buttons flex flex-wrap justify-center gap-4 mb-5">
               <a href="#"
                 className="inline-flex items-center text-white font-bold"
                 style={{ background: '#2599F6', fontSize: 17, padding: '18px 40px', borderRadius: '100px', transition: 'background .2s, box-shadow .2s' }}>
@@ -648,7 +644,7 @@ export default function Page() {
       <footer style={{ borderTop: `1px solid rgba(255,255,255,0.07)`, padding: '64px 0 32px', background: '#07091A' }}>
         <div className="max-w-[1180px] mx-auto px-6">
           {/* Top 4-col grid */}
-          <div className="grid md:grid-cols-[2fr_1fr_1fr_1fr] gap-12 mb-12">
+          <div className="grid md:grid-cols-[2fr_1fr_1fr_1fr] gap-10 mb-12">
             {/* Brand col */}
             <div>
               <div className="flex items-center gap-2.5 mb-3.5">

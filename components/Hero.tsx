@@ -73,7 +73,7 @@ export default function Hero() {
   }, [])
 
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden" style={{ padding: '120px 0 80px' }}>
+    <section className="hero-section relative min-h-screen flex items-center overflow-hidden">
 
       {/* ── Blurred carousel background ── */}
       <div className="hero-carousel-bg">
