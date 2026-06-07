@@ -46,7 +46,9 @@ export default function Nav() {
         boxShadow: '0 4px 40px rgba(0,0,0,0.4)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-      } : {}}>
+      } : {
+        background: 'linear-gradient(180deg, rgba(7,9,26,0.75) 0%, transparent 100%)',
+      }}>
       <div className="max-w-[1180px] mx-auto px-6 flex items-center justify-between" style={{ height: 70 }}>
         <Link href="/"><Logo /></Link>
 
