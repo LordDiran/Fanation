@@ -193,27 +193,27 @@ export default function Page() {
                 Whether you&apos;re just starting out or already have a thriving audience, Fanation gets you earning from day one — no agency, no approval, no guesswork.
               </p>
             </div>
-            <div className="grid gap-4 md:gap-0 md:grid-cols-[1fr_40px_1fr_40px_1fr] items-center">
+            <div className="flex flex-col md:flex-row md:items-stretch gap-5 md:gap-0">
               {/* Step 01 */}
-              <div className="how-step rounded-[22px] p-9 relative" style={{ background: '#111830', border: `1px solid ${BORDER}` }}>
+              <div className="how-step rounded-[22px] p-9 relative md:flex-1" style={{ background: '#111830', border: `1px solid ${BORDER}` }}>
                 <div className="text-xs font-black tracking-[0.1em] mb-5" style={{ color: '#2599F6', textTransform: 'uppercase' }}>Step {STEPS[0].n}</div>
                 <div className="flex items-center justify-center rounded-2xl mb-5 text-[26px]" style={{ width: 56, height: 56, background: 'rgba(37,153,246,0.1)', border: '1px solid rgba(37,153,246,0.18)' }}>{STEPS[0].icon}</div>
                 <h3 className="font-black text-white mb-2.5" style={{ fontSize: 19, letterSpacing: '-0.02em' }}>{STEPS[0].title}</h3>
                 <p style={{ fontSize: 14, color: '#7A8FB8', lineHeight: 1.72 }}>{STEPS[0].body}</p>
               </div>
-              {/* Arrow */}
-              <div className="hidden md:flex items-center justify-center" style={{ color: 'rgba(37,153,246,0.3)', fontSize: 24 }}>→</div>
+              {/* Arrow — hidden on mobile (display:none in flex is fine; siblings are unaffected) */}
+              <div className="hidden md:flex flex-none items-center justify-center" style={{ width: 40, color: 'rgba(37,153,246,0.3)', fontSize: 24 }}>→</div>
               {/* Step 02 */}
-              <div className="how-step rounded-[22px] p-9 relative" style={{ background: '#111830', border: `1px solid ${BORDER}` }}>
+              <div className="how-step rounded-[22px] p-9 relative md:flex-1" style={{ background: '#111830', border: `1px solid ${BORDER}` }}>
                 <div className="text-xs font-black tracking-[0.1em] mb-5" style={{ color: '#2599F6', textTransform: 'uppercase' }}>Step {STEPS[1].n}</div>
                 <div className="flex items-center justify-center rounded-2xl mb-5 text-[26px]" style={{ width: 56, height: 56, background: 'rgba(37,153,246,0.1)', border: '1px solid rgba(37,153,246,0.18)' }}>{STEPS[1].icon}</div>
                 <h3 className="font-black text-white mb-2.5" style={{ fontSize: 19, letterSpacing: '-0.02em' }}>{STEPS[1].title}</h3>
                 <p style={{ fontSize: 14, color: '#7A8FB8', lineHeight: 1.72 }}>{STEPS[1].body}</p>
               </div>
               {/* Arrow */}
-              <div className="hidden md:flex items-center justify-center" style={{ color: 'rgba(37,153,246,0.3)', fontSize: 24 }}>→</div>
+              <div className="hidden md:flex flex-none items-center justify-center" style={{ width: 40, color: 'rgba(37,153,246,0.3)', fontSize: 24 }}>→</div>
               {/* Step 03 */}
-              <div className="how-step rounded-[22px] p-9 relative" style={{ background: '#111830', border: `1px solid ${BORDER}` }}>
+              <div className="how-step rounded-[22px] p-9 relative md:flex-1" style={{ background: '#111830', border: `1px solid ${BORDER}` }}>
                 <div className="text-xs font-black tracking-[0.1em] mb-5" style={{ color: '#2599F6', textTransform: 'uppercase' }}>Step {STEPS[2].n}</div>
                 <div className="flex items-center justify-center rounded-2xl mb-5 text-[26px]" style={{ width: 56, height: 56, background: 'rgba(37,153,246,0.1)', border: '1px solid rgba(37,153,246,0.18)' }}>{STEPS[2].icon}</div>
                 <h3 className="font-black text-white mb-2.5" style={{ fontSize: 19, letterSpacing: '-0.02em' }}>{STEPS[2].title}</h3>
@@ -230,7 +230,7 @@ export default function Page() {
             <div className="grid lg:grid-cols-2 gap-20 items-center">
 
               {/* Left: phone mockup */}
-              <div className="relative hidden lg:block" style={{ maxWidth: 340, margin: '0 auto' }}>
+              <div className="relative" style={{ maxWidth: 320, margin: '0 auto' }}>
                 <div className="relative rounded-[28px] overflow-hidden"
                   style={{
                     border: '1px solid rgba(255,255,255,0.08)',
@@ -286,7 +286,7 @@ export default function Page() {
                 </div>
                 {/* Float stat badge */}
                 <div className="absolute text-center rounded-[14px] px-4 py-3.5"
-                  style={{ top: 20, right: -24, background: '#18223C', border: '1px solid rgba(245,166,35,0.3)', boxShadow: '0 20px 50px rgba(0,0,0,0.4)', minWidth: 140 }}>
+                  style={{ top: 20, right: 12, background: '#18223C', border: '1px solid rgba(245,166,35,0.3)', boxShadow: '0 20px 50px rgba(0,0,0,0.4)', minWidth: 130 }}>
                   <p style={{ fontSize: 11, color: '#7A8FB8', marginBottom: 4 }}>Coins sent today</p>
                   <p className="font-black" style={{ fontSize: 26, color: '#F5A623', letterSpacing: '-0.02em' }}>2.4M 🪙</p>
                 </div>
