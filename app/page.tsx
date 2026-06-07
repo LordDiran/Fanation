@@ -23,9 +23,21 @@ const STATS = [
 ]
 
 const STEPS = [
-  { n: '01', icon: '✨', title: 'Create Your Creator Profile',  body: 'Set up your page, customise your profile, showcase your content, and tell your story. Takes under two minutes, no approvals.' },
-  { n: '02', icon: '💰', title: 'Invite Your Audience',         body: 'Share your Fanation profile and bring your followers, supporters, and community into one place. Your existing fans, your new home.' },
-  { n: '03', icon: '🚀', title: 'Monetize Your Community',      body: 'Earn through subscriptions, gifts, exclusive content, live sessions, and premium experiences. Multiple revenue streams from day one.' },
+  { n: '01', icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#60B8FA" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72Z"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/>
+      </svg>
+    ), title: 'Create Your Creator Profile',  body: 'Set up your page, customise your profile, showcase your content, and tell your story. Takes under two minutes, no approvals.' },
+  { n: '02', icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#60B8FA" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    ), title: 'Invite Your Audience',         body: 'Share your Fanation profile and bring your followers, supporters, and community into one place. Your existing fans, your new home.' },
+  { n: '03', icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#60B8FA" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/>
+      </svg>
+    ), title: 'Monetize Your Community',      body: 'Earn through subscriptions, gifts, exclusive content, live sessions, and premium experiences. Multiple revenue streams from day one.' },
 ]
 
 const LIVE_GIFTS = [
@@ -42,21 +54,45 @@ const LIVE_CHECKS = [
 ]
 
 const FEATURES = [
-  { icon: '💳', bg: 'rgba(37,153,246,0.12)',   border: 'rgba(37,153,246,0.2)',   title: 'Earn Recurring Income',         body: 'Create subscription plans and generate predictable monthly revenue from your most loyal supporters. Tiered access means fans choose what they value most.',                           pills: ['Monthly memberships', 'Annual plans', 'Tiered access'] },
-  { icon: '🪙', bg: 'rgba(245,166,35,0.12)',   border: 'rgba(245,166,35,0.2)',   title: 'Go Live & Get Paid',             body: 'Host live sessions, interact in real time, and receive gifts and support directly from fans as it happens. The most addictive earn loop on Fanation.',                   pills: ['Real-time gifts', 'Live interaction', 'Instant payouts'] },
-  { icon: '🔴', bg: 'rgba(239,68,68,0.12)',    border: 'rgba(239,68,68,0.2)',    title: 'Own Your Community',             body: 'Build direct relationships through communities, messaging, comments, and exclusive experiences. Your fans, your space — no algorithm between you and them.', pills: ['Direct messaging', 'Group communities', 'No algorithm'] },
-  { icon: '🎬', bg: 'rgba(168,85,247,0.12)',   border: 'rgba(168,85,247,0.2)',   title: 'Sell Exclusive Content',         body: 'Offer premium videos, photos, audio, behind-the-scenes content, and subscriber-only experiences. Lock what\'s valuable and let fans pay to unlock.',                            pills: ['Pay-per-view', 'Subscriber drops', 'Private media'] },
-  { icon: '📈', bg: 'rgba(34,197,94,0.12)',    border: 'rgba(34,197,94,0.2)',    title: 'Grow Beyond Algorithms',         body: 'Stay connected with your audience without depending on social media reach or changing platform rules. On Fanation, you own the relationship.',                         pills: ['Direct audience access', 'No feed throttling', 'You own your fans'] },
-  { icon: '📊', bg: 'rgba(245,158,11,0.12)',   border: 'rgba(245,158,11,0.2)',   title: 'Manage Your Creator Business',  body: 'Track earnings, monitor engagement, manage subscribers, and grow your brand with confidence. Everything you need to run a serious creator business.',                                 pills: ['Earnings dashboard', 'Subscriber analytics', 'Growth insights'] },
+  { icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#60B8FA" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect width="22" height="16" x="1" y="4" rx="2" ry="2"/><line x1="1" x2="23" y1="10" y2="10"/>
+      </svg>
+    ), bg: 'rgba(37,153,246,0.12)',   border: 'rgba(37,153,246,0.2)',   title: 'Earn Recurring Income',        body: 'Create subscription plans and generate predictable monthly revenue from your most loyal supporters. Tiered access means fans choose what they value most.',                          pills: ['Monthly memberships', 'Annual plans', 'Tiered access'] },
+  { icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F5A623" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" x2="12.01" y1="20" y2="20"/>
+      </svg>
+    ), bg: 'rgba(245,166,35,0.12)',   border: 'rgba(245,166,35,0.2)',   title: 'Go Live & Get Paid',            body: 'Host live sessions, interact in real time, and receive gifts and support directly from fans as it happens. The most addictive earn loop on Fanation.',                  pills: ['Real-time gifts', 'Live interaction', 'Instant payouts'] },
+  { icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F87171" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+      </svg>
+    ), bg: 'rgba(239,68,68,0.12)',    border: 'rgba(239,68,68,0.2)',    title: 'Own Your Community',            body: 'Build direct relationships through communities, messaging, comments, and exclusive experiences. Your fans, your space — no algorithm between you and them.', pills: ['Direct messaging', 'Group communities', 'No algorithm'] },
+  { icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C084FC" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    ), bg: 'rgba(168,85,247,0.12)',   border: 'rgba(168,85,247,0.2)',   title: 'Sell Exclusive Content',        body: 'Offer premium videos, photos, audio, behind-the-scenes content, and subscriber-only experiences. Lock what\'s valuable and let fans pay to unlock.',                           pills: ['Pay-per-view', 'Subscriber drops', 'Private media'] },
+  { icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
+      </svg>
+    ), bg: 'rgba(34,197,94,0.12)',    border: 'rgba(34,197,94,0.2)',    title: 'Grow Beyond Algorithms',        body: 'Stay connected with your audience without depending on social media reach or changing platform rules. On Fanation, you own the relationship.',                        pills: ['Direct audience access', 'No feed throttling', 'You own your fans'] },
+  { icon: (
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#FCD34D" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/>
+      </svg>
+    ), bg: 'rgba(245,158,11,0.12)',   border: 'rgba(245,158,11,0.2)',   title: 'Manage Your Creator Business', body: 'Track earnings, monitor engagement, manage subscribers, and grow your brand with confidence. Everything you need to run a serious creator business.',                                pills: ['Earnings dashboard', 'Subscriber analytics', 'Growth insights'] },
 ]
 
 const CREATORS = [
-  { name: 'Marcus', role: 'Podcaster',        avg: '$2.8K avg/mo', photo: 'photo-1506794778202-cad84cf45f1d' },
-  { name: 'Dembe',  role: 'Fitness Coach',    avg: '$1.9K avg/mo', photo: 'photo-1549476464-37392f717541' },
-  { name: 'Sofia',  role: 'Model · Creator',  avg: '$5.2K avg/mo', photo: 'photo-1529626455594-4ff0802cfb7e' },
-  { name: 'Aisha',  role: 'Travel Creator',   avg: '$3.1K avg/mo', photo: 'photo-1573496359142-b8d87734a5a2' },
-  { name: 'Tobi',   role: 'Vlogger',          avg: '$2.4K avg/mo', photo: 'photo-1507003211169-0a1dd7228f2d' },
-  { name: 'Nadia',  role: 'Lifestyle Creator',avg: '$4.0K avg/mo', photo: 'photo-1517841905240-472988babdf9' },
+  { name: 'Marcus', role: 'Podcaster',         avg: '$2.8K avg/mo', photo: '/images/creator-marcus.jpg' },
+  { name: 'Dembe',  role: 'Fitness Coach',     avg: '$1.9K avg/mo', photo: '/images/creator-dembe.jpg' },
+  { name: 'Sofia',  role: 'Model · Creator',   avg: '$5.2K avg/mo', photo: '/images/creator-sofia.jpg' },
+  { name: 'Aisha',  role: 'Travel Creator',    avg: '$3.1K avg/mo', photo: '/images/creator-aisha.jpg' },
+  { name: 'Tobi',   role: 'Vlogger',           avg: '$2.4K avg/mo', photo: '/images/creator-tobi.jpg' },
+  { name: 'Nadia',  role: 'Lifestyle Creator', avg: '$4.0K avg/mo', photo: '/images/creator-nadia.jpg' },
 ]
 
 const EARN = [
@@ -85,9 +121,9 @@ const COMPARE_FANATION = [
 ]
 
 const TESTIMONIALS = [
-  { name: 'Priscilia O.', handle: '@yummychill54', role: 'Lifestyle Creator', stat: '+$2,480', stat2: 'this month',   photo: 'photo-1531746020798-e6953c6e8e04', quote: "I left my old platform after three years of watching fees eat my income. Two months on Fanation and I've tripled what I made there — the live gifting alone covered my rent in one stream." },
-  { name: 'Marcus T.',    handle: '@marcusbeats',  role: 'Musician',          stat: '+$1,800', stat2: 'in 48 hours',  photo: 'photo-1506794778202-cad84cf45f1d', quote: "Pay-per-view drops changed everything. I put a track behind a paywall, promoted it on my feed, and made $1,800 in 48 hours. I was giving that music away for free before." },
-  { name: 'Lara K.',      handle: '@laracreates',  role: 'Vlogger',           stat: '+$3,100', stat2: 'last month',   photo: 'photo-1573496359142-b8d87734a5a2', quote: "My fans feel genuinely close to me here — the DMs and group chats feel different. And the payouts are fast. First withdrawal hit my account within 24 hours of signing up." },
+  { name: 'Priscilia O.', handle: '@yummychill54', role: 'Lifestyle Creator', stat: '+$2,480', stat2: 'this month',  photo: '/images/creator-amara.jpg',  quote: "I left my old platform after three years of watching fees eat my income. Two months on Fanation and I've tripled what I made there — the live gifting alone covered my rent in one stream." },
+  { name: 'Marcus T.',    handle: '@marcusbeats',  role: 'Musician',          stat: '+$1,800', stat2: 'in 48 hours', photo: '/images/creator-marcus.jpg', quote: "Pay-per-view drops changed everything. I put a track behind a paywall, promoted it on my feed, and made $1,800 in 48 hours. I was giving that music away for free before." },
+  { name: 'Lara K.',      handle: '@laracreates',  role: 'Vlogger',           stat: '+$3,100', stat2: 'last month',  photo: '/images/creator-aisha.jpg',  quote: "My fans feel genuinely close to me here — the DMs and group chats feel different. And the payouts are fast. First withdrawal hit my account within 24 hours of signing up." },
 ]
 
 const FAQS = [
@@ -382,7 +418,7 @@ export default function Page() {
                 <div key={c.name} className="ctype-card relative rounded-[20px] overflow-hidden"
                   style={{ aspectRatio: '3/4', background: 'linear-gradient(145deg,#111830,#18223C)' }}>
                   <Image
-                    src={`https://images.unsplash.com/${c.photo}?w=1200&h=1600&fit=crop&crop=faces&q=90`}
+                    src={c.photo}
                     alt={c.name}
                     fill
                     quality={90}
@@ -507,7 +543,7 @@ export default function Page() {
                   <div className="flex items-center gap-3 pt-5" style={{ borderTop: `1px solid ${BORDER}` }}>
                     <div className="w-11 h-11 rounded-full overflow-hidden flex-shrink-0">
                       <Image
-                        src={`https://images.unsplash.com/${t.photo}?w=200&h=200&fit=crop&crop=faces&q=90`}
+                        src={t.photo}
                         alt={t.name}
                         width={44}
                         height={44}

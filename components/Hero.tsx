@@ -6,18 +6,18 @@ import Image from 'next/image'
 // Carousel: platform-consistent photos that look dramatic blurred
 // Uses creators-section photos (different from hero mosaic) + atmospheric new additions
 const CAROUSEL_PHOTOS = [
-  { id: 'photo-1549476464-37392f717541', q: 60 }, // Dembe – dark, dramatic
-  { id: 'photo-1517841905240-472988babdf9', q: 60 }, // Nadia – warm lifestyle
-  { id: 'photo-1507003211169-0a1dd7228f2d', q: 60 }, // Tobi – warm natural
-  { id: 'photo-1529626455594-4ff0802cfb7e', q: 60 }, // Sofia model – close-up dramatic
+  'creator-dembe.jpg',
+  'creator-nadia.jpg',
+  'creator-tobi.jpg',
+  'creator-sofia.jpg',
 ]
 
 const AVATARS = [
-  { id: 'photo-1531746020798-e6953c6e8e04', name: 'Amara' },
-  { id: 'photo-1506794778202-cad84cf45f1d', name: 'James' },
-  { id: 'photo-1573496359142-b8d87734a5a2', name: 'Priscilia' },
-  { id: 'photo-1517841905240-472988babdf9', name: 'David' },
-  { id: 'photo-1507003211169-0a1dd7228f2d', name: 'Sofia' },
+  { file: 'creator-amara.jpg',  name: 'Amara' },
+  { file: 'creator-marcus.jpg', name: 'James' },
+  { file: 'creator-aisha.jpg',  name: 'Priscilia' },
+  { file: 'creator-tobi.jpg',   name: 'David' },
+  { file: 'creator-nadia.jpg',  name: 'Sofia' },
 ]
 
 const GIFTS = [
@@ -79,11 +79,11 @@ export default function Hero() {
       <div className="hero-carousel-bg">
         {CAROUSEL_PHOTOS.map((photo, i) => (
           <div
-            key={photo.id}
+            key={photo}
             ref={el => { slideEls.current[i] = el }}
             className={`hero-slide${i === slide ? ' active' : ''}`}
             style={{
-              backgroundImage: `url('https://images.unsplash.com/${photo.id}?w=800&h=600&fit=crop&q=${photo.q}')`,
+              backgroundImage: `url('/images/${photo}')`,
             }}
           />
         ))}
@@ -169,11 +169,10 @@ export default function Hero() {
                   <div key={i} className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0"
                     style={{ border: '2px solid #07091A', marginLeft: i === 0 ? 0 : -9 }}>
                     <Image
-                      src={`https://images.unsplash.com/${a.id}?w=72&h=72&fit=crop&crop=faces&q=70`}
+                      src={`/images/${a.file}`}
                       alt={a.name}
                       width={36}
                       height={36}
-                      quality={70}
                       className="object-cover w-full h-full"
                     />
                   </div>
