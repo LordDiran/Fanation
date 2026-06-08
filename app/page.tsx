@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Nav from '@/components/Nav'
 import Hero from '@/components/Hero'
+import SocialIcons from '@/components/SocialIcons'
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -660,11 +661,8 @@ export default function Page() {
             <div className="flex items-center justify-center flex-wrap gap-3 pt-10" style={{ borderTop: `1px solid rgba(255,255,255,0.07)` }}>
               <span style={{ fontSize: 13, color: '#7A8FB8' }}>Download the app</span>
               {/* Apple App Store */}
-              <a href="#"
-                className="inline-flex items-center gap-2.5"
-                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '11px 20px', borderRadius: 12, transition: 'background .2s, border-color .2s' }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background='rgba(255,255,255,0.1)'; el.style.borderColor='rgba(255,255,255,0.22)'; }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background='rgba(255,255,255,0.06)'; el.style.borderColor='rgba(255,255,255,0.1)'; }}>
+              <a href="#" className="inline-flex items-center gap-2.5"
+                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '11px 20px', borderRadius: 12 }}>
                 <svg width="20" height="24" viewBox="0 0 814 1000" fill="white" aria-hidden="true">
                   <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-37.6-148.2-99.9C115 375.5 44.2 230.1 44.2 159.5c0-47.7 18.7-97.4 52.6-132.5 44.6-46.8 112.1-72.4 175.7-72.4 62.1 0 114.2 34.2 152.4 34.2 36.4 0 97.7-37.6 169.2-37.6 26.7 0 108.2 2.6 168.3 80.8zm-172.4-188.4c32.6-37.1 55.2-88.9 55.2-140.7 0-7.1-.6-14.3-1.9-20.1-52.6 1.9-114.7 35.2-151.7 78.5-28.5 32.3-55.1 83.4-55.1 136.6 0 7.8 1.3 15.6 1.9 18.1 3.2.6 8.4 1.3 13.6 1.3 47.1 0 105.5-31.7 138-73.7z"/>
                 </svg>
@@ -674,11 +672,8 @@ export default function Page() {
                 </span>
               </a>
               {/* Google Play */}
-              <a href="#"
-                className="inline-flex items-center gap-2.5"
-                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '11px 20px', borderRadius: 12, transition: 'background .2s, border-color .2s' }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background='rgba(255,255,255,0.1)'; el.style.borderColor='rgba(255,255,255,0.22)'; }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background='rgba(255,255,255,0.06)'; el.style.borderColor='rgba(255,255,255,0.1)'; }}>
+              <a href="#" className="inline-flex items-center gap-2.5"
+                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '11px 20px', borderRadius: 12 }}>
                 <svg width="20" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                   <path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 010 2.594z" fill="#FBBC05"/>
                   <path d="M1.337.924a1.486 1.486 0 00-.112.568v21.017a1.49 1.49 0 00.112.568l.043.038 11.765-11.77v-.275L1.38.886l-.043.038z" fill="#4285F4"/>
@@ -717,24 +712,7 @@ export default function Page() {
                 Fanation empowers creators to own their audience, deepen fan relationships, and build sustainable income through community, content, and meaningful engagement.
               </p>
               {/* Social icons */}
-              <div className="flex gap-2.5">
-                {[
-                  { label: 'X/Twitter', hover: 'rgba(255,255,255,0.9)', path: 'M18 6.48l-4.96 5.52L18 18h-3.36l-3.24-3.84L8.16 18H5.04l5.28-5.88L5.04 6h3.36l2.88 3.48L14.64 6H18z' },
-                  { label: 'Instagram', hover: '#E1306C', path: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z' },
-                  { label: 'TikTok', hover: '#69C9D0', path: 'M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.5a8.21 8.21 0 004.79 1.52V6.55a4.85 4.85 0 01-1.02.14z' },
-                  { label: 'YouTube', hover: '#FF0000', path: 'M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z' },
-                ].map(s => (
-                  <a key={s.label} href="#" aria-label={s.label}
-                    className="flex items-center justify-center rounded-[9px]"
-                    style={{ width: 36, height: 36, background: 'rgba(255,255,255,0.06)', border: `1px solid rgba(255,255,255,0.07)`, color: '#7A8FB8', transition: 'color 150ms ease, background 150ms ease, transform 150ms ease' }}
-                    onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.color = s.hover; el.style.background = 'rgba(255,255,255,0.1)'; el.style.transform = 'scale(1.1)'; }}
-                    onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.color = '#7A8FB8'; el.style.background = 'rgba(255,255,255,0.06)'; el.style.transform = ''; }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                      <path d={s.path} />
-                    </svg>
-                  </a>
-                ))}
-              </div>
+              <SocialIcons />
             </div>
 
             {/* Product links */}
