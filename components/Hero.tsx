@@ -96,7 +96,7 @@ export default function Hero() {
         background: `radial-gradient(ellipse 60% 55% at 65% 45%,rgba(37,153,246,.09) 0%,transparent 60%),
                      radial-gradient(ellipse 50% 45% at 20% 70%,rgba(252,164,75,.06) 0%,transparent 55%),
                      radial-gradient(ellipse 40% 40% at 80% 10%,rgba(93,221,144,.05) 0%,transparent 50%),
-                     radial-gradient(ellipse 50% 45% at 85% 80%,rgba(243,106,70,.10) 0%,transparent 55%)`
+                     radial-gradient(ellipse 50% 45% at 85% 80%,rgba(243,106,70,.13) 0%,transparent 55%)`
       }} />
 
       {/* ── Floating particles ── */}
@@ -108,8 +108,8 @@ export default function Hero() {
           {/* ── Left copy ── */}
           <div>
             <div className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-bold mb-7"
-              style={{ background: 'rgba(37,153,246,0.1)', border: '1px solid rgba(37,153,246,0.22)', color: '#60B8FA' }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-brand" style={{ animation: 'blink 2s ease-in-out infinite' }} />
+              style={{ background: 'rgba(243,106,70,0.08)', border: '1px solid rgba(243,106,70,0.28)', color: '#F8A98A', borderLeft: '2px solid #F36A46' }}>
+              <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: '#F36A46', animation: 'blink 2s ease-in-out infinite' }} />
               Turn followers into fans. Turn fans into income.
             </div>
 
@@ -117,7 +117,7 @@ export default function Hero() {
               style={{ fontSize: 'clamp(40px,5vw,72px)', letterSpacing: '-0.04em' }}>
               Turn Your Audience Into<br />
               <em className="not-italic" style={{
-                background: 'linear-gradient(90deg, #2599F6 0%, #F36A46 100%)',
+                background: 'linear-gradient(90deg, #F36A46 0%, #2599F6 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',

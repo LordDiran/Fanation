@@ -613,14 +613,14 @@ export default function Page() {
           <div className="absolute inset-0 pointer-events-none" style={{
             background: `radial-gradient(ellipse 60% 50% at 50% 50%,rgba(37,153,246,0.1) 0%,transparent 65%),
                          radial-gradient(ellipse 40% 40% at 20% 80%,rgba(252,164,75,0.07) 0%,transparent 55%),
-                         radial-gradient(ellipse 45% 40% at 85% 20%,rgba(243,106,70,0.08) 0%,transparent 55%)`
+                         radial-gradient(ellipse 45% 40% at 85% 20%,rgba(243,106,70,0.13) 0%,transparent 55%)`
           }} />
           <div className="max-w-[1180px] mx-auto px-6 relative z-10">
             <h2 className="font-black text-white mb-5 leading-[1.06]"
               style={{ fontSize: 'clamp(34px,5vw,68px)', letterSpacing: '-0.04em' }}>
               Ready To Build Something<br />
               <em className="not-italic" style={{
-                background: 'linear-gradient(90deg, #2599F6 0%, #F36A46 100%)',
+                background: 'linear-gradient(90deg, #F36A46 0%, #2599F6 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
