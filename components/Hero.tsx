@@ -94,8 +94,9 @@ export default function Hero() {
       <div className="absolute inset-0 pointer-events-none" style={{
         zIndex: 1,
         background: `radial-gradient(ellipse 60% 55% at 65% 45%,rgba(37,153,246,.09) 0%,transparent 60%),
-                     radial-gradient(ellipse 50% 45% at 20% 70%,rgba(245,166,35,.05) 0%,transparent 55%),
-                     radial-gradient(ellipse 40% 40% at 80% 10%,rgba(34,197,94,.04) 0%,transparent 50%)`
+                     radial-gradient(ellipse 50% 45% at 20% 70%,rgba(252,164,75,.05) 0%,transparent 55%),
+                     radial-gradient(ellipse 40% 40% at 80% 10%,rgba(93,221,144,.04) 0%,transparent 50%),
+                     radial-gradient(ellipse 35% 35% at 90% 85%,rgba(243,106,70,.04) 0%,transparent 55%)`
       }} />
 
       {/* ── Floating particles ── */}
@@ -144,22 +145,37 @@ export default function Hero() {
             {/* App store badges */}
             <div className="hidden sm:flex items-center gap-3 flex-wrap mb-10">
               <span className="text-xs mr-1" style={{ color: '#7A8FB8' }}>Available on</span>
-              {[
-                { icon: '🍎', sub: 'Download on the', name: 'App Store' },
-                { icon: '▶', sub: 'Get it on', name: 'Google Play' },
-              ].map(b => (
-                <a key={b.name} href="#"
-                  className="inline-flex items-center gap-2.5"
-                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '9px 16px', borderRadius: 12, transition: 'background .2s, border-color .2s' }}
-                  onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background='rgba(255,255,255,0.1)'; el.style.borderColor='rgba(255,255,255,0.22)'; }}
-                  onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background='rgba(255,255,255,0.06)'; el.style.borderColor='rgba(255,255,255,0.1)'; }}>
-                  <span className="text-xl leading-none">{b.icon}</span>
-                  <span>
-                    <p className="leading-none mb-0.5" style={{ fontSize: 10, color: '#7A8FB8' }}>{b.sub}</p>
-                    <p className="font-bold text-white leading-none" style={{ fontSize: 14 }}>{b.name}</p>
-                  </span>
-                </a>
-              ))}
+              {/* Apple App Store */}
+              <a href="#"
+                className="inline-flex items-center gap-2.5"
+                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '9px 16px', borderRadius: 12, transition: 'background .2s, border-color .2s' }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background='rgba(255,255,255,0.1)'; el.style.borderColor='rgba(255,255,255,0.22)'; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background='rgba(255,255,255,0.06)'; el.style.borderColor='rgba(255,255,255,0.1)'; }}>
+                <svg width="20" height="24" viewBox="0 0 814 1000" fill="white" aria-hidden="true">
+                  <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-37.6-148.2-99.9C115 375.5 44.2 230.1 44.2 159.5c0-47.7 18.7-97.4 52.6-132.5 44.6-46.8 112.1-72.4 175.7-72.4 62.1 0 114.2 34.2 152.4 34.2 36.4 0 97.7-37.6 169.2-37.6 26.7 0 108.2 2.6 168.3 80.8zm-172.4-188.4c32.6-37.1 55.2-88.9 55.2-140.7 0-7.1-.6-14.3-1.9-20.1-52.6 1.9-114.7 35.2-151.7 78.5-28.5 32.3-55.1 83.4-55.1 136.6 0 7.8 1.3 15.6 1.9 18.1 3.2.6 8.4 1.3 13.6 1.3 47.1 0 105.5-31.7 138-73.7z"/>
+                </svg>
+                <span>
+                  <p className="leading-none mb-0.5" style={{ fontSize: 10, color: '#7A8FB8' }}>Download on the</p>
+                  <p className="font-bold text-white leading-none" style={{ fontSize: 14 }}>App Store</p>
+                </span>
+              </a>
+              {/* Google Play */}
+              <a href="#"
+                className="inline-flex items-center gap-2.5"
+                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '9px 16px', borderRadius: 12, transition: 'background .2s, border-color .2s' }}
+                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.background='rgba(255,255,255,0.1)'; el.style.borderColor='rgba(255,255,255,0.22)'; }}
+                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.background='rgba(255,255,255,0.06)'; el.style.borderColor='rgba(255,255,255,0.1)'; }}>
+                <svg width="20" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 010 2.594z" fill="#FBBC05"/>
+                  <path d="M1.337.924a1.486 1.486 0 00-.112.568v21.017a1.49 1.49 0 00.112.568l.043.038 11.765-11.77v-.275L1.38.886l-.043.038z" fill="#4285F4"/>
+                  <path d="M17.627 17.257l-4.48-4.462v-.018l11.564 11.57.039.018a1.49 1.49 0 001.568-.278L17.627 17.257z" fill="#34A853"/>
+                  <path d="M17.627 6.743L4.022 12.12v.018l11.564 11.57 1.848-1.847-9.961-9.962 9.153-9.758z" fill="#EA4335"/>
+                </svg>
+                <span>
+                  <p className="leading-none mb-0.5" style={{ fontSize: 10, color: '#7A8FB8' }}>Get it on</p>
+                  <p className="font-bold text-white leading-none" style={{ fontSize: 14 }}>Google Play</p>
+                </span>
+              </a>
             </div>
 
             {/* Social proof */}
@@ -211,12 +227,12 @@ export default function Hero() {
                       className="flex items-center gap-1.5 text-white font-bold whitespace-nowrap rounded-full px-2.5 py-1.5"
                       style={{
                         fontSize: 11,
-                        background: 'rgba(245,166,35,0.18)',
-                        border: '1px solid rgba(245,166,35,.35)',
+                        background: 'rgba(243,106,70,0.18)',
+                        border: '1px solid rgba(243,106,70,0.38)',
                         backdropFilter: 'blur(6px)',
                         animation: `giftPop 3.6s ease-in-out ${g.delay} infinite`,
                       }}>
-                      {g.icon} {g.text} from <span style={{ color: '#F5A623' }}>{g.user}</span>
+                      {g.icon} {g.text} from <span style={{ color: '#F36A46' }}>{g.user}</span>
                     </div>
                   ))}
                 </div>
@@ -238,7 +254,7 @@ export default function Hero() {
                   <span style={{ fontSize: 8 }}>●</span>LIVE
                 </div>
                 <div className="absolute top-3 right-3 font-bold rounded-full px-2.5 py-1"
-                  style={{ fontSize: 11, background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.3)', color: '#22C55E' }}>
+                  style={{ fontSize: 11, background: 'rgba(93,221,144,0.15)', border: '1px solid rgba(93,221,144,0.32)', color: '#5DDD90' }}>
                   +$340 today
                 </div>
                 <div className="absolute bottom-3 left-3 right-3 z-10">
@@ -255,7 +271,7 @@ export default function Hero() {
                   style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 30%,rgba(7,9,26,0.9) 100%)' }} />
                 <div className="absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"
-                  style={{ fontSize: 11, background: 'rgba(245,166,35,0.15)', border: '1px solid rgba(245,166,35,0.3)', color: '#F5A623' }}>
+                  style={{ fontSize: 11, background: 'rgba(252,164,75,0.15)', border: '1px solid rgba(252,164,75,0.3)', color: '#FCA44B' }}>
                   🪙 12,400 coins earned
                 </div>
                 <div className="absolute bottom-3 left-3 right-3 z-10">
@@ -270,7 +286,7 @@ export default function Hero() {
               style={{
                 bottom: 8, left: 0, zIndex: 10,
                 background: '#18223C',
-                border: '1px solid rgba(34,197,94,0.28)',
+                border: '1px solid rgba(93,221,144,0.28)',
                 borderRadius: 14,
                 padding: '14px 18px',
                 boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
@@ -279,7 +295,7 @@ export default function Hero() {
               <span className="text-2xl leading-none">💰</span>
               <div>
                 <p className="mb-0.5" style={{ fontSize: 11, color: '#7A8FB8' }}>This month&apos;s earnings</p>
-                <p className="font-black leading-none" style={{ fontSize: 22, color: '#22C55E', letterSpacing: '-0.02em' }}>$4,280.00</p>
+                <p className="font-black leading-none" style={{ fontSize: 22, color: '#5DDD90', letterSpacing: '-0.02em' }}>$4,280.00</p>
               </div>
             </div>
           </div>
