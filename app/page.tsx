@@ -333,7 +333,7 @@ export default function Page() {
 
               {/* Right: copy */}
               <div>
-                <SectionTag color="#EF4444">● Live Streaming</SectionTag>
+                <SectionTag color="#F36A46">● Live Streaming</SectionTag>
                 <h2 className="font-black text-white mb-5" style={{ fontSize: 'clamp(28px,3.5vw,48px)', letterSpacing: '-0.035em', lineHeight: 1.1 }}>
                   Go Live. Connect Instantly.
                 </h2>
@@ -453,7 +453,7 @@ export default function Page() {
         <section id="earn" className="section-pad" style={{ background: '#0C1121' }}>
           <div className="max-w-[1180px] mx-auto px-6">
             <div className="text-center mb-16">
-              <SectionTag>Monetize your work</SectionTag>
+              <SectionTag color="#F36A46">Monetize your work</SectionTag>
               <SectionHead>More Ways To Earn<br />From What You Create</SectionHead>
               <p className="mt-4 max-w-xl mx-auto leading-[1.75]" style={{ fontSize: 17, color: '#7A8FB8' }}>
                 Your audience supports you in different ways. Fanation gives you multiple revenue streams — mix and match what fits how you create.
@@ -529,7 +529,7 @@ export default function Page() {
         <section className="section-pad" style={{ background: '#0C1121' }}>
           <div className="max-w-[1180px] mx-auto px-6">
             <div className="text-center mb-16">
-              <SectionTag>Real creators, real income</SectionTag>
+              <SectionTag color="#FCA44B">Real creators, real income</SectionTag>
               <SectionHead>Hear from the people<br />building their living on Fanation</SectionHead>
             </div>
             <div className="grid md:grid-cols-3 gap-5">
@@ -612,13 +612,19 @@ export default function Page() {
         <section className="section-pad-cta">
           <div className="absolute inset-0 pointer-events-none" style={{
             background: `radial-gradient(ellipse 60% 50% at 50% 50%,rgba(37,153,246,0.1) 0%,transparent 65%),
-                         radial-gradient(ellipse 40% 40% at 20% 80%,rgba(252,164,75,0.05) 0%,transparent 55%)`
+                         radial-gradient(ellipse 40% 40% at 20% 80%,rgba(252,164,75,0.07) 0%,transparent 55%),
+                         radial-gradient(ellipse 45% 40% at 85% 20%,rgba(243,106,70,0.08) 0%,transparent 55%)`
           }} />
           <div className="max-w-[1180px] mx-auto px-6 relative z-10">
             <h2 className="font-black text-white mb-5 leading-[1.06]"
               style={{ fontSize: 'clamp(34px,5vw,68px)', letterSpacing: '-0.04em' }}>
               Ready To Build Something<br />
-              <em className="not-italic" style={{ color: '#2599F6' }}>Bigger Than Followers?</em>
+              <em className="not-italic" style={{
+                background: 'linear-gradient(90deg, #2599F6 0%, #F36A46 100%)',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                backgroundClip: 'text',
+              }}>Bigger Than Followers?</em>
             </h2>
             <p className="mb-3 mx-auto max-w-xl" style={{ fontSize: 18, color: '#7A8FB8' }}>
               Your audience already believes in you. Now give them a place to belong.
@@ -661,28 +667,28 @@ export default function Page() {
             <div className="flex items-center justify-center flex-wrap gap-3 pt-10" style={{ borderTop: `1px solid rgba(255,255,255,0.07)` }}>
               <span style={{ fontSize: 13, color: '#7A8FB8' }}>Download the app</span>
               {/* Apple App Store */}
-              <a href="#" className="inline-flex items-center gap-2.5"
-                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '11px 20px', borderRadius: 12 }}>
-                <svg width="20" height="24" viewBox="0 0 814 1000" fill="white" aria-hidden="true">
+              <a href="#" className="inline-flex items-center gap-3 hover:opacity-90 transition-opacity"
+                style={{ background: '#000', border: '1px solid rgba(255,255,255,0.18)', padding: '10px 20px', borderRadius: 14, boxShadow: '0 4px 20px rgba(0,0,0,0.4)' }}>
+                <svg width="22" height="26" viewBox="0 0 814 1000" fill="white" aria-hidden="true">
                   <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76 0-103.7 40.8-165.9 40.8s-105-37.6-148.2-99.9C115 375.5 44.2 230.1 44.2 159.5c0-47.7 18.7-97.4 52.6-132.5 44.6-46.8 112.1-72.4 175.7-72.4 62.1 0 114.2 34.2 152.4 34.2 36.4 0 97.7-37.6 169.2-37.6 26.7 0 108.2 2.6 168.3 80.8zm-172.4-188.4c32.6-37.1 55.2-88.9 55.2-140.7 0-7.1-.6-14.3-1.9-20.1-52.6 1.9-114.7 35.2-151.7 78.5-28.5 32.3-55.1 83.4-55.1 136.6 0 7.8 1.3 15.6 1.9 18.1 3.2.6 8.4 1.3 13.6 1.3 47.1 0 105.5-31.7 138-73.7z"/>
                 </svg>
                 <span>
-                  <p className="leading-none mb-0.5" style={{ fontSize: 10, color: '#7A8FB8' }}>Download on the</p>
-                  <p className="font-bold text-white leading-none" style={{ fontSize: 15 }}>App Store</p>
+                  <p className="leading-none mb-1" style={{ fontSize: 10, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.03em' }}>Download on the</p>
+                  <p className="font-bold text-white leading-none" style={{ fontSize: 16, letterSpacing: '-0.01em' }}>App Store</p>
                 </span>
               </a>
               {/* Google Play */}
-              <a href="#" className="inline-flex items-center gap-2.5"
-                style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', padding: '11px 20px', borderRadius: 12 }}>
-                <svg width="20" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                  <path d="M22.018 13.298l-3.919 2.218-3.515-3.493 3.543-3.521 3.891 2.202a1.49 1.49 0 010 2.594z" fill="#FBBC05"/>
-                  <path d="M1.337.924a1.486 1.486 0 00-.112.568v21.017a1.49 1.49 0 00.112.568l.043.038 11.765-11.77v-.275L1.38.886l-.043.038z" fill="#4285F4"/>
-                  <path d="M17.627 17.257l-4.48-4.462v-.018l11.564 11.57.039.018a1.49 1.49 0 001.568-.278L17.627 17.257z" fill="#34A853"/>
-                  <path d="M17.627 6.743L4.022 12.12v.018l11.564 11.57 1.848-1.847-9.961-9.962 9.153-9.758z" fill="#EA4335"/>
+              <a href="#" className="inline-flex items-center gap-3 hover:opacity-90 transition-opacity"
+                style={{ background: '#000', border: '1px solid rgba(255,255,255,0.18)', padding: '10px 20px', borderRadius: 14, boxShadow: '0 4px 20px rgba(0,0,0,0.4)' }}>
+                <svg width="22" height="24" viewBox="0 0 24 27" fill="none" aria-hidden="true">
+                  <path d="M1.5 0.8L14.5 13.5L1.5 26.2C0.9 25.9 0.5 25.3 0.5 24.5V2.5C0.5 1.7 0.9 1.1 1.5 0.8Z" fill="#4285F4"/>
+                  <path d="M19.5 9L14.5 13.5L19.5 18L22.8 16.2C23.7 15.7 23.7 14.8 23.7 13.5C23.7 12.2 23.7 11.3 22.8 10.8L19.5 9Z" fill="#FBBC05"/>
+                  <path d="M1.5 0.8L14.5 13.5L19.5 9L4.2 0.1C3.1 -0.5 2 0 1.5 0.8Z" fill="#EA4335"/>
+                  <path d="M1.5 26.2L14.5 13.5L19.5 18L4.2 26.9C3.1 27.5 2 27 1.5 26.2Z" fill="#34A853"/>
                 </svg>
                 <span>
-                  <p className="leading-none mb-0.5" style={{ fontSize: 10, color: '#7A8FB8' }}>Get it on</p>
-                  <p className="font-bold text-white leading-none" style={{ fontSize: 15 }}>Google Play</p>
+                  <p className="leading-none mb-1" style={{ fontSize: 10, color: 'rgba(255,255,255,0.6)', letterSpacing: '0.03em' }}>Get it on</p>
+                  <p className="font-bold text-white leading-none" style={{ fontSize: 16, letterSpacing: '-0.01em' }}>Google Play</p>
                 </span>
               </a>
             </div>
