@@ -16,7 +16,7 @@ They differ by **Root Directory** and nothing else.
 |---|---|---|
 | `fanation` | `apps/landing` | `fanation-creator.vercel.app`, `fanation-black.vercel.app` |
 | `fanation-app` | `apps/web` | `fanation-app.vercel.app` |
-| `fanation-admin` | `apps/admin` | `fanation-admin.vercel.app` |
+| `fanation-admin` | `apps/admin` | `fanation-admin-git-main-timmydiran1-6323s-projects.vercel.app` — see §5 |
 
 Framework preset Next.js on all three. Install command, build command and output directory
 stay on default — Vercel detects pnpm workspaces and Turborepo without help. There are no
@@ -54,23 +54,36 @@ Root Directory unselectable and the Application Preset falling back to "Other".
 
 ---
 
-## 4. Ignored Build Step
+## 4. Build settings — stopping the three-way rebuild
 
-Every push currently rebuilds all three apps. Build CPU is metered on Pro, so a one-line
-landing-page tweak paying for three builds is waste.
+A push to `main` touches one repo, and without this every push would rebuild all three
+apps. Build CPU is metered on Pro, so a one-line landing-page tweak paying for three
+builds is waste.
 
-**Settings → Git → Ignored Build Step → Custom:**
+Everything needed sits under **Settings → Build and Deployment → Root Directory**. Both
+toggles below are already on for all three projects. Leave them that way.
 
-| Project | Command |
-|---|---|
-| `fanation` | `npx turbo-ignore landing` |
-| `fanation-app` | `npx turbo-ignore web` |
-| `fanation-admin` | `npx turbo-ignore admin` |
+| Setting | State | Why |
+|---|---|---|
+| Include files outside the root directory in the Build Step | **Enabled** | Mandatory. Each app builds from its own root but still needs `pnpm-workspace.yaml`, `pnpm-lock.yaml` and `packages/`. Disable it and every build fails on install. |
+| Skip deployments when there are no changes to the root directory or its dependencies | **Enabled** | This is the whole mechanism. Vercel skips the build when nothing in that app's dependency graph moved. |
 
-`turbo-ignore` compares the current commit against the last successful deploy and exits
-non-zero when nothing in that app's dependency graph changed. Because the apps depend on
-`packages/core` and `packages/ui`, a change to either still correctly rebuilds `web` and
-`admin` — it is dependency-aware, not path-matching.
+It is dependency-aware, not path-matching — a change in `packages/core` still correctly
+rebuilds `web` and `admin`, because both depend on it. A change confined to
+`apps/landing` rebuilds only `fanation`.
+
+**Ignored Build Step stays on *Automatic*.** Do not put `npx turbo-ignore` in that field.
+Vercel deprecated it in favour of the Skip Deployments toggle above and the dashboard
+throws a banner if you try: *"`turbo-ignore` is deprecated. Use the built-in Skip
+Deployments feature instead."* If a custom command is sitting there from an earlier
+attempt, set **Behavior → Automatic**, clear the field, and save.
+
+One trap worth naming: the argument to `turbo-ignore` was the workspace name, so
+`npx turbo-ignore landing` on the **admin** project would have told Vercel to watch the
+wrong app entirely. The native toggle takes no argument — it reads the project's own Root
+Directory. That is one fewer thing to get wrong.
+
+Node.js version is **24.x** on all three. Leave it.
 
 ---
 
@@ -80,33 +93,90 @@ Sign-in in the prototype is mocked. Any input signs you in. That is acceptable b
 Vercel Authentication and unacceptable on an open URL, because the admin console is where
 payouts, KYC decisions and bans live.
 
-**Settings → Deployment Protection → Vercel Authentication → Standard Protection → on for
-Production → Save.**
+**Settings → Deployment Protection → Vercel Authentication → Standard Protection.** This
+is already on and stored.
 
-Two things to watch:
+### What Standard Protection actually covers
 
-- The toggle does not persist until you click **Save**. If Save reads greyed out, the
-  setting has not changed from what is stored — reload the page and check the toggle's
-  actual state before assuming it is on.
-- Verify from outside. Open `fanation-admin.vercel.app` in a private window. A Vercel
-  log-in wall means it is on. The admin console loading means it is not.
+Vercel exposes three modes. The API field is `ssoProtection.deploymentType`:
+
+| Dashboard label | API value | Covers | Cost |
+|---|---|---|---|
+| Standard Protection | `prod_deployment_urls_and_all_previews` | Every deployment URL and every branch URL. **Exempts the project's production domain by design.** | included |
+| All Deployments | `all` | Everything, production domain included | $150/month add-on |
+| Only Preview Deployments | `preview` | Previews only | included |
+
+Standard Protection is the mode in use, and its own dropdown text says what it does:
+*"Protect all except production Custom Domains for your project."* That exemption is not
+a misconfiguration and it is not something a Save button fixes — `fanation-admin.vercel.app`
+is the production domain, so it is deliberately left open.
+
+Verified against the live projects with unauthenticated requests:
+
+| URL | Result |
+|---|---|
+| `fanation-admin.vercel.app` | **200 — serves the console** |
+| `fanation-admin-timmydiran1-6323s-projects.vercel.app` | 302 → `vercel.com/login` |
+| `fanation-admin-git-main-timmydiran1-6323s-projects.vercel.app` | 302 → `vercel.com/login` |
+| per-deployment URLs (`fanation-admin-<hash>-…`) | 302 → `vercel.com/login` |
+| `fanation-app-git-main-…vercel.app` | 302 → `vercel.com/login` |
+
+One hole, and it is the pretty alias.
+
+### The fix, without paying $150/month
+
+**Settings → Domains → `fanation-admin.vercel.app` → Remove.** Then hand people the
+branch URL:
+
+```
+fanation-admin-git-main-timmydiran1-6323s-projects.vercel.app
+```
+
+It tracks the latest `main` build, so it never goes stale, and it sits behind the log-in
+wall. Grant access per person under **Project → Settings → Project Members**.
+
+### Two things that will mislead you
+
+- **A greyed-out Save button means nothing is pending.** It does not mean the change
+  failed to save. If you toggle a setting and Save stays grey, the value on screen already
+  matches what is stored.
+- **`mcp__Vercel__web_fetch_vercel_url` and a browser you are already logged into both
+  bypass protection.** The only honest test is a private window, logged out — or curl.
 
 `noindex, nofollow` is set in the app's metadata. That is a search-engine instruction, not
 access control.
+
+### If a custom domain is added later
+
+A custom domain on `fanation-admin` inherits the same exemption — Standard Protection
+protects everything *except* production custom domains. Adding `admin.fanation.com` would
+re-open exactly the hole removing the `.vercel.app` alias just closed. Either stay on the
+branch URL, or budget for All Deployments.
 
 ---
 
 ## 6. Custom domains — optional
 
-The `.vercel.app` URLs are production-grade and fine to hand to the devs. For real
-subdomains, add each in **Project → Settings → Domains** and point DNS at Vercel:
+Nothing on any of the three projects uses a custom domain today. Everything is
+`.vercel.app`, including the landing page at `fanation-creator.vercel.app`. Those URLs are
+production-grade and fine to hand to the devs — this section is only relevant once a
+domain is actually bought.
 
-```
-app     CNAME  cname.vercel-dns.com     ->  fanation-app
-admin   CNAME  cname.vercel-dns.com     ->  fanation-admin
-```
+When it is: add each subdomain in **Project → Settings → Domains**, then create the
+records at the registrar (Namecheap, Cloudflare — wherever the apex lives):
 
-Leave the apex alone — that is the landing page.
+| Host | Type | Value | Project |
+|---|---|---|---|
+| `app` | CNAME | `cname.vercel-dns.com` | `fanation-app` |
+| `admin` | CNAME | `cname.vercel-dns.com` | `fanation-admin` |
+
+Vercel shows the exact value to use on the Domains page and issues the certificate itself
+once the record resolves — usually minutes, occasionally an hour if the registrar's TTL is
+long. Leave the apex alone; that is the landing page.
+
+**Do not put a custom domain on `fanation-admin` without reading §5 first.** Standard
+Protection exempts production custom domains, so `admin.fanation.com` would be publicly
+readable the moment DNS resolves.
 
 ---
 
@@ -129,6 +199,16 @@ resolve, push again. Do not force push over a deployed tip.
 
 **Saving a project setting did not deploy anything.** Correct — settings changes never
 trigger a build. Push, or **Deployments → ⋯ → Redeploy**.
+
+**Save is greyed out and the setting looks wrong.** Greyed means nothing is pending, not
+that the save failed. What is on screen is what is stored.
+
+**A deploy was skipped and shows no build log.** Expected — that is the Skip Deployments
+toggle in §4 doing its job. Nothing in that app's dependency graph changed. Force one
+anyway with **Deployments → ⋯ → Redeploy** if you need it.
+
+**The dashboard warns that `turbo-ignore` is deprecated.** Something is sitting in Ignored
+Build Step. Set **Behavior → Automatic** and clear the field. §4 has the replacement.
 
 ---
 

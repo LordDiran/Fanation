@@ -10,7 +10,7 @@ What this is, what is real, what is not, and what has to be built.
 |---|---|---|
 | `apps/landing` | `fanation-creator.vercel.app` | Marketing site. Finished. Do not restructure it. |
 | `apps/web` | `fanation-app.vercel.app` | Fan + creator app. 26 routes. Prototype. |
-| `apps/admin` | `fanation-admin.vercel.app` | Admin console. 11 routes. Prototype. |
+| `apps/admin` | see §5 — the public alias is going away | Admin console. 11 routes. Prototype. |
 
 Repo: `github.com/LordDiran/Fanation` — apps under `apps/`, shared code under `packages/`.
 pnpm workspaces + Turborepo. Node 22, pnpm 10.28.
@@ -78,8 +78,21 @@ call the API.
 
 ## 5. Access
 
-`fanation-admin` sits behind Vercel Authentication. If you cannot open it, you are not on
-the Vercel team — ask Timmy for an invite rather than routing around it.
+The admin console is at:
+
+```
+fanation-admin-git-main-timmydiran1-6323s-projects.vercel.app
+```
+
+Not `fanation-admin.vercel.app`. That alias is being removed — Vercel's Standard
+Protection exempts a project's production domain by design, so it was the one URL serving
+the console to anyone who found it. The branch URL tracks the latest `main` build and sits
+behind Vercel Authentication.
+
+If it bounces you to a Vercel log-in you cannot get past, you are not on the team yet —
+ask Timmy to add you under **Project → Settings → Project Members**. Do not route around
+it. Sign-in inside the app is mocked (§2), so that log-in wall is the only real access
+control on the console.
 
 `fanation-app` and the landing page are open.
 

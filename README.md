@@ -5,7 +5,7 @@ One repo, three deployments. Creator-economy platform — marketing site, fan/cr
 ```
 apps/landing     marketing site         1 page      fanation-creator.vercel.app
 apps/web         fan + creator app      26 pages    fanation-app.vercel.app
-apps/admin       admin console          11 pages    fanation-admin.vercel.app
+apps/admin       admin console          11 pages    see §7 — do not use the public alias
 packages/core    types, seed data, zustand stores
 packages/ui      design tokens + primitives
 ```
@@ -45,21 +45,27 @@ Directory.
 |---|---|---|---|
 | `fanation` | `apps/landing` | `fanation-creator.vercel.app` | Live — public |
 | `fanation-app` | `apps/web` | `fanation-app.vercel.app` | Live — public |
-| `fanation-admin` | `apps/admin` | `fanation-admin.vercel.app` | Live — **see §7** |
+| `fanation-admin` | `apps/admin` | — | Live — protected, see §7 |
 
 Framework preset is Next.js on all three. Do not set a custom install or build command —
 Vercel detects pnpm workspaces and Turborepo on its own.
 
 `fanation` also answers on `fanation-black.vercel.app`.
 
-Set **Settings → Git → Ignored Build Step** on each project so a change to one app does not
-rebuild the other two:
+Two settings under **Settings → Build and Deployment → Root Directory** matter and both are
+already on. Leave them on:
 
-| Project | Command |
-|---|---|
-| `fanation` | `npx turbo-ignore landing` |
-| `fanation-app` | `npx turbo-ignore web` |
-| `fanation-admin` | `npx turbo-ignore admin` |
+- **Include files outside the root directory in the Build Step.** Required. Each app builds
+  from its own root but needs the workspace root — `pnpm-workspace.yaml`, `pnpm-lock.yaml`,
+  `packages/`. Turn this off and every build fails.
+- **Skip deployments when there are no changes to the root directory or its dependencies.**
+  This is what stops a landing-page tweak from rebuilding all three apps. It is
+  dependency-aware, so a change in `packages/core` still correctly rebuilds `web` and
+  `admin`.
+
+Leave **Ignored Build Step** on *Automatic*. Do not put `npx turbo-ignore` there —
+Vercel deprecated it in favour of the Skip Deployments toggle above, and the dashboard
+warns you if you try.
 
 Full deployment procedure and troubleshooting: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
@@ -118,15 +124,31 @@ the UI enforcing them alone is not enforcement.
 
 ---
 
-## 7. Before the admin URL goes to anyone
+## 7. Reaching the admin console
 
-`apps/admin` ships `noindex, nofollow` metadata, but **auth is mocked** — any input signs
-you in. `noindex` keeps it out of search results. It does not keep anyone out.
+**Do not use `fanation-admin.vercel.app`.** Use:
 
-`fanation-admin` → **Settings → Deployment Protection → Vercel Authentication** → Standard
-Protection, on for Production → **Save**.
+```
+fanation-admin-git-main-timmydiran1-6323s-projects.vercel.app
+```
 
-Toggling is not saving. Confirm it took by opening `fanation-admin.vercel.app` in a private
-window: you should get a Vercel log-in wall, not the console.
+That tracks the latest `main` build and sits behind a Vercel log-in wall. Access is granted
+per person under **Project → Settings → Project Members**.
 
-Until that wall is up, anyone holding the URL is an admin over payouts, KYC and moderation.
+Why the ugly URL. Vercel Authentication is on at **Standard Protection**, which by design
+exempts the project's production domain — `fanation-admin.vercel.app` — while protecting
+every deployment URL and branch URL. Closing that last gap requires the *All Deployments*
+mode, which is a $150/month add-on. The cheaper answer is to not publish the exempt alias.
+
+Verified by unauthenticated request:
+
+| URL | Result |
+|---|---|
+| `fanation-admin.vercel.app` | serves the console — remove this domain |
+| `fanation-admin-timmydiran1-6323s-projects.vercel.app` | 302 → Vercel log-in |
+| `fanation-admin-git-main-timmydiran1-…vercel.app` | 302 → Vercel log-in |
+| per-deployment URLs | 302 → Vercel log-in |
+
+`apps/admin` also ships `noindex, nofollow` metadata. That is a search-engine instruction,
+not access control. Auth in the app itself is mocked — anyone who reaches the page is an
+admin over payouts, KYC and moderation.
