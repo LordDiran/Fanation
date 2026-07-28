@@ -104,7 +104,7 @@ export default function UsersPage() {
           </div>
         )}
         {rows.map((u, i) => (
-          <div key={u.id} className="row" style={{ padding: "12px 18px", borderBottom: i < rows.length - 1 ? "1px solid var(--line)" : "none", background: sel[u.id] ? "rgba(46,155,255,.05)" : "" }}>
+          <div key={u.id} className="row" style={{ padding: "12px 18px", borderBottom: i < rows.length - 1 ? "1px solid var(--line)" : "none", background: sel[u.id] ? "rgba(37,153,246,.05)" : "" }}>
             <div style={{ width: 30 }}>
               <input type="checkbox" checked={!!sel[u.id]} onChange={() => setSel((m) => ({ ...m, [u.id]: !m[u.id] }))} />
             </div>

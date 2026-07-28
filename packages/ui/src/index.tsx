@@ -176,11 +176,17 @@ export function ToastStack({ list }: { list: ToastMsg[] }) {
   );
 }
 
-export function Logo({ label = "Fanation" }: { label?: string }) {
-  return (
-    <div className="row gap10">
-      <div className="logo">F</div>
-      <div className="display t20" style={{ fontWeight: 600 }}>{label}</div>
-    </div>
-  );
-}
+/**
+ * The logo is not defined here. It lives in `@fanation/brand`, which is the single
+ * source for the mark's geometry, the palette and the lockup ratios — the same source
+ * the favicons, the Apple touch icon and the Open Graph card are generated from.
+ *
+ * Re-exported rather than re-implemented so the fan app and the admin console can keep
+ * importing everything they render from `@fanation/ui`, without a second workspace
+ * dependency in each app and without a second copy of the ratios drifting out of sync.
+ *
+ * `Logo` is the horizontal lockup — mark, gap, wordmark. `FanationMark` is the tile on
+ * its own, for anywhere the wordmark would not fit.
+ */
+export { FanationLogo as Logo, FanationMark } from "@fanation/brand";
+export type { FanationLogoProps as LogoProps, FanationMarkProps } from "@fanation/brand";

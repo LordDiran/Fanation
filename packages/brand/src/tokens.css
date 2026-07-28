@@ -1,0 +1,72 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   Fanation brand tokens — CSS rendering.
+
+   This file and `tokens.ts` are two renderings of one list. Change both together;
+   nothing enforces that for you.
+
+   Consumed by `@fanation/ui/src/styles.css`, which imports it and then defines
+   components on top. Nothing here describes a component — only values.
+
+   `apps/landing` deliberately does not import this. It carries its own inline hex,
+   which already matches these values, because taking the dependency would make
+   every brand tweak rebuild the live marketing site.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── Brand ──────────────────────────────────────────────────────────────── */
+  --blue: #2599f6;
+  --blueD: #1a80d8;
+  --blueL: #60b8fa;
+  --coral: #f36a46;
+  --coralL: #f79a7e;
+  --grad: linear-gradient(90deg, #f36a46 0%, #2599f6 100%);
+
+  /* ── Semantic ───────────────────────────────────────────────────────────── */
+  --mint: #5ddd90; /* positive — earnings, payouts cleared, upward movement */
+  --amber: #fca44b; /* coins, tips, anything with a value attached */
+  --red: #ef4444; /* destructive, and live-broadcast state only */
+
+  /* ── Surfaces, dark (default) ───────────────────────────────────────────── */
+  --bg: #07091a;
+  --bg2: #0c1121;
+  --panel: #0c1121;
+  --card: #111830;
+  --card2: #18223c;
+
+  /* ── Text, dark ─────────────────────────────────────────────────────────── */
+  --text: #f6f8fc;
+  --muted: #7a8fb8;
+  --muted2: rgba(255, 255, 255, 0.5);
+
+  /* ── Chrome — derived from text/bg, not brand colours ───────────────────── */
+  --line: rgba(255, 255, 255, 0.07);
+  --line2: rgba(255, 255, 255, 0.13);
+  --fill: rgba(255, 255, 255, 0.05);
+  --fill2: rgba(255, 255, 255, 0.09);
+  --glass: rgba(255, 255, 255, 0.04);
+  --topbar: rgba(7, 9, 26, 0.82);
+
+  /* ── Radii ──────────────────────────────────────────────────────────────── */
+  --r: 16px;
+  --r2: 22px;
+  --rp: 999px;
+}
+
+[data-theme="light"] {
+  --bg: #f3f5fa;
+  --bg2: #e9eef6;
+  --panel: #e9eef6;
+  --card: #ffffff;
+  --card2: #ffffff;
+
+  --text: #0c1220;
+  --muted: #5a6579;
+  --muted2: rgba(12, 18, 32, 0.5);
+
+  --line: rgba(12, 18, 32, 0.1);
+  --line2: rgba(12, 18, 32, 0.17);
+  --fill: rgba(12, 24, 48, 0.045);
+  --fill2: rgba(12, 24, 48, 0.08);
+  --glass: rgba(255, 255, 255, 0.72);
+  --topbar: rgba(255, 255, 255, 0.85);
+}

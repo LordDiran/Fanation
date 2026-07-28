@@ -64,7 +64,7 @@ export function PostCard({ p }: { p: Post }) {
             <div className="row gap6">
               <span className="b7 t14">{p.who}</span>
               {p.v && <Verified />}
-              {isSub && !p.mine && <span className="tag" style={{ padding: "1px 8px", fontSize: 10.5, color: "var(--blueL)", borderColor: "rgba(46,155,255,.35)" }}>Subscribed</span>}
+              {isSub && !p.mine && <span className="tag" style={{ padding: "1px 8px", fontSize: 10.5, color: "var(--blueL)", borderColor: "rgba(37,153,246,.35)" }}>Subscribed</span>}
               {p.mine && p.vis && <span className="tag" style={{ padding: "1px 8px", fontSize: 10.5 }}>{p.vis}</span>}
             </div>
             <div className="muted t13">@{p.h} · {p.t}</div>
@@ -95,7 +95,7 @@ export function PostCard({ p }: { p: Post }) {
             return (
               <div key={i} className="hair" onClick={() => { if (voted == null) S.vote(p.id, i); }}
                 style={{ position: "relative", padding: "11px 14px", borderRadius: 12, overflow: "hidden", cursor: voted == null ? "pointer" : "default", borderColor: voted === i ? "var(--blue)" : "var(--line)" }}>
-                <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${pct}%`, background: voted === i ? "rgba(46,155,255,.3)" : "rgba(46,155,255,.14)", transition: ".4s" }} />
+                <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${pct}%`, background: voted === i ? "rgba(37,153,246,.3)" : "rgba(37,153,246,.14)", transition: ".4s" }} />
                 <div className="row between" style={{ position: "relative" }}>
                   <span className="row gap8 b6 t14">{voted === i && <Icon n="check" s={14} c="var(--blueL)" />}{o.label}</span>
                   <span className="muted t13">{pct}%</span>

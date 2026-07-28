@@ -55,7 +55,7 @@ export default function LivePage() {
   const tone = (t: string): [string, string, string] =>
     t === "coin" ? ["rgba(252,164,75,.13)", "rgba(252,164,75,.34)", "var(--amber)"]
       : t === "gift" ? ["rgba(93,221,144,.14)", "rgba(93,221,144,.36)", "var(--mint)"]
-        : t === "sub" || t === "me" ? ["rgba(46,155,255,.14)", "rgba(46,155,255,.36)", "var(--blueL)"]
+        : t === "sub" || t === "me" ? ["rgba(37,153,246,.14)", "rgba(37,153,246,.36)", "var(--blueL)"]
           : ["", "", "var(--text)"];
   const sendChat = () => {
     const v = msg.trim();

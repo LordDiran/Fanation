@@ -55,7 +55,7 @@ export default function MassMessagingPage() {
         <hr className="divider" />
         {hist.map((b, i) => (
           <div key={i}>
-            <div className="row between" style={{ padding: "13px 18px", background: b[2].includes("sending") ? "rgba(46,155,255,.05)" : "" }}>
+            <div className="row between" style={{ padding: "13px 18px", background: b[2].includes("sending") ? "rgba(37,153,246,.05)" : "" }}>
               <div className="grow">
                 <div className="b6 t14">{b[0]}</div>
                 <div className="muted t12">{b[1]} · {b[2]}</div>

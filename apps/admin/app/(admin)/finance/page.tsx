@@ -34,7 +34,7 @@ export default function FinancePage() {
   const chip = (s: string) =>
     s === "Settled" ? { color: "var(--mint)", borderColor: "rgba(93,221,144,.3)" }
       : s === "Failed" ? { color: "var(--muted)", borderColor: "var(--line2)" }
-        : s === "Refunded" ? { color: "var(--blueL)", borderColor: "rgba(46,155,255,.35)" }
+        : s === "Refunded" ? { color: "var(--blueL)", borderColor: "rgba(37,153,246,.35)" }
           : { color: "var(--coral)", borderColor: "rgba(243,106,70,.3)" }; // Chargeback / Flagged
 
   const refund = (r: (typeof rows)[number]) => A.ask({

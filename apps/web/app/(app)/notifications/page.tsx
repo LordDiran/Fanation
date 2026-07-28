@@ -17,7 +17,7 @@ export default function NotificationsPage() {
           const unread = !S.notifsRead && i < 4;
           return (
             <div key={i}>
-              <div className="row gap14" style={{ padding: "15px 18px", background: unread ? "rgba(46,155,255,.05)" : "" }}>
+              <div className="row gap14" style={{ padding: "15px 18px", background: unread ? "rgba(37,153,246,.05)" : "" }}>
                 <div className="feature-ic" style={{ width: 40, height: 40, background: "var(--fill)" }}>
                   <span style={{ color: n.color }}><Icon n={n.icon} s={18} /></span>
                 </div>

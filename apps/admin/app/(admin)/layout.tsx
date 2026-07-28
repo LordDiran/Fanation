@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useAdminStore } from "@fanation/core";
-import { Avatar, Icon, Menu } from "@fanation/ui";
+import { Avatar, Icon, Logo, Menu } from "@fanation/ui";
 import { AdminThemeToggle } from "../../components/admin-chrome";
 
 const NAV: Array<[string, string, string]> = [
@@ -39,9 +39,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <div className="app">
       <div className="side">
-        <div style={{ padding: "4px 8px 20px" }} className="row gap10">
-          <div className="logo">F</div>
-          <div className="display t18" style={{ fontWeight: 600 }}>Admin</div>
+        {/* Mark carries the brand, word carries the product. The full "Fanation Admin"
+            lockup measures 192px against 200px of usable sidebar — too tight to survive
+            a fallback-font flash — so it lives on the login screen instead. */}
+        <div style={{ padding: "4px 8px 20px" }}>
+          <Logo label="Admin" />
         </div>
         <div className="col gap4 grow">
           <div className="up muted2" style={{ padding: "6px 13px 8px" }}>Admin console</div>

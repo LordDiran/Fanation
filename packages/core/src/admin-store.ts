@@ -108,5 +108,5 @@ export const stChipStyle = (st: string): CSSProperties =>
     : st === "Suspended" || st === "Banned" || st === "Rejected" || st === "Removed"
       ? { color: "var(--coral)", borderColor: "rgba(243,106,70,.3)" }
       : st === "Awaiting co-sign"
-        ? { color: "var(--blueL)", borderColor: "rgba(46,155,255,.35)" }
+        ? { color: "var(--blueL)", borderColor: "rgba(37,153,246,.35)" }
         : { color: "var(--amber)", borderColor: "rgba(252,164,75,.3)" };
