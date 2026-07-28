@@ -59,9 +59,10 @@ already on. Leave them on:
   from its own root but needs the workspace root — `pnpm-workspace.yaml`, `pnpm-lock.yaml`,
   `packages/`. Turn this off and every build fails.
 - **Skip deployments when there are no changes to the root directory or its dependencies.**
-  This is what stops a landing-page tweak from rebuilding all three apps. It is
+  This is what stops a tweak inside `apps/landing` from rebuilding all three apps. It is
   dependency-aware, so a change in `packages/core` still correctly rebuilds `web` and
-  `admin`.
+  `admin`. Changes at the repo root — this file, `docs/`, `turbo.json`, the lockfile —
+  rebuild all three regardless. See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) §4.
 
 Leave **Ignored Build Step** on *Automatic*. Do not put `npx turbo-ignore` there —
 Vercel deprecated it in favour of the Skip Deployments toggle above, and the dashboard

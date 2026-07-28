@@ -60,17 +60,28 @@ A push to `main` touches one repo, and without this every push would rebuild all
 apps. Build CPU is metered on Pro, so a one-line landing-page tweak paying for three
 builds is waste.
 
-Everything needed sits under **Settings → Build and Deployment → Root Directory**. Both
-toggles below are already on for all three projects. Leave them that way.
+Everything needed sits under **Settings → Build and Deployment → Root Directory**. Confirm
+both toggles below read Enabled on each of the three projects.
 
-| Setting | State | Why |
+| Setting | Required state | Why |
 |---|---|---|
 | Include files outside the root directory in the Build Step | **Enabled** | Mandatory. Each app builds from its own root but still needs `pnpm-workspace.yaml`, `pnpm-lock.yaml` and `packages/`. Disable it and every build fails on install. |
-| Skip deployments when there are no changes to the root directory or its dependencies | **Enabled** | This is the whole mechanism. Vercel skips the build when nothing in that app's dependency graph moved. |
+| Skip deployments when there are no changes to the root directory or its dependencies | **Enabled** | Vercel skips the build when nothing in that app's dependency graph moved. |
 
-It is dependency-aware, not path-matching — a change in `packages/core` still correctly
-rebuilds `web` and `admin`, because both depend on it. A change confined to
-`apps/landing` rebuilds only `fanation`.
+It is dependency-aware, not path-matching. A change in `packages/core` still rebuilds
+`web` and `admin`, because both depend on it. A change confined to `apps/landing` rebuilds
+only `fanation`.
+
+**What it does not skip: anything at the repo root.** Commit `8de1bd9` touched only
+`README.md` and `docs/` — no app directory, no package — and all three projects built
+anyway. That is consistent, not a bug: with *Include files outside the root directory*
+enabled, the repo root is part of every project's build context, so a root-level change
+counts as a change for all three. `turbo.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`
+and the root `package.json` behave the same way, and for those it is the correct answer.
+
+The saving is real but narrower than it sounds: it applies to work done inside one app's
+own folder, which is most day-to-day work. Documentation commits will rebuild everything.
+If that becomes annoying, batch doc changes rather than trying to defeat the toggle.
 
 **Ignored Build Step stays on *Automatic*.** Do not put `npx turbo-ignore` in that field.
 Vercel deprecated it in favour of the Skip Deployments toggle above and the dashboard
