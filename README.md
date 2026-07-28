@@ -5,7 +5,7 @@ One repo, three deployments. Creator-economy platform — marketing site, fan/cr
 ```
 apps/landing     marketing site         1 page      fanation-creator.vercel.app
 apps/web         fan + creator app      26 pages    fanation-app.vercel.app
-apps/admin       admin console          11 pages    see §7 — do not use the public alias
+apps/admin       admin console          11 pages    fanation-admin.vercel.app  (open — §7)
 packages/core    types, seed data, zustand stores
 packages/ui      design tokens + primitives
 ```
@@ -45,7 +45,7 @@ Directory.
 |---|---|---|---|
 | `fanation` | `apps/landing` | `fanation-creator.vercel.app` | Live — public |
 | `fanation-app` | `apps/web` | `fanation-app.vercel.app` | Live — public |
-| `fanation-admin` | `apps/admin` | — | Live — protected, see §7 |
+| `fanation-admin` | `apps/admin` | `fanation-admin.vercel.app` | Live — open, see §7 |
 
 Framework preset is Next.js on all three. Do not set a custom install or build command —
 Vercel detects pnpm workspaces and Turborepo on its own.
@@ -127,29 +127,52 @@ the UI enforcing them alone is not enforcement.
 
 ## 7. Reaching the admin console
 
-**Do not use `fanation-admin.vercel.app`.** Use:
-
 ```
-fanation-admin-git-main-timmydiran1-6323s-projects.vercel.app
+fanation-admin.vercel.app
 ```
 
-That tracks the latest `main` build and sits behind a Vercel log-in wall. Access is granted
-per person under **Project → Settings → Project Members**.
+Open, no log-in required. That is a deliberate call for the prototype stage — read the
+rest of this section before assuming it is protected, because it is not.
 
-Why the ugly URL. Vercel Authentication is on at **Standard Protection**, which by design
-exempts the project's production domain — `fanation-admin.vercel.app` — while protecting
-every deployment URL and branch URL. Closing that last gap requires the *All Deployments*
-mode, which is a $150/month add-on. The cheaper answer is to not publish the exempt alias.
+### What is actually exposed
 
-Verified by unauthenticated request:
+Nothing that matters yet. Auth is mocked, there is no backend, no database, no processor
+and no real user. Every record you see is a fixture in `packages/core`. The console moves
+numbers in a zustand store and nothing else. The business logic it reveals — payout
+thresholds, moderation rules, ban states — is in this repo anyway.
 
-| URL | Result |
+### Why it is open, mechanically
+
+Vercel Authentication is on at **Standard Protection**, which protects every deployment URL
+and branch URL but **exempts the project's production domain by design**. Its own dropdown
+says so: *"Protect all except production Custom Domains for your project."* Closing that
+last gap needs the *All Deployments* mode, a $150/month add-on. So `fanation-admin.vercel.app`
+is open while everything else on the project is not:
+
+| URL | Unauthenticated result |
 |---|---|
-| `fanation-admin.vercel.app` | serves the console — remove this domain |
+| `fanation-admin.vercel.app` | serves the console |
 | `fanation-admin-timmydiran1-6323s-projects.vercel.app` | 302 → Vercel log-in |
 | `fanation-admin-git-main-timmydiran1-…vercel.app` | 302 → Vercel log-in |
 | per-deployment URLs | 302 → Vercel log-in |
 
-`apps/admin` also ships `noindex, nofollow` metadata. That is a search-engine instruction,
-not access control. Auth in the app itself is mocked — anyone who reaches the page is an
-admin over payouts, KYC and moderation.
+`apps/admin` ships `noindex, nofollow`. That keeps it out of search results. It is not
+access control.
+
+### When this has to change
+
+**Before the first real API call is wired into `apps/admin`.** The day this console talks
+to a live backend, an open URL plus mocked sign-in means anyone who types the hostname is
+an administrator over payouts, KYC and bans. Mock auth is the only thing standing between
+those two states, and replacing it is a deliberate task — it will not happen by accident,
+and neither will closing this.
+
+Two ways to close it when the time comes, both reversible in under a minute:
+
+1. **Settings → Domains → remove `fanation-admin.vercel.app`.** Free. Everyone moves to
+   `fanation-admin-git-main-timmydiran1-6323s-projects.vercel.app`, which is already
+   protected, and access is granted per person under **Settings → Project Members**.
+2. **Deployment Protection → All Deployments.** $150/month, keeps the clean URL.
+
+Do not add a custom domain such as `admin.fanation.com` and assume it is protected — custom
+production domains carry the same exemption.

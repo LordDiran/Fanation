@@ -16,7 +16,7 @@ They differ by **Root Directory** and nothing else.
 |---|---|---|
 | `fanation` | `apps/landing` | `fanation-creator.vercel.app`, `fanation-black.vercel.app` |
 | `fanation-app` | `apps/web` | `fanation-app.vercel.app` |
-| `fanation-admin` | `apps/admin` | `fanation-admin-git-main-timmydiran1-6323s-projects.vercel.app` — see §5 |
+| `fanation-admin` | `apps/admin` | `fanation-admin.vercel.app` — open, see §5 |
 
 Framework preset Next.js on all three. Install command, build command and output directory
 stay on default — Vercel detects pnpm workspaces and Turborepo without help. There are no
@@ -132,19 +132,29 @@ Verified against the live projects with unauthenticated requests:
 | per-deployment URLs (`fanation-admin-<hash>-…`) | 302 → `vercel.com/login` |
 | `fanation-app-git-main-…vercel.app` | 302 → `vercel.com/login` |
 
-One hole, and it is the pretty alias.
+One hole, and it is the pretty alias. See the decision below before treating that as a
+defect to fix.
 
-### The fix, without paying $150/month
+### Current decision: leave it open
 
-**Settings → Domains → `fanation-admin.vercel.app` → Remove.** Then hand people the
-branch URL:
+`fanation-admin.vercel.app` stays. Deliberate, for the prototype stage only.
 
-```
-fanation-admin-git-main-timmydiran1-6323s-projects.vercel.app
-```
+The reasoning is that there is nothing behind the URL — mocked sign-in, no backend, no
+database, no processor, fabricated fixtures — and the business logic it reveals is in a
+public repo anyway. Handing devs one clean URL beats managing a Project Members list for a
+console that stores nothing.
 
-It tracks the latest `main` build, so it never goes stale, and it sits behind the log-in
-wall. Grant access per person under **Project → Settings → Project Members**.
+**The trigger that reverses this: the first real API call wired into `apps/admin`.** At
+that point mocked sign-in plus an open URL is an unauthenticated admin over payouts, KYC
+and bans. Two ways to close it, both reversible in under a minute:
+
+| Option | Cost | Effect |
+|---|---|---|
+| **Settings → Domains → remove `fanation-admin.vercel.app`** | free | Everyone moves to `fanation-admin-git-main-timmydiran1-6323s-projects.vercel.app`, already protected. Grant access under **Settings → Project Members**. |
+| **Deployment Protection → All Deployments** | $150/month | Clean URL kept, everything protected. |
+
+Nothing about this is one-way. Removing a domain does not touch the deployment; the branch
+URL serves the identical build, and re-adding the alias later takes the same minute.
 
 ### Two things that will mislead you
 
@@ -160,9 +170,10 @@ access control.
 ### If a custom domain is added later
 
 A custom domain on `fanation-admin` inherits the same exemption — Standard Protection
-protects everything *except* production custom domains. Adding `admin.fanation.com` would
-re-open exactly the hole removing the `.vercel.app` alias just closed. Either stay on the
-branch URL, or budget for All Deployments.
+protects everything *except* production custom domains. `admin.fanation.com` would be as
+open as `fanation-admin.vercel.app` is now. That is consistent with today's decision, but
+it stops being acceptable at the same trigger: the first real API call. Do not assume a
+custom domain is more private than a `.vercel.app` one. It is not.
 
 ---
 
@@ -185,9 +196,10 @@ Vercel shows the exact value to use on the Domains page and issues the certifica
 once the record resolves — usually minutes, occasionally an hour if the registrar's TTL is
 long. Leave the apex alone; that is the landing page.
 
-**Do not put a custom domain on `fanation-admin` without reading §5 first.** Standard
-Protection exempts production custom domains, so `admin.fanation.com` would be publicly
-readable the moment DNS resolves.
+**Read §5 before putting a custom domain on `fanation-admin`.** Standard Protection exempts
+production custom domains, so `admin.fanation.com` would be publicly readable the moment
+DNS resolves — no more and no less than the current setup, but do not mistake it for a
+security upgrade.
 
 ---
 

@@ -10,7 +10,7 @@ What this is, what is real, what is not, and what has to be built.
 |---|---|---|
 | `apps/landing` | `fanation-creator.vercel.app` | Marketing site. Finished. Do not restructure it. |
 | `apps/web` | `fanation-app.vercel.app` | Fan + creator app. 26 routes. Prototype. |
-| `apps/admin` | see §5 — the public alias is going away | Admin console. 11 routes. Prototype. |
+| `apps/admin` | `fanation-admin.vercel.app` | Admin console. 11 routes. Prototype. Open — read §5. |
 
 Repo: `github.com/LordDiran/Fanation` — apps under `apps/`, shared code under `packages/`.
 pnpm workspaces + Turborepo. Node 22, pnpm 10.28.
@@ -78,23 +78,23 @@ call the API.
 
 ## 5. Access
 
-The admin console is at:
+All three URLs are open. No Vercel log-in, no invite needed. Take them and start.
 
-```
-fanation-admin-git-main-timmydiran1-6323s-projects.vercel.app
-```
+`fanation-admin.vercel.app` included — and that is a decision, not an oversight. It is
+open because there is nothing behind it: mocked sign-in, no backend, no database, no
+processor, fabricated fixtures. Access friction on a prototype costs more than it buys.
 
-Not `fanation-admin.vercel.app`. That alias is being removed — Vercel's Standard
-Protection exempts a project's production domain by design, so it was the one URL serving
-the console to anyone who found it. The branch URL tracks the latest `main` build and sits
-behind Vercel Authentication.
+**This changes the moment you wire the first real API call into `apps/admin`.** Mocked
+sign-in (§2) plus an open URL equals an unauthenticated administrator over payouts, KYC
+and bans. So when you pick up the auth work:
 
-If it bounces you to a Vercel log-in you cannot get past, you are not on the team yet —
-ask Timmy to add you under **Project → Settings → Project Members**. Do not route around
-it. Sign-in inside the app is mocked (§2), so that log-in wall is the only real access
-control on the console.
+1. Real sign-in and a real session land **before** the admin console talks to a live
+   backend, not after. Not in the same PR — before it.
+2. Flag it to Timmy when you start that work so the URL gets locked the same week.
+   `README.md` §7 has both options and either takes under a minute.
 
-`fanation-app` and the landing page are open.
+Treat it as a hard sequencing constraint on the auth ticket. Do not build the admin API
+against mock auth and plan to swap it later.
 
 ---
 
