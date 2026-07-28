@@ -3,14 +3,17 @@
 One repo, three deployments. Creator-economy platform — marketing site, fan/creator app, admin console.
 
 ```
-apps/landing     marketing site        fanation-creator.vercel.app   (live)
-apps/web         fan + creator app     27 routes
-apps/admin       admin console         12 routes
+apps/landing     marketing site         1 page      fanation-creator.vercel.app
+apps/web         fan + creator app      26 pages    fanation-app.vercel.app
+apps/admin       admin console          11 pages    fanation-admin.vercel.app
 packages/core    types, seed data, zustand stores
 packages/ui      design tokens + primitives
 ```
 
-pnpm workspaces + Turborepo. Node 22, pnpm 10.28.
+All three are live and building green off `main`. pnpm workspaces + Turborepo. Node 22, pnpm 10.28.
+
+> Vercel's build table reports 27 and 12 for `apps/web` and `apps/admin`. That is the page
+> count plus Next.js's implicit `/_not-found`. 26 and 11 are the real route counts.
 
 ---
 
@@ -35,28 +38,39 @@ pnpm dev:admin      # :3001
 
 ## 2. The three Vercel projects
 
-All three point at this same repo. The only thing that differs is Root Directory.
+All three point at this same repo on branch `main`. The only thing that differs is Root
+Directory.
 
-| Project | Root Directory | URL |
-|---|---|---|
-| `fanation` | `apps/landing` | `fanation-creator.vercel.app` |
-| `fanation-app` | `apps/web` | `fanation-app.vercel.app` |
-| `fanation-admin` | `apps/admin` | `fanation-admin.vercel.app` |
+| Project | Root Directory | URL | Status |
+|---|---|---|---|
+| `fanation` | `apps/landing` | `fanation-creator.vercel.app` | Live — public |
+| `fanation-app` | `apps/web` | `fanation-app.vercel.app` | Live — public |
+| `fanation-admin` | `apps/admin` | `fanation-admin.vercel.app` | Live — **see §7** |
 
 Framework preset is Next.js on all three. Do not set a custom install or build command —
 Vercel detects pnpm workspaces and Turborepo on its own.
 
-Set **Ignored Build Step** to `npx turbo-ignore` on each project so a change to one app
-does not rebuild the other two.
+`fanation` also answers on `fanation-black.vercel.app`.
+
+Set **Settings → Git → Ignored Build Step** on each project so a change to one app does not
+rebuild the other two:
+
+| Project | Command |
+|---|---|
+| `fanation` | `npx turbo-ignore landing` |
+| `fanation-app` | `npx turbo-ignore web` |
+| `fanation-admin` | `npx turbo-ignore admin` |
+
+Full deployment procedure and troubleshooting: [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md).
 
 ---
 
 ## 3. What the landing app is
 
-`apps/landing` is the existing marketing site, moved without a single content change.
-Tailwind 3.4, its own `next.config.ts`, its own `vercel.json` cache headers. It does not
-share the design system in `packages/ui` and it does not import from `packages/core`.
-It is independent — treat it as finished.
+`apps/landing` is the existing marketing site, moved into the monorepo without a single
+content change. Tailwind 3.4, its own `next.config.ts`, its own `vercel.json` cache headers.
+It does not share the design system in `packages/ui` and it does not import from
+`packages/core`. It is independent — treat it as finished.
 
 ---
 
@@ -93,7 +107,8 @@ maps to exactly one call:
 
 ## 6. Admin governance rules
 
-These are behavioural requirements, not UI decoration. The backend has to enforce them.
+These are behavioural requirements, not UI decoration. The backend has to enforce them —
+the UI enforcing them alone is not enforcement.
 
 - Destructive actions are reason-gated — no free-text-only confirms
 - Payouts at or above **$10,000** require a second admin to co-sign
@@ -105,6 +120,13 @@ These are behavioural requirements, not UI decoration. The backend has to enforc
 
 ## 7. Before the admin URL goes to anyone
 
-`apps/admin` ships `noindex` metadata, but auth is mocked. Put Vercel Deployment
-Protection (Settings → Deployment Protection → Vercel Authentication) in front of
-`fanation-admin` before sharing the URL.
+`apps/admin` ships `noindex, nofollow` metadata, but **auth is mocked** — any input signs
+you in. `noindex` keeps it out of search results. It does not keep anyone out.
+
+`fanation-admin` → **Settings → Deployment Protection → Vercel Authentication** → Standard
+Protection, on for Production → **Save**.
+
+Toggling is not saving. Confirm it took by opening `fanation-admin.vercel.app` in a private
+window: you should get a Vercel log-in wall, not the console.
+
+Until that wall is up, anyone holding the URL is an admin over payouts, KYC and moderation.
