@@ -106,6 +106,29 @@ deploys all three. Full detail, including how to add a fourth app: [`DEPLOYMENT.
 Do not add a `vercel.json` at the repo root — it will be ignored. Vercel reads it from each
 project's Root Directory.
 
+### Secrets — this repo is public
+
+`github.com/LordDiran/Fanation` is a **public** repository. Read that again before your
+first commit.
+
+**No credential goes in this repo. Ever. Not temporarily, not commented out, not in a
+`.env.example` with a real value in it.** That covers Paystack and Flutterwave keys,
+database URLs, JWT signing secrets, S3 or Cloudinary credentials, webhook signing secrets,
+and any API token of any kind.
+
+This is not a style rule. Bots scrape newly-pushed public commits within minutes of the
+push, and **git history is permanent** — deleting the file in a later commit does not
+remove it, and neither would flipping the repo to private. A key that lands here is burned
+the moment it lands. The only remedy is rotating it at the provider.
+
+Where secrets actually go: **Vercel → the project → Settings → Environment Variables**,
+scoped to Production, Preview or Development. Read them with `process.env.X` at runtime.
+There are none on any of the three projects today, which is why this is worth saying now
+rather than after the first one appears.
+
+If you commit one by accident, do not quietly force-push over it. Tell Timmy immediately so
+the key gets rotated — that is the fix, and it is a two-minute fix if you say something.
+
 ---
 
 ## 7. Open questions for the build team
