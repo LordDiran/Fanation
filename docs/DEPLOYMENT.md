@@ -26,9 +26,11 @@ All three point at the same GitHub repository, `github.com/LordDiran/Fanation`, 
 2. **Root Directory** → `landing`, `client` or `admin`. This is the only setting that differs between the three.
 3. Framework Preset → Vite. Build command `npm run build`, output directory `dist`, install command `npm install`.
 4. Node version → 20 or later.
-5. **Settings → Build and Deployment → Root Directory** → turn *Include files outside the root directory in the Build Step* **off** and *Skip deployments* **on**, then Save. Both toggles sit in that one card and share one Save button. Both defaults are wrong for this repository — see §1.2.
+5. **Settings → Build and Deployment → Root Directory** → optionally turn *Include files outside the root directory in the Build Step* **off**, then Save. Both toggles sit in that one card and share one Save button. Neither is load-bearing: the committed `ignoreCommand` overrides both, proven in production on 29 July 2026. Turning this one off is hygiene — a smaller upload and one less leftover from the pnpm-workspace layout. Leave *Skip deployments* alone. See §1.2.
 6. No environment variables. There are none yet; when the backend arrives the API base URL goes here, per environment, not in the repository.
 7. Deploy.
+
+One inherited record to correct on all three. Project Settings still reads **Framework Preset: Next.js** and **Node.js Version: 24.x** on `fanation`, `fanation-app` and `fanation-admin` — left over from the Next.js monorepo these projects were first imported as. Builds are unaffected, because each `vercel.json` pins `"framework": "vite"` and `vercel.json` overrides Project Settings (§1.3). The cost is a developer reading the dashboard and being told the wrong stack. Set the preset to **Vite** on all three. Node 24.x can stay — it only has to be 20 or later.
 
 ### 1.2 Stop the other two rebuilding
 
@@ -49,12 +51,22 @@ All three live under **Settings → Build and Deployment**, not Settings → Git
 | Setting | Where | Found | Required |
 |---|---|---|---|
 | Ignored Build Step | Build and Deployment → Ignored Build Step | `Automatic` on all three — no custom command had ever been set | `Automatic`, with `ignoreCommand` committed |
-| Include files outside the root directory in the Build Step | Build and Deployment → Root Directory | Enabled on all three | **Disabled** on all three |
-| Skip deployments when the root directory has no changes | Build and Deployment → Root Directory | Enabled on `fanation-app` and `fanation-admin`, **Disabled** on `fanation` | Enabled on all three |
+| Include files outside the root directory in the Build Step | Build and Deployment → Root Directory | Enabled on all three | Optional. Hygiene only — no effect on skipping |
+| Skip deployments when the root directory has no changes | Build and Deployment → Root Directory | Enabled on `fanation-app` and `fanation-admin`, **Disabled** on `fanation` | No action. `ignoreCommand` overrides it either way |
 
-An earlier revision of this section described the ignore step as configured. It never was, on any of the three — which is why every push since the repository was restructured has rebuilt all three projects, and why none of the recent deployments is marked `CANCELED`.
+An earlier revision of this section described the ignore step as configured. It never was, on any of the three — which is why every push since the repository was restructured rebuilt all three projects, and why no deployment before `3504a98` is marked `CANCELED`.
 
-*Include files outside the root directory* is a leftover from the pnpm-workspace layout these projects no longer use. With it enabled the whole repository sits inside every project's build context, so Vercel's native skip reads a change in any folder as a change to this project and never skips. The three folders are self-contained today — each with its own `package-lock.json`, no import crossing a folder boundary, `@` aliased to `./src` and nothing else — so turning it off is safe, and it is what makes the native skip work at all.
+*Include files outside the root directory* is a leftover from the pnpm-workspace layout these projects no longer use. With it enabled the whole repository sits inside every project's build context, which makes every upload larger than it needs to be and would defeat Vercel's *native* path-based skip. The three folders are self-contained today — each with its own `package-lock.json`, no import crossing a folder boundary, `@` aliased to `./src` and nothing else — so turning it off is safe. It is hygiene, not a fix. The committed `ignoreCommand` runs regardless of either Root Directory toggle.
+
+Proved in production on 29 July 2026. Commit `3504a98` touched `docs/` only, and all three projects canceled within the same second:
+
+| Project | Deployment | Result |
+|---|---|---|
+| `fanation` | `dpl_AASyjuoz6uFn6ULFeb7mKxzLAY59` | `CANCELED` |
+| `fanation-app` | `dpl_Dohkqnomx9EhETNaw8eKMWnMTADD` | `CANCELED` |
+| `fanation-admin` | `dpl_3rH8tstTTwddhRHbEEZthfhiRq4A` | `CANCELED` |
+
+Commit `e3832ec` directly beneath it touched all three folders and went `READY` on all three, so the rule discriminates rather than refusing everything. The decisive detail: `fanation` canceled with *Skip deployments* still **Disabled** and *Include files outside the root directory* still **Enabled**. Nothing in the dashboard could have produced that cancellation. Only the committed `ignoreCommand` could — which is what establishes that neither toggle is load-bearing.
 
 Two things to watch. The ignore command compares against the previous commit only, so a squashed merge or a force-push can make a folder look unchanged when it is not; if a deployment goes missing after an unusual git operation, redeploy that project by hand rather than debugging the ignore step. And the commit that introduces `ignoreCommand` still rebuilds all three — it touches all three folders, and a `vercel.json` change has to build once before it applies. The saving starts on the push after it.
 
@@ -79,21 +91,21 @@ Rates, from Team Settings → Build and Deployment:
 | Machine | Spec | Rate |
 |---|---|---|
 | Elastic | dynamic vCPU and memory | from $0.0035 per CPU minute |
-| Standard | 4 vCPU, 8 GB | $0.014 per build minute |
+| **Standard — team default since 29 July 2026** | 4 vCPU, 8 GB | **$0.014 per build minute** |
 | Enhanced | 8 vCPU, 16 GB | $0.028 per build minute |
-| **Turbo** | 30 vCPU, 60 GB | **$0.105 per build minute** |
+| Turbo | 30 vCPU, 60 GB | $0.105 per build minute |
 
-Turbo was the team default, so all three projects were building on 30 vCPUs at 7.5× the Standard rate. The workload cannot use it. `npm run build` is `tsc --noEmit && vite build`: `tsc` is single-threaded, and a rollup build at this module count gains nothing measurable past four cores. A production build of `client` measured 10 seconds of billed machine time end to end — deployment `dpl_G4RQWWy6sTfwJWZuoFjpdpCPdtki`, 11:15:38 to 11:15:48.
+Turbo was the team default until 29 July 2026, so all three projects were building on 30 vCPUs at 7.5× the Standard rate. It is **Standard** now. The workload could never use Turbo. `npm run build` is `tsc --noEmit && vite build`: `tsc` is single-threaded, and a rollup build at this module count gains nothing measurable past four cores. A production build of `client` measured 10 seconds of billed machine time end to end — deployment `dpl_G4RQWWy6sTfwJWZuoFjpdpCPdtki`, 11:15:38 to 11:15:48.
 
 At ten seconds a build, that is:
 
 | Configuration | Builds per push | Billed minutes | Cost per push |
 |---|---|---|---|
-| Turbo, no ignore step — as found | 3 | 0.50 | $0.0525 |
+| Turbo, no ignore step — as found, 29 July 2026 | 3 | 0.50 | $0.0525 |
 | Standard, no ignore step | 3 | 0.50 | $0.0070 |
-| Standard, ignore step working, one folder touched | 1 | 0.17 | $0.0023 |
+| **Standard, ignore step working, one folder touched — current** | 1 | 0.17 | **$0.0023** |
 
-Roughly 22× between the first row and the last, for identical output. Set the machine once at **Team Settings → Build and Deployment → Build Machines → All projects**; it applies to every project on the team, including any added later. Per-project overrides exist and are not needed here — three Vite builds of this size have no case for anything above Standard.
+Roughly 22× between the first row and the last, for identical output. Both levers are pulled. The machine was set to Standard on 29 July 2026 at **Team Settings → Build and Deployment → Build Machines → All projects**, which applies to every project on the team including any added later; per-project overrides exist and are not needed, because three Vite builds of this size have no case for anything above Standard. A docs-only push now costs effectively nothing — the ignore step cancels before `npm install` runs.
 
 ---
 
@@ -220,5 +232,6 @@ Run through this before promoting anything to a real domain.
 - [ ] Deep routes load directly on the deployed URL, not just by clicking (§3.1)
 - [ ] If any project folder was renamed or moved in this change, all three **Root Directory** settings re-checked in the dashboard (§1.3)
 - [ ] Open Graph tags in each `index.html` point at the real production domain — **currently hard-coded to `fanation.app` and `app.fanation.app`**, and `og:image` must be an absolute URL
+- [ ] Framework Preset reads **Vite**, not Next.js, on all three projects (§1.1)
 - [ ] `admin` access control decided and applied (§4) if any real API is connected
 - [ ] No secret anywhere in the diff (§5)

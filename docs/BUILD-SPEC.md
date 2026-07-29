@@ -269,11 +269,15 @@ Whichever host is used, three projects are configured, each pointing at one fold
 | `fanation-app` | `client` | `npm run build` | `dist` | Vite |
 | `fanation-admin` | `admin` | `npm run build` | `dist` | Vite |
 
-If all three stay in one repository, set each project's root directory to its folder and — where the host supports it — an ignored-build step so a change to `landing` does not rebuild `client`. On Vercel that is the *Ignored Build Step* field:
+If all three stay in one repository, set each project's root directory to its folder. One push otherwise rebuilds all three. The rule that stops that is already committed rather than configured in a dashboard — each `vercel.json` carries:
 
-```bash
-git diff --quiet HEAD^ HEAD -- ./
+```json
+"ignoreCommand": "git diff --quiet HEAD^ HEAD -- ./"
 ```
+
+and each `netlify.toml` the equivalent under `[build]`. It runs from the project's root directory; exit 0 cancels the build, exit 1 lets it proceed.
+
+Do **not** also paste that command into Vercel's *Ignored Build Step* field. Leave the field on **Automatic** — the committed `ignoreCommand` takes precedence over it, and a second copy in the dashboard only gives the two somewhere to drift apart. Same for *Skip deployments when the root directory has no changes*: once `ignoreCommand` is committed, that toggle does nothing. Working and production proof in DEPLOYMENT.md §1.2.
 
 Committed caching headers, already in each `vercel.json`: `/assets/*` is immutable for one year (safe — Vite content-hashes every filename), `index.html` is `no-cache` so a deployment is picked up on the next load.
 
