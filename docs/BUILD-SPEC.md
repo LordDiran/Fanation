@@ -272,10 +272,10 @@ Whichever host is used, three projects are configured, each pointing at one fold
 If all three stay in one repository, set each project's root directory to its folder. One push otherwise rebuilds all three. The rule that stops that is already committed rather than configured in a dashboard — each `vercel.json` carries:
 
 ```json
-"ignoreCommand": "git diff --quiet HEAD^ HEAD -- ./"
+"ignoreCommand": "git cat-file -e $VERCEL_GIT_PREVIOUS_SHA 2>/dev/null && git diff --quiet $VERCEL_GIT_PREVIOUS_SHA HEAD -- ./"
 ```
 
-and each `netlify.toml` the equivalent under `[build]`. It runs from the project's root directory; exit 0 cancels the build, exit 1 lets it proceed.
+and each `netlify.toml` the equivalent under `[build]`. It runs from the project's root directory; exit 0 cancels the build, any non-zero exit lets it proceed. `$VERCEL_GIT_PREVIOUS_SHA` is the commit of that project's last successful deployment, so the comparison spans the whole gap since it last built and a push carrying several commits cannot slip past it. DEPLOYMENT.md §1.2 records the cancellation that made that necessary.
 
 Do **not** also paste that command into Vercel's *Ignored Build Step* field. Leave the field on **Automatic** — the committed `ignoreCommand` takes precedence over it, and a second copy in the dashboard only gives the two somewhere to drift apart. Same for *Skip deployments when the root directory has no changes*: once `ignoreCommand` is committed, that toggle does nothing. Working and production proof in DEPLOYMENT.md §1.2.
 

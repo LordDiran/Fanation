@@ -39,10 +39,12 @@ One repository feeding three projects means every push rebuilds all three unless
 Each `vercel.json` now carries:
 
 ```json
-"ignoreCommand": "git diff --quiet HEAD^ HEAD -- ./"
+"ignoreCommand": "git cat-file -e $VERCEL_GIT_PREVIOUS_SHA 2>/dev/null && git diff --quiet $VERCEL_GIT_PREVIOUS_SHA HEAD -- ./"
 ```
 
-Vercel runs it from the project's Root Directory. Exit 0 — nothing in this folder changed — cancels the build. Exit 1 — something changed — lets it proceed. A commit touching only `landing/` then rebuilds `fanation` alone.
+Vercel runs it from the project's Root Directory. Exit 0 — nothing in this folder changed — cancels the build. Any non-zero exit lets it proceed. A commit touching only `landing/` then rebuilds `fanation` alone.
+
+`$VERCEL_GIT_PREVIOUS_SHA` is the commit of that project's last **successful** deployment, and Vercel only exposes it when an ignore command is present. Comparing against that rather than against `HEAD^` is what makes the rule survive a push carrying more than one commit — the correction at the end of this section records why that is not theoretical. The `git cat-file -e` guard in front of it covers the case where that commit is missing from the shallow clone Vercel checks out: the guard exits non-zero, the build proceeds, and the project deploys work it might not strictly have needed to. Every failure path in this command ends in a build, never in a silent cancellation. That direction is deliberate.
 
 It sits in `vercel.json` rather than in the dashboard on purpose. `ignoreCommand` is one of the six keys `vercel.json` overrides (§1.3), so the rule travels with the repository and cannot silently differ between the three projects. The dashboard equivalent is **Settings → Build and Deployment → Ignored Build Step** — *Build and Deployment*, not Settings → Git, where it used to live. Leave that field on **Automatic**; the committed command takes precedence over it.
 
@@ -68,9 +70,13 @@ Proved in production on 29 July 2026. Commit `3504a98` touched `docs/` only, and
 
 Commit `e3832ec` directly beneath it touched all three folders and went `READY` on all three, so the rule discriminates rather than refusing everything. The decisive detail: `fanation` canceled with *Skip deployments* still **Disabled** and *Include files outside the root directory* still **Enabled**. Nothing in the dashboard could have produced that cancellation. Only the committed `ignoreCommand` could — which is what establishes that neither toggle is load-bearing.
 
-Two things to watch. The ignore command compares against the previous commit only, so a squashed merge or a force-push can make a folder look unchanged when it is not; if a deployment goes missing after an unusual git operation, redeploy that project by hand rather than debugging the ignore step. And the commit that introduces `ignoreCommand` still rebuilds all three — it touches all three folders, and a `vercel.json` change has to build once before it applies. The saving starts on the push after it.
+**Corrected 29 July 2026, hours later, after the rule cancelled work it should have built.** The first revision compared `HEAD^` against `HEAD`. Vercel evaluates the ignore command once per push against the tip commit — not once per commit in the push. Three commits went up together, `a8fa807`, `edb5bfe` and `4ea63f7`. The tip touched `tools/` and nothing else, so every project compared its own folder across that single commit, found nothing, exited 0 and cancelled: `fanation-app` `dpl_46CGtyG9qt8Mrfg1kaiBuCEt66pT` and `fanation-admin` `dpl_98wgQKDAZZBmpPowTCcQ1kWjEn57`, both `CANCELED`, production still serving the build from six hours earlier. The reels and auth rebuild sitting in the two commits underneath never deployed at all.
 
-Netlify expresses the same rule as `ignore` under `[build]`, committed alongside, same convention — exit 0 cancels. It compares `$CACHED_COMMIT_REF` against `$COMMIT_REF`, the last commit Netlify actually built rather than the previous commit in history, so the squash and force-push caveat above does not apply there.
+`$VERCEL_GIT_PREVIOUS_SHA` fixes that at the root. The comparison now spans everything since the project last built successfully, so it stops mattering how many commits a push carries, whether history was squashed or force-pushed, or how many pushes a folder sat idle through. A folder that changed builds. A folder that did not, does not.
+
+One thing still to watch: the commit that changes `ignoreCommand` rebuilds all three, because it touches all three folders and a `vercel.json` change has to build once before it applies. The saving starts on the push after it.
+
+Netlify expresses the same rule as `ignore` under `[build]`, committed alongside, same convention — exit 0 cancels. It compares `$CACHED_COMMIT_REF` against `$COMMIT_REF` — the last commit Netlify actually built, against the one being built now. That is the same semantics the Vercel command uses after the correction above, and it was right on Netlify from the start. The `netlify.toml` files needed no change.
 
 ### 1.3 Root Directory is dashboard-only
 
