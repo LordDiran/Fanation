@@ -26,7 +26,7 @@ All three point at the same GitHub repository, `github.com/LordDiran/Fanation`, 
 2. **Root Directory** → `landing`, `client` or `admin`. This is the only setting that differs between the three.
 3. Framework Preset → Vite. Build command `npm run build`, output directory `dist`, install command `npm install`.
 4. Node version → 20 or later.
-5. **Settings → Build and Deployment** → turn *Include files outside the root directory in the Build Step* **off**. **Settings → Git** → turn *Skip deployments* **on**. Both default the wrong way for this repository — see §1.2.
+5. **Settings → Build and Deployment → Root Directory** → turn *Include files outside the root directory in the Build Step* **off** and *Skip deployments* **on**, then Save. Both toggles sit in that one card and share one Save button. Both defaults are wrong for this repository — see §1.2.
 6. No environment variables. There are none yet; when the backend arrives the API base URL goes here, per environment, not in the repository.
 7. Deploy.
 
@@ -44,13 +44,13 @@ Vercel runs it from the project's Root Directory. Exit 0 — nothing in this fol
 
 It sits in `vercel.json` rather than in the dashboard on purpose. `ignoreCommand` is one of the six keys `vercel.json` overrides (§1.3), so the rule travels with the repository and cannot silently differ between the three projects. The dashboard equivalent is **Settings → Build and Deployment → Ignored Build Step** — *Build and Deployment*, not Settings → Git, where it used to live. Leave that field on **Automatic**; the committed command takes precedence over it.
 
-Dashboard state as checked on 29 July 2026, before this commit:
+All three live under **Settings → Build and Deployment**, not Settings → Git. The two Root Directory toggles share a single Save button. Dashboard state as checked on 29 July 2026, before this commit:
 
 | Setting | Where | Found | Required |
 |---|---|---|---|
-| Ignored Build Step | Build and Deployment | `Automatic` on all three — no custom command had ever been set | `Automatic`, with `ignoreCommand` committed |
-| Include files outside the root directory in the Build Step | Build and Deployment | Enabled on all three | **Disabled** on all three |
-| Skip deployments when the root directory has no changes | Git | Enabled on `fanation-app` and `fanation-admin`, **Disabled** on `fanation` | Enabled on all three |
+| Ignored Build Step | Build and Deployment → Ignored Build Step | `Automatic` on all three — no custom command had ever been set | `Automatic`, with `ignoreCommand` committed |
+| Include files outside the root directory in the Build Step | Build and Deployment → Root Directory | Enabled on all three | **Disabled** on all three |
+| Skip deployments when the root directory has no changes | Build and Deployment → Root Directory | Enabled on `fanation-app` and `fanation-admin`, **Disabled** on `fanation` | Enabled on all three |
 
 An earlier revision of this section described the ignore step as configured. It never was, on any of the three — which is why every push since the repository was restructured has rebuilt all three projects, and why none of the recent deployments is marked `CANCELED`.
 
