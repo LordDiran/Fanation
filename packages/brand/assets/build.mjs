@@ -126,6 +126,7 @@ const REEL_STILLS = {};    // handle        -> /img/r/<slug>.webp
 const REEL_LOOPS = {};     // handle        -> /img/r/<slug>.mp4
 const COVERS = {};         // handle        -> /img/c/<slug>.webp
 const MEDIA_VIDEOS = {};   // still path    -> /img/v/<cat>-<i>.mp4
+const REEL_IN_POOL = {};   // handle        -> /img/m/<cat>-<i>.webp, when it exists
 const FALLBACK_FACES = [];
 const EVIDENCE = {};
 
@@ -186,6 +187,15 @@ async function main() {
     const rel = `c/${slug}.webp`;
     webp(await grab(id, "cover"), path.join(WEB, rel), Q.cover);
     COVERS[c.handle] = `/img/${rel}`;
+
+    /* If a creator's reel photograph also sits in their own post pool, the feed
+       would show the same picture twice under the same name — once as a reel
+       and once as a post — which reads as an asset shortage rather than as a
+       creator reposting their own clip. Record the collision here, at the only
+       point where the reel id and the pool are both in hand, so the resolver
+       can deal around it instead of the two files having to agree by luck. */
+    const clash = MAN.categories[c.cat].indexOf(c.reel);
+    if (clash !== -1) REEL_IN_POOL[c.handle] = CATEGORY_MEDIA[c.cat][clash];
   }
 
   /* ---- 4. Reels ----
@@ -267,6 +277,14 @@ export const COVERS: Record<string, string> = ${j(COVERS)};
 
 /** Post still → the loop that plays in its place. Only the nine video posts. */
 export const MEDIA_VIDEOS: Record<string, string> = ${j(MEDIA_VIDEOS)};
+
+/**
+ * Creator handle → a post photograph that is the same picture as their reel.
+ * Empty means no creator's reel is also in their own post pool, which is the
+ * state the current manifest is curated into. The resolver deals around
+ * anything listed here so one photograph never appears twice under one name.
+ */
+export const REEL_IN_POOL: Record<string, string> = ${j(REEL_IN_POOL)};
 
 /** Moderation exhibits, admin only. */
 export const EVIDENCE: Record<string, string> = ${j(EVIDENCE)};

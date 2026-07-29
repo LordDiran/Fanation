@@ -303,6 +303,14 @@ export const MEDIA_VIDEOS: Record<string, string> = {
   "/img/m/model-0.webp": "/img/v/model-0.mp4"
 };
 
+/**
+ * Creator handle → a post photograph that is the same picture as their reel.
+ * Empty means no creator's reel is also in their own post pool, which is the
+ * state the current manifest is curated into. The resolver deals around
+ * anything listed here so one photograph never appears twice under one name.
+ */
+export const REEL_IN_POOL: Record<string, string> = {};
+
 /** Moderation exhibits, admin only. */
 export const EVIDENCE: Record<string, string> = {
   "replay-priscilla": "/img/e/replay-priscilla.webp",

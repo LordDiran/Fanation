@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { fhash } from "@fanation/core";
 import type { ToastMsg } from "@fanation/core";
+import { avatarFor } from "./media";
 
 /* ---------------- Icons ---------------- */
 const P: Record<string, string> = {
@@ -68,12 +69,118 @@ export function bg(seed: string): string {
 }
 
 /* ---------------- Primitives ---------------- */
-export function Avatar({ name = "", size = 40, ring }: { name?: string; size?: number; ring?: string }) {
+
+/**
+ * A person.
+ *
+ * The initials disc is not gone — it is the floor. The gradient paints first
+ * and stays visible behind the photograph while it decodes, so a face arrives
+ * over a coloured tile rather than over a hole, and it is what remains if the
+ * file 404s. Pass `src` to override the lookup; leave it off and the component
+ * resolves the name itself, which is what almost every call site wants.
+ */
+export function Avatar({ name = "", size = 40, ring, src }: { name?: string; size?: number; ring?: string; src?: string }) {
   const h = fhash(name);
   const init = (name.split(" ").map((w) => w[0]).slice(0, 2).join("") || "?").toUpperCase();
+  const url = src ?? avatarFor(name);
+  const [broken, setBroken] = useState(false);
   return (
     <div className="av" style={{ width: size, height: size, fontSize: size * 0.36, background: `linear-gradient(135deg,hsl(${h % 360},66%,55%),hsl(${(h + 50) % 360},66%,42%))`, boxShadow: ring ? `0 0 0 2px ${ring}` : "none" }}>
-      {init}
+      {url && !broken ? (
+        <img src={url} alt="" width={size} height={size} loading="lazy" decoding="async"
+          onError={() => setBroken(true)}
+          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+      ) : (
+        init
+      )}
+    </div>
+  );
+}
+
+/**
+ * A photograph, wherever a `bg()` mesh used to stand in for one.
+ *
+ * The mesh moves underneath as the loading colour, so the frame is never white
+ * and never empty — it fades from a plausible colour into the real picture. By
+ * default the photograph fills its parent absolutely, which is how every media
+ * frame in the app is built; pass `fill={false}` for the handful of places that
+ * want the photograph to size itself.
+ *
+ * `blur` is a CSS filter rather than a second, pre-blurred file: a locked post
+ * and the same post unlocked must be the same photograph, and shipping two
+ * copies of every PPV image to achieve that would be silly. `scale` pairs with
+ * it — a blur samples past the edge of the element and leaves a soft rim, so
+ * the image is pushed slightly oversize to keep the corners honest.
+ */
+export function Photo({ src, seed, alt = "", radius, blur, scale, priority, fill = true, style, children }: {
+  src: string; seed?: string; alt?: string; radius?: number | string; blur?: number;
+  scale?: number; priority?: boolean; fill?: boolean; style?: React.CSSProperties; children?: React.ReactNode;
+}) {
+  return (
+    <div style={{
+      position: fill ? "absolute" : "relative",
+      ...(fill ? { inset: 0 } : null),
+      borderRadius: radius,
+      overflow: "hidden",
+      background: bg(seed || src),
+      ...style,
+    }}>
+      <img src={src} alt={alt} loading={priority ? "eager" : "lazy"} decoding="async"
+        fetchPriority={priority ? "high" : "auto"}
+        style={{
+          position: "absolute", inset: 0, width: "100%", height: "100%",
+          objectFit: "cover", display: "block",
+          filter: blur ? `blur(${blur}px)` : undefined,
+          transform: scale ? `scale(${scale})` : undefined,
+        }} />
+      {children}
+    </div>
+  );
+}
+
+/**
+ * A silent, looping video with its own still behind it.
+ *
+ * `poster` is the photograph the loop was synthesised from, so the swap from
+ * still to motion is invisible — same framing, same colour. Autoplay only ever
+ * works muted, and these clips carry no audio track at all, so `muted` is not
+ * a preference here: it is the only state that plays.
+ *
+ * `active` is what a snap feed drives. Only the reel on screen should be
+ * decoding; the rest hold their poster frame.
+ */
+export function Loop({ src, poster, active = true, sound = false, radius, fit = "cover", style, children }: {
+  src: string; poster?: string; active?: boolean; sound?: boolean;
+  radius?: number | string; fit?: "cover" | "contain"; style?: React.CSSProperties; children?: React.ReactNode;
+}) {
+  const ref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const v = ref.current;
+    if (!v) return;
+    if (active) {
+      const p = v.play();
+      // A rejected play() is normal — a background tab, or a browser that has
+      // not seen a gesture yet. The poster stays up and nothing is broken.
+      if (p && typeof p.catch === "function") p.catch(() => {});
+    } else {
+      v.pause();
+      v.currentTime = 0;
+    }
+  }, [active, src]);
+
+  useEffect(() => {
+    if (ref.current) ref.current.muted = !sound;
+  }, [sound]);
+
+  return (
+    <div style={{
+      position: "absolute", inset: 0, borderRadius: radius, overflow: "hidden",
+      background: bg(poster || src), ...style,
+    }}>
+      <video ref={ref} src={src} poster={poster} muted={!sound} loop playsInline preload="metadata"
+        style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: fit, display: "block" }} />
+      {children}
     </div>
   );
 }
@@ -190,3 +297,15 @@ export function ToastStack({ list }: { list: ToastMsg[] }) {
  */
 export { FanationLogo as Logo, FanationMark } from "@fanation/brand";
 export type { FanationLogoProps as LogoProps, FanationMarkProps } from "@fanation/brand";
+
+/**
+ * The picture resolvers, and the brand tables they read.
+ *
+ * Same reasoning as the logo above, with one extra constraint: neither app
+ * lists `@fanation/brand` as a dependency, so this re-export is the only route
+ * from a page to a photograph. `Avatar` and `Photo` already resolve internally,
+ * so most call sites never touch these directly — the ones that do are the
+ * surfaces that need a picture without a component around it: a cover, a grid
+ * tile, a reel loop, an admin exhibit.
+ */
+export * from "./media";

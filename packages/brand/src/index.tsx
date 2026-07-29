@@ -22,3 +22,13 @@ export {
 
 export { FanationMark, FanationLogo } from "./logo";
 export type { FanationMarkProps, FanationLogoProps } from "./logo";
+
+/**
+ * The photography tables. Generated — see `assets/build.mjs`.
+ *
+ * They live in brand because the curation is a brand decision: which face is
+ * attached to which name, which photographs a creator's work is allowed to be.
+ * The *resolvers* that turn a post into a picture live in `@fanation/ui`,
+ * because that is what both apps actually depend on.
+ */
+export * from "./media";
