@@ -54,8 +54,9 @@ Fanation/
 ├── tools/
 │   ├── verify-responsive.mjs   75 route/viewport layout checks
 │   ├── smoke.mjs               27 behavioural assertions
+│   ├── verify-media.mjs        181 manifest paths, admin imagery, video posters
 │   ├── diag-overflow.mjs       names the element causing an overflow
-│   ├── playwright-env.mjs      browser path resolution for the three above
+│   ├── playwright-env.mjs      browser path resolution for the four above
 │   └── brand-assets/           logo sources + icon/OG generators
 └── README.md
 ```
@@ -70,7 +71,7 @@ The rule that makes this safe: **`client/src/lib/ui/styles.css` and `admin/src/l
 diff client/src/lib/ui/styles.css admin/src/lib/ui/styles.css && echo IDENTICAL
 ```
 
-It prints `IDENTICAL` and nothing else when they match. If this starts to hurt — a third consumer appears, or the copies drift in practice — publish `@fanation/ui` to a private registry and depend on a version. Not before.
+It prints `IDENTICAL` and nothing else when they match. `lib/ui` and `lib/brand` are identical trees; `lib/core` is the one deliberate exception, because each app ships its own store — HANDOFF §6.2 has the exact three differences a healthy tree reports. If this starts to hurt — a third consumer appears, or the copies drift in practice — publish `@fanation/ui` to a private registry and depend on a version. Not before.
 
 `landing` shares none of this. Its own Tailwind styling, its own components, no `src/lib`.
 
@@ -83,13 +84,14 @@ cd client && npm run build && npm run preview     # terminal one
 cd admin  && npm run build && npm run preview     # terminal two
 node tools/verify-responsive.mjs                  # terminal three
 node tools/smoke.mjs
+node tools/verify-media.mjs
 ```
 
 Needs Playwright: `npm i -D playwright && npx playwright install chromium`.
 
-**Current state: responsive PASS across 25 routes × 3 viewports; smoke 27 passed, 0 failed; all three projects build clean.**
+**Current state: responsive PASS across 25 routes × 3 viewports; smoke 27 passed, 0 failed; media PASS across all 181 manifest paths; all three projects build clean.**
 
-`verify-responsive.mjs` checks that nothing overflows horizontally at 390, 768 and 1440, that navigation is present on every route that should have it, and that no console errors or failed requests occur. `smoke.mjs` checks that the product still works — that a suspend refuses to submit without a reason, that a $12,400 payout needs two approvals, that the audit log captured what just happened. Layout regressions and logic regressions do not look alike and are not caught by the same check.
+`verify-responsive.mjs` checks that nothing overflows horizontally at 390, 768 and 1440, that navigation is present on every route that should have it, and that no console errors or failed requests occur. `smoke.mjs` checks that the product still works — that a suspend refuses to submit without a reason, that a $12,400 payout needs two approvals, that the audit log captured what just happened. Layout regressions and logic regressions do not look alike and are not caught by the same check. `verify-media.mjs` covers what neither can see: the admin console's imagery, every `<video poster>`, and the whole media manifest resolved against both builds rather than only the assets a visited route happened to paint.
 
 `diag-overflow.mjs` is the diagnostic for when the first one fails:
 

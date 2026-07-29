@@ -228,9 +228,10 @@ Because the three projects deploy independently, rolling one back does not touch
 Run through this before promoting anything to a real domain.
 
 - [ ] `npm run build` clean in all three projects — the build typechecks first, so this covers types too
-- [ ] `diff client/src/lib/ui/styles.css admin/src/lib/ui/styles.css && echo IDENTICAL` — prints `IDENTICAL` and nothing else
+- [ ] `diff client/src/lib/ui/styles.css admin/src/lib/ui/styles.css && echo IDENTICAL` — prints `IDENTICAL` and nothing else. Same for `lib/core/types.ts` and `lib/core/data.ts`; `lib/core` otherwise diverges by design (HANDOFF §6.2)
 - [ ] `node tools/verify-responsive.mjs` — PASS, and **zero** broken images (a non-zero count means media is missing from the build)
 - [ ] `node tools/smoke.mjs` — 27 passed, 0 failed
+- [ ] `node tools/verify-media.mjs` — PASS: all 181 manifest paths resolve, admin imagery and every `<video poster>` decode
 - [ ] Deep routes load directly on the deployed URL, not just by clicking (§3.1)
 - [ ] If any project folder was renamed or moved in this change, all three **Root Directory** settings re-checked in the dashboard (§1.3)
 - [ ] Framework Preset reads **Vite**, not Next.js, on all three projects (§1.1)

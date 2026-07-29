@@ -314,11 +314,11 @@ These are implemented in the console's interface. **The interface is not the enf
 4. The audit log is **append-only**. No edit, no delete, no exceptions for administrators.
 5. A payout against a sanctioned account warns before it proceeds and records the override, including who made it.
 
-### 10.2 Open questions — answer 1 and 3 before writing backend code
+### 10.2 Open questions — 2, 4 and 5 are open; 1 and 3 are the dev team's call
 
-1. **Session model.** JWT with refresh, or server sessions? This decides how the client stores auth state and whether the current in-memory approach is replaced or extended.
+1. **Session model.** JWT with refresh, or server sessions? This decides how the client stores auth state and whether the current in-memory approach is replaced or extended. **Closed 29 July 2026 — reassigned to the dev team, decided inside the backend build. HANDOFF §5 records what the prototype assumes either way.**
 2. **Media storage.** Where do uploads live, and are paid-tier assets served through signed URLs with expiry? Affects the media components directly.
-3. **Payout rails.** Which provider, and does the $10,000 co-sign gate live in our service or theirs? Affects the payout flow and the audit trail.
+3. **Payout rails.** Which provider, and does the $10,000 co-sign gate live in our service or theirs? Affects the payout flow and the audit trail. **Closed 29 July 2026 — reassigned to the dev team, decided inside the backend build. HANDOFF §5 records what the prototype assumes either way.**
 4. **KYC provider.** Which vendor, and is the review queue ours or theirs? Determines whether `/kyc` stays a working queue or becomes a status view.
 5. **Real-time transport.** WebSocket, SSE, or polling for messages, live streams and notifications? Nothing depends on this yet; everything real-time is currently static.
 
@@ -339,12 +339,13 @@ One interface limitation worth stating plainly: **`admin` has no navigation belo
 
 ## 12. Verification
 
-Three scripts in `tools/`, all runnable against production builds. Playwright is the only development dependency they need (`npm i -D playwright && npx playwright install chromium`).
+Four scripts in `tools/`, all runnable against production builds. Playwright is the only development dependency they need (`npm i -D playwright && npx playwright install chromium`).
 
 | Script | Checks | Current result |
 |---|---|---|
 | `tools/verify-responsive.mjs` | 25 client routes × 3 viewports (390, 768, 1440): no horizontal overflow, navigation present, no console errors, no failed requests. Plus the phone More-drawer and the two-pane messenger. | **PASS** — 75 route/viewport combinations |
 | `tools/smoke.mjs` | 27 behavioural assertions across `client` and `admin`: sign-in, route guard, feed rendering, publish, like toggle, reason-gated suspend, the $10,000 co-sign flow, KYC approval, report dismissal, audit capture, sidebar badge decrement. | **27 passed, 0 failed** |
+| `tools/verify-media.mjs` | The imagery `verify-responsive.mjs` cannot reach: all 181 paths in `lib/brand/media.ts` resolved against both builds, the admin console's nine image-bearing routes, and every `<video poster>` decoded through a fresh `Image()`. | **PASS** — 181 paths, 42 admin images, 13 posters, 0 broken |
 | `tools/diag-overflow.mjs` | Diagnostic. Given a route and a width, names the specific element causing an overflow and prints the computed property responsible. | On demand |
 
 To run them:
@@ -354,11 +355,12 @@ cd client && npm run build && npm run preview     # terminal one
 cd admin  && npm run build && npm run preview     # terminal two
 node tools/verify-responsive.mjs                  # terminal three
 node tools/smoke.mjs
+node tools/verify-media.mjs
 ```
 
 All three projects typecheck and build clean.
 
-One caveat on `verify-responsive.mjs`: it reports broken images by asking each `<img>` whether it decoded, and it reports rather than fails. On a machine with the media present that count must read zero. A `<video poster>` that fails leaves no trace in `document.images` and is not covered — nine files, checked by eye.
+One caveat on `verify-responsive.mjs`: it reports broken images by asking each `<img>` whether it decoded, and it *reports* rather than fails — a non-zero count does not turn the run red on its own, so read the last line. That count must be zero. It also walks the client only and cannot see a `<video poster>`; `verify-media.mjs` covers both gaps and does fail on them.
 
 ---
 
@@ -377,7 +379,8 @@ One caveat on `verify-responsive.mjs`: it reports broken images by asking each `
 | Confirm hosting platform and that SPA rewrite is supported | Dami | Before first deployment | Open |
 | Confirm domain assignments for the three projects | Folasayo / Dami | Before first deployment | **Closed 29 July 2026** — no custom domain for this build. The three `*.vercel.app` URLs are the demo surface; real domains are set in the integrating codebase (§16) |
 | Decide how `admin` is access-controlled | Integrating codebase | First real API call, there | **Reassigned 29 July 2026** — §9.4 |
-| Answer open questions 1 and 3 (§10.2) | Backend lead | Before backend work starts | Open — **blocking backend work** |
+| Answer open questions 1 and 3 (§10.2) | Integrating dev team | Inside the backend build | **Reassigned 29 July 2026** — no longer blocking. Decided during the backend build rather than ahead of it; HANDOFF §5 records what the prototype assumes either way |
+| Answer open questions 2, 4 and 5 (§10.2) | Backend lead | Before the media, KYC and real-time work respectively | Open |
 | Provide API base URLs per environment | Backend lead | At integration | Open |
 
 ## 15. Out of scope for this build

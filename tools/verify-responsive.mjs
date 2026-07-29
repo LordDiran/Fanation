@@ -24,15 +24,20 @@
  * codes here would report a clean media run over a site with no pictures in it,
  * which is exactly what an earlier version of this script did.
  *
- * In this sandbox every photograph is expected to fail: `public/img` holds only
- * the generated icons, because the 12MB of media never travels through the file
- * bridge — it is copied in locally on the machine that already has it. So a run
- * here proves the layout and nothing about the imagery. Run it again after the
- * copy, on that machine, and the broken list is what has to come back empty.
+ * The media is committed and git-tracked — `client/public` is 8.4MB across 183
+ * files — so it travels with a clone, and the broken list at the bottom of a run
+ * has to read zero on any machine, including a fresh checkout in a container. An
+ * earlier version of this note said the opposite, written when the 12MB had to be
+ * copied in by hand and a run here proved the layout and nothing about the
+ * imagery. That is no longer true. Do not carry it forward and discount a real
+ * result.
  *
- * One gap worth knowing about: a <video poster> that fails leaves no trace in
- * `document.images`, so the posters behind the reels and the video posts are
- * not covered by this. Nine files, checked by eye.
+ * Two things this deliberately does not cover: a <video poster> that fails leaves
+ * no trace in `document.images`, and the admin console is a separate application
+ * this script never opens. Both are `verify-media.mjs`'s job — it decodes every
+ * poster through a fresh Image() and resolves the whole of `lib/brand/media.ts`
+ * against both builds, which is stronger than either DOM walk. Run the two
+ * together; neither replaces the other.
  *
  * Why every route after the first is reached by pushState rather than `goto`:
  * the store is plain Zustand with no persist middleware, so `authed` is memory
@@ -192,8 +197,8 @@ await browser.close();
 
 console.log(`\n${failures === 0 ? "PASS" : `FAIL — ${failures} problem(s)`}`);
 
-/* Distinct files, not occurrences. On the machine that has the media this line
-   has to read zero; here it reads however many photographs the app references. */
+/* Distinct files, not occurrences — the same avatar across nine routes and three
+   viewports is one file, not 27. This line has to read zero. */
 const broken = [...brokenImages].sort();
 console.log(`${broken.length} image(s) failed to decode` +
   (broken.length ? ` — no bytes behind these paths:` : ""));

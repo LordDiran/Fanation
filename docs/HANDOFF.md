@@ -119,16 +119,20 @@ Four, all deliberate. Anyone demonstrating this needs to know all four before so
 
 ## 5. Open questions
 
-Answer 1 and 3 before writing backend code. The other three can wait but not indefinitely.
+**1 and 3 are closed — reassigned 29 July 2026.** Not because they have an answer here, but because ownership moved: the dev team decides both inside the backend build rather than ahead of it. They stay written down so the choice gets made deliberately instead of by default, and so whoever makes it can see what the prototype already assumes. 2, 4 and 5 are still open and still need answers before the work they touch starts.
 
-1. **Session model — JWT with refresh, or server sessions?**
+1. **Session model — JWT with refresh, or server sessions?** — **Closed 29 July 2026, dev team's call.**
    Decides how the client holds auth state, whether the in-memory approach is replaced or extended, and what happens on refresh. Everything in the client's auth path is a placeholder until this is settled.
+
+   What the prototype commits to either way: `authed` lives in the Zustand store with no persist middleware, so a hard reload clears it and the route guard returns you to `/login` (§4, boundary 2). Server sessions add a cookie and a `/me` call on boot. JWT with refresh adds a token held out of `localStorage` and a refresh on 401. The guard itself and every screen behind it are untouched by the choice — this is a seam, not a rewrite.
 
 2. **Media storage — where do uploads live, and are paid-tier assets served through signed URLs with expiry?**
    Affects the media components directly. If paid content is served from a public URL, the paywall is decorative — anyone who gets the URL keeps it forever. Signed URLs with a short expiry are the usual answer and they change how the components request images.
 
-3. **Payout rails — which provider, and does the $10,000 co-sign gate live in our service or theirs?**
+3. **Payout rails — which provider, and does the $10,000 co-sign gate live in our service or theirs?** — **Closed 29 July 2026, dev team's call.**
    If the provider enforces it, our job is to reflect their state. If we enforce it, we own the two-admin check and the audit trail around it. These are different builds.
+
+   What the prototype commits to either way: the threshold is $10,000, a request above it needs two distinct approvals, the first moves the row to `Awaiting co-sign`, and both approvals land in the audit log as separate entries. That behaviour is in `admin/src/routes/payouts.tsx` and asserted by `tools/smoke.mjs`. If the provider owns the gate, that screen becomes a mirror of their state rather than the source of it — the states themselves do not change.
 
 4. **KYC provider — which vendor, and is the review queue ours or theirs?**
    Determines whether `/kyc` stays a working approval queue or becomes a read-only status view over the vendor's decisions.
@@ -159,7 +163,26 @@ Step 4 is the one people skip. A route that is not in that array is a route nobo
 diff client/src/lib/ui/styles.css admin/src/lib/ui/styles.css && echo IDENTICAL
 ```
 
-It must print `IDENTICAL` and nothing before it, and the same applies to `types.ts` and `data.ts`. (`md5sum` is Linux-only — it does not exist on macOS. `diff` does, on both.) Change one, change the other, in the same commit. If this starts to hurt in practice, publish `@fanation/ui` to a private registry and depend on a version — but do that when the pain is real, not pre-emptively.
+It must print `IDENTICAL` and nothing before it. The same applies to `types.ts` and `data.ts` — but note those two live in `lib/core`, not `lib/ui`:
+
+```bash
+diff client/src/lib/core/types.ts admin/src/lib/core/types.ts && echo IDENTICAL
+diff client/src/lib/core/data.ts  admin/src/lib/core/data.ts  && echo IDENTICAL
+```
+
+(`md5sum` is Linux-only — it does not exist on macOS. `diff` does, on both.)
+
+`lib/ui` and `lib/brand` are identical trees end to end: `diff -r` across either pair prints nothing, and nothing is the standard. **`lib/core` is the deliberate exception.** The client ships `app-store.ts`, the admin ships `admin-store.ts`, and each `index.ts` re-exports its own — so a recursive diff on `lib/core` reports exactly three differences on a healthy tree:
+
+```
+Only in admin/src/lib/core: admin-store.ts
+Only in client/src/lib/core: app-store.ts
+Files client/src/lib/core/index.ts and admin/src/lib/core/index.ts differ
+```
+
+Those three are correct by design. Anything beyond them is drift.
+
+Change one, change the other, in the same commit. If this starts to hurt in practice, publish `@fanation/ui` to a private registry and depend on a version — but do that when the pain is real, not pre-emptively.
 
 ### 6.3 CSS notes worth having
 
@@ -176,6 +199,7 @@ cd client && npm run build && npm run preview     # terminal one
 cd admin  && npm run build && npm run preview     # terminal two
 node tools/verify-responsive.mjs                  # terminal three
 node tools/smoke.mjs
+node tools/verify-media.mjs
 ```
 
 Needs Playwright: `npm i -D playwright && npx playwright install chromium`.
@@ -184,13 +208,14 @@ Needs Playwright: `npm i -D playwright && npx playwright install chromium`.
 |---|---|---|
 | `verify-responsive.mjs` | 25 routes × 3 viewports: no overflow, navigation present, no console errors, no failed requests | **PASS** |
 | `smoke.mjs` | 27 behavioural assertions across both applications | **27 / 0** |
+| `verify-media.mjs` | All 181 paths in `lib/brand/media.ts` resolve against the builds; admin imagery and every `<video poster>` decode | **PASS** |
 
-The two do not overlap and both matter. One asks whether every page fits and can be navigated; the other asks whether the product still works — that a suspend refuses to submit without a reason, that a $12,400 payout needs two approvals, that the audit log captured what just happened. Layout regressions and logic regressions do not look alike.
+The three do not overlap and all three matter. The first asks whether every page fits and can be navigated. The second asks whether the product still works — that a suspend refuses to submit without a reason, that a $12,400 payout needs two approvals, that the audit log captured what just happened. The third asks whether the pictures are actually there — in the admin console, behind the video posters, and across the whole manifest rather than only the assets a visited route happened to paint. Layout regressions, logic regressions and missing media do not look alike and are not caught by the same check.
 
 Two things to know about `verify-responsive.mjs`:
 
-- It reports broken images by asking each `<img>` whether it **decoded**, not by watching for 404s. `vite preview` answers any unknown path with `index.html` and a 200, so a missing photograph arrives as a page of HTML rather than a failed request. On a machine with the media present, the broken count must read **zero**.
-- A `<video poster>` that fails leaves no trace in `document.images` and is not covered. Nine files, checked by eye.
+- It reports broken images by asking each `<img>` whether it **decoded**, not by watching for 404s. `vite preview` answers any unknown path with `index.html` and a 200, so a missing photograph arrives as a page of HTML rather than a failed request. The broken count must read **zero** — the media is committed and git-tracked, so that holds on any machine including a fresh clone.
+- It walks the client only, and a `<video poster>` leaves no trace in `document.images`. Both gaps are `verify-media.mjs`'s job: it resolves all 181 paths in `lib/brand/media.ts` against both builds, walks the admin console's nine image-bearing routes, and decodes every poster through a fresh `Image()`. Run it alongside the other two, not instead of them.
 
 `smoke.mjs` navigates client-side throughout — clicking the nav, never `goto` — because a hard reload logs you out (boundary 2). One assertion proves that deliberately, then signs in again.
 
