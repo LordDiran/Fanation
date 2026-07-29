@@ -106,7 +106,7 @@ This is a deliberate trade. Two copies of a stylesheet is duplication, and dupli
 The discipline that goes with it: `client/src/lib/ui/styles.css` and `admin/src/lib/ui/styles.css` must stay byte-for-byte identical. A change to one is applied to the other in the same commit, and checked:
 
 ```bash
-md5sum client/src/lib/ui/styles.css admin/src/lib/ui/styles.css   # both hashes must match
+diff client/src/lib/ui/styles.css admin/src/lib/ui/styles.css && echo IDENTICAL   # macOS has no md5sum; diff works everywhere
 ```
 
 If this becomes painful — if the two start diverging in practice, or a third application appears — the answer is to publish `@fanation/ui` to a private registry and depend on a version number. That is a change worth making when the pain is real, not before.

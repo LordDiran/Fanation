@@ -228,7 +228,7 @@ Because the three projects deploy independently, rolling one back does not touch
 Run through this before promoting anything to a real domain.
 
 - [ ] `npm run build` clean in all three projects — the build typechecks first, so this covers types too
-- [ ] `md5sum client/src/lib/ui/styles.css admin/src/lib/ui/styles.css` — hashes match
+- [ ] `diff client/src/lib/ui/styles.css admin/src/lib/ui/styles.css && echo IDENTICAL` — prints `IDENTICAL` and nothing else
 - [ ] `node tools/verify-responsive.mjs` — PASS, and **zero** broken images (a non-zero count means media is missing from the build)
 - [ ] `node tools/smoke.mjs` — 27 passed, 0 failed
 - [ ] Deep routes load directly on the deployed URL, not just by clicking (§3.1)

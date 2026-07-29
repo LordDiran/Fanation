@@ -156,10 +156,10 @@ Step 4 is the one people skip. A route that is not in that array is a route nobo
 `client/src/lib/{core,ui,brand}` and `admin/src/lib/{core,ui,brand}` are copies, not a shared package — see the README for why. The rule:
 
 ```bash
-md5sum client/src/lib/ui/styles.css admin/src/lib/ui/styles.css
+diff client/src/lib/ui/styles.css admin/src/lib/ui/styles.css && echo IDENTICAL
 ```
 
-Both hashes must match, and the same applies to `types.ts` and `data.ts`. Change one, change the other, in the same commit. If this starts to hurt in practice, publish `@fanation/ui` to a private registry and depend on a version — but do that when the pain is real, not pre-emptively.
+It must print `IDENTICAL` and nothing before it, and the same applies to `types.ts` and `data.ts`. (`md5sum` is Linux-only — it does not exist on macOS. `diff` does, on both.) Change one, change the other, in the same commit. If this starts to hurt in practice, publish `@fanation/ui` to a private registry and depend on a version — but do that when the pain is real, not pre-emptively.
 
 ### 6.3 CSS notes worth having
 

@@ -67,10 +67,10 @@ Fanation/
 The rule that makes this safe: **`client/src/lib/ui/styles.css` and `admin/src/lib/ui/styles.css` are byte-identical.** Change one, change the other in the same commit, and check:
 
 ```bash
-md5sum client/src/lib/ui/styles.css admin/src/lib/ui/styles.css
+diff client/src/lib/ui/styles.css admin/src/lib/ui/styles.css && echo IDENTICAL
 ```
 
-Both hashes must match. If this starts to hurt — a third consumer appears, or the copies drift in practice — publish `@fanation/ui` to a private registry and depend on a version. Not before.
+It prints `IDENTICAL` and nothing else when they match. If this starts to hurt — a third consumer appears, or the copies drift in practice — publish `@fanation/ui` to a private registry and depend on a version. Not before.
 
 `landing` shares none of this. Its own Tailwind styling, its own components, no `src/lib`.
 
