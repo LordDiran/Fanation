@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import { useAppStore } from "@fanation/core";
-import { Icon, Menu, bg } from "@fanation/ui";
+import { fhash, useAppStore } from "@fanation/core";
+import { Icon, Menu, Photo, myMediaFor } from "@fanation/ui";
 
 export default function ContentStudioPage() {
   const S = useAppStore();
@@ -47,10 +47,15 @@ export default function ContentStudioPage() {
             onChange={(e) => setCap(e.target.value)} style={{ resize: "none", marginBottom: 4 }} />
           <div className="row between muted2 t12" style={{ marginBottom: 8 }}><span /><span>{cap.length}/500</span></div>
           <div onClick={() => setMediaOn((v) => !v)}
-            style={{ border: `1px dashed ${mediaOn ? "var(--mint)" : "var(--line2)"}`, borderRadius: 14, marginBottom: 14, cursor: "pointer", height: mediaOn ? 110 : undefined, background: mediaOn ? bg("studioMedia") : undefined, position: "relative", overflow: "hidden", padding: mediaOn ? 0 : 20 }}>
-            {mediaOn
-              ? <span className="chip-mint" style={{ position: "absolute", top: 8, left: 8 }}><Icon n="check" s={12} />Media attached</span>
-              : <div className="row center gap8 muted"><Icon n="upload" s={18} />Drag media or click to upload</div>}
+            style={{ border: `1px dashed ${mediaOn ? "var(--mint)" : "var(--line2)"}`, borderRadius: 14, marginBottom: 14, cursor: "pointer", height: mediaOn ? 110 : undefined, position: "relative", overflow: "hidden", padding: mediaOn ? 0 : 20 }}>
+            {mediaOn ? (
+              <>
+                <Photo src={myMediaFor(0)} seed="studioMedia" />
+                <span className="chip-mint" style={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}><Icon n="check" s={12} />Media attached</span>
+              </>
+            ) : (
+              <div className="row center gap8 muted"><Icon n="upload" s={18} />Drag media or click to upload</div>
+            )}
           </div>
           <label className="label">Who can see this</label>
           <div className="row gap8 wrap" style={{ marginBottom: 14 }}>
@@ -106,9 +111,13 @@ export default function ContentStudioPage() {
       <div className="grid g4 gap16">
         {published.map((c, i) => (
           <div key={i} className="card" style={{ padding: 0, overflow: "hidden" }}>
-            <div style={{ height: 118, background: bg(`pub${i}${c[0]}`), position: "relative" }}>
-              <div className="tag" style={{ position: "absolute", top: 10, left: 10, fontSize: 11 }}>{c[1]}</div>
-              {c[2] === "Just now" && <span className="chip-mint" style={{ position: "absolute", top: 10, right: 10, padding: "2px 7px" }}>New</span>}
+            {/* Keyed off the caption, not the row index — publishing unshifts a
+                new card onto the front, and index-keyed pictures would shuffle
+                every existing thumbnail down one. */}
+            <div style={{ height: 118, position: "relative", overflow: "hidden" }}>
+              <Photo src={myMediaFor(fhash(c[0]))} seed={`pub${i}${c[0]}`} />
+              <div className="tag" style={{ position: "absolute", top: 10, left: 10, fontSize: 11, zIndex: 1 }}>{c[1]}</div>
+              {c[2] === "Just now" && <span className="chip-mint" style={{ position: "absolute", top: 10, right: 10, padding: "2px 7px", zIndex: 1 }}>New</span>}
             </div>
             <div style={{ padding: 12 }}>
               <div className="b6 t14" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c[0]}</div>

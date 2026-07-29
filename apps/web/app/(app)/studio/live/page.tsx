@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useAppStore } from "@fanation/core";
-import { Icon, bg } from "@fanation/ui";
+import { Icon, Loop, Photo, loopFor, mediaFor } from "@fanation/ui";
 
 export default function GoLivePage() {
   const S = useAppStore();
@@ -13,6 +13,10 @@ export default function GoLivePage() {
   const timer = useRef<ReturnType<typeof setInterval> | null>(null);
   useEffect(() => () => { if (timer.current) clearInterval(timer.current); }, []);
   const mmss = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+  /* Your own camera. Landscape footage, unlike Elena's phone stream — this is
+     the desk setup a creator broadcasts from, and it fills the preview. */
+  const camStill = mediaFor("life", 0);
+  const camLoop = loopFor(camStill);
   const start = () => {
     setLive(true); setV(12); setG(0); setSec(0);
     S.toast("You're live — fans are being notified", "ok");
@@ -31,7 +35,10 @@ export default function GoLivePage() {
     <div className="content">
       <h2 className="display t32" style={{ marginBottom: 18 }}>Go Live</h2>
       <div className="grid gap16" style={{ gridTemplateColumns: "1.5fr 1fr" }}>
-        <div className="card" style={{ padding: 0, height: 420, position: "relative", overflow: "hidden", background: live ? bg("mystream") : "var(--card2)" }}>
+        <div className="card" style={{ padding: 0, height: 420, position: "relative", overflow: "hidden", background: "var(--card2)" }}>
+          {live && (camLoop
+            ? <Loop src={camLoop} poster={camStill} active={live} />
+            : <Photo src={camStill} seed="mystream" />)}
           {!live && (
             <div className="col center gap8" style={{ position: "absolute", inset: 0 }}>
               <div className="feature-ic" style={{ width: 60, height: 60, background: "var(--fill)" }}><Icon n="camera" s={28} c="var(--muted)" /></div>

@@ -1,16 +1,37 @@
 "use client";
 import { useState } from "react";
 import { useAppStore } from "@fanation/core";
-import { Icon, bg } from "@fanation/ui";
+import { Icon, MOTION_STILLS, Photo, mediaFor, myMediaFor } from "@fanation/ui";
 
-interface VaultItem { id: string; kind: string; used: boolean }
+/**
+ * `n` is the item's position within its own kind, fixed when the item is
+ * created. Hashing the id instead collided — two photographs appeared twice
+ * inside the same twenty-five — and hashing the row index would redeal the
+ * whole wall every time a filter chip is tapped. An ordinal does neither.
+ */
+interface VaultItem { id: string; kind: string; n: number; used: boolean }
+
+/** An audio file has no frame of its own, so it borrows one: mics, decks,
+    monitors. Two pools interleaved gives ten distinct covers. */
+const AUDIO_CATS = ["music", "pod"];
+const audioCover = (n: number) => mediaFor(AUDIO_CATS[n % AUDIO_CATS.length], Math.floor(n / AUDIO_CATS.length));
+
+function coverFor(x: VaultItem): string {
+  if (x.kind === "Videos") return MOTION_STILLS[x.n % MOTION_STILLS.length];
+  if (x.kind === "Audio") return audioCover(x.n);
+  return myMediaFor(x.n);
+}
 
 export default function VaultPage() {
   const S = useAppStore();
   const [tab, setTab] = useState("All");
-  const [items, setItems] = useState<VaultItem[]>(
-    Array.from({ length: 25 }).map((_, i) => ({ id: String(i), kind: i % 4 === 1 ? "Videos" : i % 4 === 3 ? "Audio" : "Photos", used: i % 3 !== 0 })),
-  );
+  const [items, setItems] = useState<VaultItem[]>(() => {
+    const seen: Record<string, number> = {};
+    return Array.from({ length: 25 }).map((_, i) => {
+      const kind = i % 4 === 1 ? "Videos" : i % 4 === 3 ? "Audio" : "Photos";
+      return { id: String(i), kind, n: (seen[kind] = (seen[kind] ?? -1) + 1), used: i % 3 !== 0 };
+    });
+  });
   const [sel, setSel] = useState<Record<string, boolean>>({});
   const list = items.filter((x) => tab === "All" || x.kind === tab || (tab === "Used" && x.used) || (tab === "Unused" && !x.used));
   const nSel = Object.keys(sel).filter((k) => sel[k]).length;
@@ -21,7 +42,10 @@ export default function VaultPage() {
           <h2 className="display t32">Vault</h2>
           <span className="muted">All your media in one place · {items.length} items.</span>
         </div>
-        <button className="btn btn-grad" onClick={() => { setItems((x) => [{ id: `n${x.length}`, kind: "Photos", used: false }, ...x]); S.toast("Upload complete — added to your vault", "ok"); }}>
+        <button className="btn btn-grad" onClick={() => {
+          setItems((x) => [{ id: `n${x.length}`, kind: "Photos", n: x.filter((it) => it.kind === "Photos").length, used: false }, ...x]);
+          S.toast("Upload complete — added to your vault", "ok");
+        }}>
           <Icon n="upload" s={16} />Upload
         </button>
       </div>
@@ -53,7 +77,10 @@ export default function VaultPage() {
       <div className="grid gap12" style={{ gridTemplateColumns: "repeat(5,1fr)" }}>
         {list.map((x) => (
           <div key={x.id} onClick={() => setSel((m) => ({ ...m, [x.id]: !m[x.id] }))}
-            style={{ aspectRatio: "1", borderRadius: 12, background: bg(`v${x.id}`), position: "relative", cursor: "pointer", outline: sel[x.id] ? "2px solid var(--blue)" : "none", outlineOffset: -2 }}>
+            style={{ aspectRatio: "1", borderRadius: 12, position: "relative", cursor: "pointer", outline: sel[x.id] ? "2px solid var(--blue)" : "none", outlineOffset: -2 }}>
+            {/* A video item shows a frame that actually has footage behind it,
+                so the play badge is not a lie. */}
+            <Photo radius={12} seed={`v${x.id}`} src={coverFor(x)} />
             {!x.used && !sel[x.id] && <span className="chip-coin" style={{ position: "absolute", top: 8, left: 8, padding: "2px 7px" }}>Unused</span>}
             {x.kind === "Videos" && <span className="pill t12" style={{ position: "absolute", bottom: 8, right: 8, background: "rgba(0,0,0,.5)", border: "none", color: "#fff" }}><Icon n="play" s={11} /></span>}
             {sel[x.id] && (

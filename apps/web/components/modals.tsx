@@ -1,15 +1,32 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CREATORS, REPORT_REASONS, useAppStore } from "@fanation/core";
 import type { Creator, PollOpt, Post } from "@fanation/core";
-import { Avatar, Icon, Verified, bg } from "@fanation/ui";
+import { Avatar, Icon, Photo, Verified, myMediaFor } from "@fanation/ui";
 
 /** Global modal host — open from anywhere via store.openModal(type, data). */
 export function ModalHost() {
   const modal = useAppStore((s) => s.modal);
   const close = useAppStore((s) => s.closeModal);
+  /* Read through a ref so the listener is registered once and never churns. */
+  const open = useRef(false);
+  open.current = !!modal;
   useEffect(() => {
-    const h = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
+    /* Escape must not touch the store when no modal is open.
+     *
+     * This host mounts in the app layout, so its listener is on `window`
+     * before any page's. `closeModal()` writes `{ modal: null }`, which is a
+     * new state object even when nothing changed, so every component that
+     * subscribes to the whole store re-renders. Escape is a discrete input
+     * event, so React flushes that re-render *synchronously, inside the
+     * dispatch* — and any listener a re-rendering component removes in its
+     * effect cleanup is dropped from the live dispatch before it runs.
+     *
+     * That is exactly how the story viewer lost its own Escape: it registered
+     * after this one, and this handler's pointless store write unmounted its
+     * listener mid-flight. Guarding on `open` keeps the store untouched, so
+     * every later Escape listener on the page still fires. */
+    const h = (e: KeyboardEvent) => { if (e.key === "Escape" && open.current) close(); };
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
   }, [close]);
@@ -232,10 +249,15 @@ function ComposeModal({ defaultVis }: { defaultVis?: string }) {
         onChange={(e) => setCap(e.target.value)} style={{ resize: "none", marginBottom: 4 }} />
       <div className="row between muted2 t12" style={{ marginBottom: 10 }}><span /><span>{cap.length}/500</span></div>
       <div onClick={() => setMedia(!media)}
-        style={{ border: `1px dashed ${media ? "var(--mint)" : "var(--line2)"}`, borderRadius: 14, marginBottom: 14, cursor: "pointer", overflow: "hidden", position: "relative", height: media ? 110 : undefined, background: media ? bg("composeMedia") : undefined, padding: media ? 0 : 20 }}>
-        {media
-          ? <span className="chip-mint" style={{ position: "absolute", top: 8, left: 8 }}><Icon n="check" s={12} />Media attached — click to remove</span>
-          : <div className="row center gap8 muted"><Icon n="upload" s={18} />Add photos or video</div>}
+        style={{ border: `1px dashed ${media ? "var(--mint)" : "var(--line2)"}`, borderRadius: 14, marginBottom: 14, cursor: "pointer", overflow: "hidden", position: "relative", height: media ? 110 : undefined, padding: media ? 0 : 20 }}>
+        {media ? (
+          <>
+            <Photo src={myMediaFor(1)} seed="composeMedia" />
+            <span className="chip-mint" style={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}><Icon n="check" s={12} />Media attached — click to remove</span>
+          </>
+        ) : (
+          <div className="row center gap8 muted"><Icon n="upload" s={18} />Add photos or video</div>
+        )}
       </div>
       {pollOn && (
         <div className="col gap8" style={{ marginBottom: 12 }}>

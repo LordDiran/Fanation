@@ -1,25 +1,36 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { CREATORS, useAppStore } from "@fanation/core";
-import { Avatar, CoinBadge, Icon, Verified, bg } from "@fanation/ui";
+import { Avatar, CoinBadge, Icon, Loop, Photo, Verified, reelFor } from "@fanation/ui";
 import { FollowBtn, PostCard } from "../../../components/post-card";
 
 function StoryViewer({ idx, close }: { idx: number; close: () => void }) {
   const [i, setI] = useState(idx);
   const c = CREATORS[((i % CREATORS.length) + CREATORS.length) % CREATORS.length];
+  /* A story is vertical, so it draws the creator's 9:16 frame — the same
+     footage their reel is cut from, which is what a story actually is. */
+  const { still, loop } = reelFor(c.handle);
   useEffect(() => {
     const t = setTimeout(() => setI((v) => v + 1), 4000);
     return () => clearTimeout(t);
   }, [i]);
+  /* `close` is an inline arrow in the parent, so it is a new function on every
+     render of the feed. Depending on it would re-register this listener each
+     time, and a listener removed while a keydown is being dispatched never
+     runs — which is how a store write elsewhere on the page can swallow the
+     key. Register once, read the current `close` through a ref. */
+  const closeRef = useRef(close);
+  closeRef.current = close;
   useEffect(() => {
-    const h = (e: KeyboardEvent) => { if (e.key === "Escape") close(); };
+    const h = (e: KeyboardEvent) => { if (e.key === "Escape") closeRef.current(); };
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
-  }, [close]);
+  }, []);
   return (
     <div className="overlay" style={{ background: "rgba(2,4,12,.9)" }} onClick={close}>
-      <div style={{ width: 380, height: 640, borderRadius: 22, overflow: "hidden", position: "relative", background: bg(`story${c.id}`) }} onClick={(e) => e.stopPropagation()}>
+      <div style={{ width: 380, height: 640, borderRadius: 22, overflow: "hidden", position: "relative" }} onClick={(e) => e.stopPropagation()}>
+        {loop ? <Loop key={c.id} src={loop} poster={still} radius={22} /> : <Photo src={still} seed={c.id} radius={22} />}
         <div style={{ position: "absolute", top: 10, left: 12, right: 12, height: 3, borderRadius: 9, background: "rgba(255,255,255,.25)" }}>
           <div key={i} style={{ height: "100%", borderRadius: 9, background: "#fff", animation: "storyprog 4s linear forwards" }} />
         </div>

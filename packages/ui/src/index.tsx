@@ -71,6 +71,33 @@ export function bg(seed: string): string {
 /* ---------------- Primitives ---------------- */
 
 /**
+ * Is this element on screen?
+ *
+ * Nine video posts all decoding at once because they happen to exist in the
+ * DOM is how a demo laptop starts sounding like a hairdryer. The feed uses
+ * this to hand `Loop` an `active` flag, so only the clips a person can
+ * actually see are running.
+ *
+ * `amount` is the fraction of the element that has to be visible before it
+ * counts, and the observer is torn down on unmount. It reports `false` until
+ * the first callback, which is the honest answer during SSR and the first
+ * paint — a poster frame showing for one tick is invisible, a video that
+ * autoplayed off screen is not.
+ */
+export function useInView<T extends HTMLElement = HTMLDivElement>(amount = 0.55) {
+  const ref = useRef<T>(null);
+  const [seen, setSeen] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(([e]) => setSeen(e.isIntersecting), { threshold: amount });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [amount]);
+  return [ref, seen] as const;
+}
+
+/**
  * A person.
  *
  * The initials disc is not gone — it is the floor. The gradient paints first
@@ -135,6 +162,27 @@ export function Photo({ src, seed, alt = "", radius, blur, scale, priority, fill
         }} />
       {children}
     </div>
+  );
+}
+
+/**
+ * The dark wash that keeps white text legible over an arbitrary photograph.
+ *
+ * A mesh placeholder was always dark, so every caption laid over one was
+ * readable by accident. A real photograph is not — a third of the pool is a
+ * bright sky or a white studio wall. This is bottom-weighted rather than a
+ * flat tint, so it darkens the corner the caption actually sits in and leaves
+ * the middle of the picture alone. Pass `top` for the chrome that hangs off
+ * the top edge instead.
+ */
+export function Scrim({ from = 0.8, height = "58%", top = false }: { from?: number; height?: number | string; top?: boolean }) {
+  return (
+    <div aria-hidden style={{
+      position: "absolute", left: 0, right: 0, height,
+      ...(top ? { top: 0 } : { bottom: 0 }),
+      background: `linear-gradient(${top ? 180 : 0}deg, rgba(6,8,16,${from}) 0%, rgba(6,8,16,${(from * 0.42).toFixed(3)}) 44%, rgba(6,8,16,0) 100%)`,
+      pointerEvents: "none",
+    }} />
   );
 }
 

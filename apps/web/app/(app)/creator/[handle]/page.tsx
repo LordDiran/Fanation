@@ -2,7 +2,7 @@
 import { use, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SEED_FEED, byHandle, useAppStore } from "@fanation/core";
-import { Avatar, Icon, Verified, bg } from "@fanation/ui";
+import { Avatar, Icon, Photo, Verified, coverFor, gridFor } from "@fanation/ui";
 import { FollowBtn, PostCard } from "../../../../components/post-card";
 
 export default function CreatorProfilePage({ params }: { params: Promise<{ handle: string }> }) {
@@ -15,17 +15,26 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ handl
   const posts = SEED_FEED.filter((p) => p.h === c.handle).slice(0, 6);
   return (
     <div>
-      <div style={{ height: 180, background: bg(`fan${c.id}`) }} />
-      <div className="content" style={{ marginTop: -56 }}>
-        <div className="row between wrap" style={{ alignItems: "flex-end", gap: 16 }}>
-          <div className="row gap16" style={{ alignItems: "flex-end" }}>
-            <div style={{ border: "4px solid var(--bg)", borderRadius: "50%" }}><Avatar name={c.name} size={104} /></div>
-            <div className="col gap4" style={{ paddingBottom: 8 }}>
-              <div className="row gap8 t24 b7">{c.name} {c.v && <Verified s={18} />} {c.live && <span className="badge-live"><span className="dot" />LIVE</span>}</div>
-              <div className="muted">@{c.handle} · {c.tag}</div>
-              <div className="row gap16 muted t13" style={{ marginTop: 4 }}>
-                <span><b className="mint">8,412</b> subscribers</span><span><b>326</b> posts</span><span><b>1.2M</b> likes</span>
-              </div>
+      {/* The covers are cropped 3:1 (1500×500) for exactly this strip. Nothing
+          is written on it — the avatar is the only thing that overlaps it — so
+          it needs no scrim. */}
+      <div style={{ height: 180, position: "relative", overflow: "hidden" }}>
+        <Photo src={coverFor(c.handle)} seed={c.id} />
+      </div>
+      {/* The avatar alone rides up into the photograph; the name, handle and
+          counts sit below it on the page background. Pulling the whole header
+          block up put the name inside the cover, and a third of the covers are
+          near-white — no amount of scrim makes white type readable there. */}
+      <div className="content" style={{ marginTop: -52 }}>
+        <div style={{ width: 112, height: 112, boxSizing: "border-box", border: "4px solid var(--bg)", borderRadius: "50%" }}>
+          <Avatar name={c.name} size={104} />
+        </div>
+        <div className="row between wrap" style={{ alignItems: "flex-end", gap: 16, marginTop: 14 }}>
+          <div className="col gap4">
+            <div className="row gap8 t24 b7">{c.name} {c.v && <Verified s={18} />} {c.live && <span className="badge-live"><span className="dot" />LIVE</span>}</div>
+            <div className="muted">@{c.handle} · {c.tag}</div>
+            <div className="row gap16 muted t13" style={{ marginTop: 4 }}>
+              <span><b className="mint">8,412</b> subscribers</span><span><b>326</b> posts</span><span><b>1.2M</b> likes</span>
             </div>
           </div>
           <div className="row gap10">
@@ -53,8 +62,9 @@ export default function CreatorProfilePage({ params }: { params: Promise<{ handl
             {tab === "Media" ? (
               <div className="grid g3 gap10">
                 {Array.from({ length: 18 }).map((_, i) => (
-                  <div key={i} className="card" style={{ padding: 0, overflow: "hidden", aspectRatio: "1", background: bg(`prof${i}`), position: "relative", cursor: "pointer" }}
+                  <div key={i} className="card" style={{ padding: 0, overflow: "hidden", aspectRatio: "1", position: "relative", cursor: "pointer" }}
                     onClick={() => { if (i % 4 === 0) S.openModal("ppv", { id: `pm${i}`, price: 150, who: c.name }); }}>
+                    <Photo src={gridFor(c.handle, i)} seed={`prof${i}`} />
                     {i % 4 === 0 && <div className="chip-coin" style={{ position: "absolute", top: 8, left: 8, padding: "2px 7px" }}><Icon n="lock" s={11} />PPV</div>}
                     {i % 5 === 2 && <div className="pill t12" style={{ position: "absolute", bottom: 8, right: 8, background: "rgba(0,0,0,.5)", border: "none", color: "#fff" }}><Icon n="play" s={11} /></div>}
                   </div>

@@ -90,11 +90,19 @@ export const useAppStore = create<AppState>()((set, get) => ({
   payoutReqs: [],
   liked: {},
   reacts: {},
-  saved: {},
+  /* An account that has been used has history. Collections opening on its own
+     empty state is technically correct and reads as a broken page, so the demo
+     account arrives with a few things already bookmarked — deliberately across
+     five creators and three post types. "3" is Priscilla's PPV drop: it stays
+     blurred in Collections, which is the point. Saving a locked post is not a
+     way around paying for it. */
+  saved: { "1": true, "3": true, "6": true, "7": true, "9": true, "14": true },
   votes: {},
   unlocked: {},
   subs: { sofiaa: true, marcusbeats: true, elenalive: true },
-  follows: {},
+  /* Following is free and subscribing is not, so the two lists overlap without
+     matching — this account follows six creators and pays three of them. */
+  follows: { sofiaa: true, aishab: true, lenaart: true, zaraali: true, leochef: true, noahk: true },
   hidden: {},
   muted: {},
   blocked: {},

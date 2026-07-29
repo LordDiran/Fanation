@@ -41,6 +41,8 @@ export interface Post {
 export interface NotifItem {
   icon: string;
   color: string;
+  /** Who the row is about. Absent on system notices, which carry no face. */
+  actor?: string;
   text: string;
   time: string;
 }

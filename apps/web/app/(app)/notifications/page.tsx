@@ -1,6 +1,6 @@
 "use client";
 import { NOTIF_SEED, useAppStore } from "@fanation/core";
-import { Icon, Menu } from "@fanation/ui";
+import { Avatar, Icon, Menu } from "@fanation/ui";
 
 export default function NotificationsPage() {
   const S = useAppStore();
@@ -18,9 +18,23 @@ export default function NotificationsPage() {
           return (
             <div key={i}>
               <div className="row gap14" style={{ padding: "15px 18px", background: unread ? "rgba(37,153,246,.05)" : "" }}>
-                <div className="feature-ic" style={{ width: 40, height: 40, background: "var(--fill)" }}>
-                  <span style={{ color: n.color }}><Icon n={n.icon} s={18} /></span>
-                </div>
+                {/* A social row leads with the person, with the reason as a
+                    badge on their shoulder — the face is what makes the list
+                    scannable. A platform notice has no person, so it keeps the
+                    plain icon disc and reads as visibly different. */}
+                {n.actor ? (
+                  <div style={{ position: "relative", flexShrink: 0 }}>
+                    <Avatar name={n.actor} size={42} />
+                    <span className="feature-ic"
+                      style={{ position: "absolute", right: -2, bottom: -2, width: 20, height: 20, background: "var(--card)", border: "2px solid var(--bg)" }}>
+                      <span style={{ color: n.color, display: "flex" }}><Icon n={n.icon} s={11} /></span>
+                    </span>
+                  </div>
+                ) : (
+                  <div className="feature-ic" style={{ width: 42, height: 42, background: "var(--fill)", flexShrink: 0 }}>
+                    <span style={{ color: n.color }}><Icon n={n.icon} s={18} /></span>
+                  </div>
+                )}
                 <div className="grow">
                   <div className="t14 b6">{n.text}</div>
                   <div className="muted t12">{n.time}</div>

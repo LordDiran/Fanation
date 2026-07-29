@@ -2,9 +2,57 @@
 import { useState } from "react";
 import { byHandle, seedCommentsFor, useAppStore } from "@fanation/core";
 import type { Post } from "@fanation/core";
-import { Avatar, Icon, Menu, Verified, bg } from "@fanation/ui";
+import { Avatar, Icon, Loop, Menu, Photo, Verified, postMediaFor, postVideoFor, useInView } from "@fanation/ui";
 
 const EMOJIS = ["❤️", "🔥", "😂", "😍", "👏"];
+
+/**
+ * The feed column is 640 wide and the photographs are cropped 3:2, so 420 is
+ * very close to the height the picture wants to be — the frame crops a sliver
+ * off the top and bottom rather than slicing the subject in half. The lock is
+ * shorter on purpose: it is a teaser, and a shorter frame reads as one.
+ */
+const MEDIA_H = 420;
+const LOCKED_H = 320;
+
+/**
+ * The media on a post.
+ *
+ * Video posts autoplay muted, the way Instagram's web feed does, but only
+ * while they are on screen — `useInView` is what keeps the other eight clips
+ * paused on their poster frame. Clicking toggles play, so a person who wants a
+ * still can have one. There is no sound control here: the loops carry no audio
+ * track, and a speaker button that does nothing is worse than no button.
+ */
+function PostMedia({ p, onToggle, playing }: { p: Post; playing: boolean; onToggle: () => void }) {
+  const [ref, inView] = useInView<HTMLDivElement>(0.4);
+  const src = postMediaFor(p);
+  const loop = postVideoFor(p);
+  const isVideo = p.type === "video" && !!loop;
+
+  return (
+    <div ref={ref} onClick={isVideo ? onToggle : undefined}
+      style={{ height: MEDIA_H, borderRadius: 14, position: "relative", overflow: "hidden", cursor: isVideo ? "pointer" : "default" }}>
+      {isVideo ? (
+        <Loop src={loop} poster={src} active={inView && playing} radius={14} />
+      ) : (
+        <Photo src={src} seed={p.seed} alt="" radius={14} />
+      )}
+      {isVideo && !playing && (
+        <div className="row center" style={{ position: "absolute", inset: 0 }}>
+          <div className="feature-ic" style={{ width: 56, height: 56, background: "rgba(0,0,0,.42)" }}>
+            <Icon n="play" s={24} c="#fff" fill="#fff" />
+          </div>
+        </div>
+      )}
+      {p.dur && (
+        <div className="pill t12" style={{ position: "absolute", bottom: 10, right: 10, background: "rgba(0,0,0,.55)", border: "none", color: "#fff" }}>
+          {p.dur}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function FollowBtn({ handle }: { handle: string }) {
   const on = useAppStore((s) => !!s.follows[handle]);
@@ -23,6 +71,7 @@ export function PostCard({ p }: { p: Post }) {
   const [showC, setShowC] = useState(false);
   const [showR, setShowR] = useState(false);
   const [ctext, setCtext] = useState("");
+  const [playing, setPlaying] = useState(true);
   const liked = !!S.liked[p.id];
   const savedP = !!S.saved[p.id];
   const isSub = !!S.subs[p.h];
@@ -75,17 +124,7 @@ export function PostCard({ p }: { p: Post }) {
       <div className="t14" style={{ margin: "13px 0", lineHeight: 1.55 }}>{p.text}</div>
 
       {(p.type === "image" || p.type === "video") && (
-        <div style={{ height: 280, borderRadius: 14, background: bg(p.seed), position: "relative", overflow: "hidden" }}>
-          {p.type === "video" && (
-            <div className="row center" style={{ position: "absolute", inset: 0 }}>
-              <div className="feature-ic" style={{ width: 56, height: 56, background: "rgba(0,0,0,.42)", cursor: "pointer" }}
-                onClick={() => S.toast(`▶ Playing preview — full video is ${p.dur}`)}>
-                <Icon n="play" s={24} c="#fff" fill="#fff" />
-              </div>
-            </div>
-          )}
-          {p.dur && <div className="pill t12" style={{ position: "absolute", bottom: 10, right: 10, background: "rgba(0,0,0,.55)", border: "none", color: "#fff" }}>{p.dur}</div>}
-        </div>
+        <PostMedia p={p} playing={playing} onToggle={() => setPlaying((v) => !v)} />
       )}
 
       {p.poll && (
@@ -108,8 +147,12 @@ export function PostCard({ p }: { p: Post }) {
       )}
 
       {p.type === "locked" && !isUnlocked && (
-        <div className="locked" style={{ height: 210 }}>
-          <div style={{ height: "100%", background: bg(`lk${p.id}`), filter: "blur(2px)", transform: "scale(1.05)" }} />
+        <div className="locked" style={{ height: LOCKED_H }}>
+          {/* Same photograph the unlocked branch shows, blurred in CSS rather
+              than pre-blurred into a second file — unlocking has to reveal the
+              picture the blur was hiding, not swap in a different one. The
+              oversize scale covers the soft rim a blur leaves at the edges. */}
+          <Photo src={postMediaFor(p)} seed={p.seed} blur={10} scale={1.12} />
           <div className="lockcover">
             <div className="feature-ic" style={{ background: "rgba(37,153,246,.16)" }}><Icon n="lock" c="var(--blueL)" /></div>
             <div className="b7" style={{ color: "#fff" }}>{isSub ? "Pay-per-view drop" : "Exclusive locked content"}</div>
@@ -121,8 +164,9 @@ export function PostCard({ p }: { p: Post }) {
         </div>
       )}
       {p.type === "locked" && isUnlocked && (
-        <div style={{ height: 280, borderRadius: 14, background: bg(`lk${p.id}`), position: "relative", overflow: "hidden" }}>
-          <span className="chip-mint" style={{ position: "absolute", top: 10, left: 10 }}><Icon n="check" s={12} />Unlocked</span>
+        <div style={{ height: MEDIA_H, borderRadius: 14, position: "relative", overflow: "hidden" }}>
+          <Photo src={postMediaFor(p)} seed={p.seed} radius={14} />
+          <span className="chip-mint" style={{ position: "absolute", top: 10, left: 10, zIndex: 1 }}><Icon n="check" s={12} />Unlocked</span>
         </div>
       )}
 

@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { CREATORS, useAppStore } from "@fanation/core";
-import { Avatar, Icon, Verified, bg } from "@fanation/ui";
+import { Avatar, Icon, Photo, Scrim, Verified, mediaFor, poolFor } from "@fanation/ui";
 
 const CATS = ["Trending", "Lifestyle", "Fitness", "Music", "Gaming", "Education", "Comedy", "Model", "Podcast", "Art"];
 
@@ -35,7 +35,11 @@ export default function ExplorePage() {
             {liveList.map((c, i) => (
               <div key={c.id} className="card" style={{ padding: 0, overflow: "hidden", minWidth: 200, flex: "none", cursor: "pointer" }}
                 onClick={() => router.push("/live")}>
-                <div style={{ height: 118, background: bg(`fan${c.id}`), position: "relative" }}>
+                <div style={{ height: 118, position: "relative", overflow: "hidden" }}>
+                  {/* A live thumbnail is the creator's own frame, not a generic
+                      tile — same pool their posts are dealt from. */}
+                  <Photo src={mediaFor(poolFor(c.handle), 0)} seed={c.id} />
+                  <Scrim from={0.5} height="46%" top />
                   <div className="badge-live" style={{ position: "absolute", top: 10, left: 10 }}><span className="dot" />LIVE</div>
                   <div className="pill t12" style={{ position: "absolute", top: 10, right: 10 }}><Icon n="eye" s={12} />{i + 1}.2K</div>
                 </div>
@@ -62,8 +66,15 @@ export default function ExplorePage() {
         {list.map((c) => (
           <div key={c.id} className="card" style={{ padding: 0, overflow: "hidden", cursor: "pointer" }}
             onClick={() => router.push(`/creator/${c.handle}`)}>
-            <div style={{ height: 180, background: bg(`fan${c.id}`), position: "relative" }}>
-              <div className="chip-mint" style={{ position: "absolute", top: 12, right: 12 }}>{c.avg} avg/mo</div>
+            <div style={{ height: 180, position: "relative", overflow: "hidden" }}>
+              <Photo src={mediaFor(poolFor(c.handle), 1)} seed={c.id} />
+              {/* The name sits in white on this frame, so the wash is not
+                  decoration — half the pool is a bright room. The top wash
+                  carries the earnings chip and the live badge for the same
+                  reason: mint on a white studio wall is unreadable. */}
+              <Scrim />
+              <Scrim from={0.45} height="38%" top />
+              <div className="chip-mint" style={{ position: "absolute", top: 12, right: 12, background: "rgba(6,8,16,.55)", backdropFilter: "blur(6px)" }}>{c.avg} avg/mo</div>
               {c.live && <div className="badge-live" style={{ position: "absolute", top: 12, left: 12 }}><span className="dot" />LIVE</div>}
               <div style={{ position: "absolute", left: 14, bottom: 12 }}>
                 <div className="row gap6 b7" style={{ color: "#fff" }}>{c.name} {c.v && <Verified s={14} />}</div>

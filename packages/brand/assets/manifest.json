@@ -53,21 +53,21 @@
       "handle": "sofiaa",
       "cat": "life",
       "avatar": { "file": "apps/landing/public/images/creator-sofia.jpg", "gravity": "north" },
-      "reel": "1445205170230-053b83016050"
+      "reel": "1495197359483-d092478c170a"
     },
     "elena": {
       "name": "Elena Rusk",
       "handle": "elenalive",
       "cat": "stream",
       "avatar": { "id": "1438761681033-6461ffad8d80" },
-      "reel": "1585647347483-22b66260dfff"
+      "reel": "1616588589676-62b3bd4ff6d2"
     },
     "marcus": {
       "name": "Marcus T.",
       "handle": "marcusbeats",
       "cat": "pod",
       "avatar": { "file": "apps/landing/public/images/creator-marcus.jpg", "gravity": "north" },
-      "reel": "1554048612-b6a482bc67e5"
+      "reel": "1505740420928-5e560c06d30e"
     },
     "dembe": {
       "name": "Dembe O.",
@@ -88,7 +88,7 @@
       "handle": "tobivlogs",
       "cat": "vlog",
       "avatar": { "file": "apps/landing/public/images/creator-tobi.jpg", "gravity": "north" },
-      "reel": "1444723121867-7a241cacace9"
+      "reel": "1554080353-a576cf803bda"
     },
     "aisha": {
       "name": "Aisha Bello",
@@ -102,7 +102,7 @@
       "handle": "priscilla",
       "cat": "model",
       "avatar": { "id": "1502378735452-bc7d86632805" },
-      "reel": "1509319117193-57bab727e09d"
+      "reel": "1595777457583-95e059d581b8"
     },
     "jayden": {
       "name": "Jayden Cole",
@@ -116,7 +116,7 @@
       "handle": "kwamea",
       "cat": "com",
       "avatar": { "id": "1463453091185-61582044d556" },
-      "reel": "1533174072545-7a4b6ad7a6c3"
+      "reel": "1585699324551-f6c309eedeca"
     },
     "lena": {
       "name": "Lena Ortiz",
@@ -130,14 +130,14 @@
       "handle": "diegoplays",
       "cat": "game",
       "avatar": { "id": "1492562080023-ab3db95bfbce" },
-      "reel": "1471967183320-ee018f6e114a"
+      "reel": "1585620385456-4759f9b5c7d9"
     },
     "amara": {
       "name": "Amara Obi",
       "handle": "amaraobi",
       "cat": "glow",
       "avatar": { "file": "apps/landing/public/images/creator-amara.jpg", "gravity": "north" },
-      "reel": "1620916566398-39f1143ab7be"
+      "reel": "1608571423902-eed4a5ad8108"
     },
     "noah": {
       "name": "Noah Kim",
@@ -151,7 +151,7 @@
       "handle": "zaraali",
       "cat": "dance",
       "avatar": { "id": "1534528741775-53994a69daeb" },
-      "reel": "1585699324551-f6c309eedeca"
+      "reel": "1502519144081-acca18599776"
     },
     "leo": {
       "name": "Leo Mensah",
@@ -196,11 +196,11 @@
 
   "categories": {
     "life": [
-      "1490481651871-ab68de25d43d",
+      "1499750310107-5fef28a66643",
       "1522708323590-d24dbb6b0267",
-      "1556228453-efd6c1ff04f6",
-      "1481349518771-20055b2a7b24",
-      "1441984904996-e0b6ba687e04"
+      "1560448204-e02f11c3d0e2",
+      "1522771739844-6a9f6d5f14af",
+      "1493663284031-b7e3aefcae8e"
     ],
     "stream": [
       "1598550476439-6847785fcea6",
@@ -249,7 +249,7 @@
       "1496747611176-843222e1e57c",
       "1558769132-cb1aea458c5e",
       "1479064555552-3ef4979f8908",
-      "1524805444758-089113d48a6d"
+      "1445205170230-053b83016050"
     ],
     "music": [
       "1511671782779-c97d3d27a1d4",
@@ -262,7 +262,7 @@
       "1527224857830-43a7acc85260",
       "1503095396549-807759245b35",
       "1514320291840-2e0a9bf2a9ae",
-      "1560439514-4e9645039924",
+      "1524368535928-5b5e00ddc76b",
       "1507676184212-d03ab07a01bf"
     ],
     "art": [
@@ -283,7 +283,7 @@
       "1631730359585-38a4935cbec4",
       "1596462502278-27bfdc403348",
       "1617897903246-719242758050",
-      "1512496015851-a90fb38ba796",
+      "1522338140262-f46f5913618a",
       "1503236823255-94609f598e71"
     ],
     "tech": [
@@ -295,10 +295,10 @@
     ],
     "dance": [
       "1518834107812-67b0b7c58434",
-      "1524594152303-9fd13543fe6e",
+      "1547153760-18fc86324498",
       "1535525153412-5a42439a210d",
-      "1508700115892-45ecd05ae2ad",
-      "1499415479124-43c32433a620"
+      "1478147427282-58a87a120781",
+      "1519925610903-381054cc2a1c"
     ],
     "food": [
       "1504674900247-0877df9cc836",
@@ -326,7 +326,7 @@
   "adminEvidence": [
     {
       "out": "replay-priscilla",
-      "id": "1509319117193-57bab727e09d",
+      "id": "1595777457583-95e059d581b8",
       "crop": "reel",
       "note": "Report #3 — restricted live replay frame. Renders blurred behind the Reveal gate."
     },

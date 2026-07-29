@@ -96,6 +96,32 @@ export function reelFor(handle?: string): { still: string; loop: string } {
   return { still: REEL_STILLS[h] || "", loop: REEL_LOOPS[h] || "" };
 }
 
+/** The motion loop behind a photograph, or "" if that frame is a still. */
+export function loopFor(src: string): string {
+  return MEDIA_VIDEOS[src] || "";
+}
+
+/** Every photograph that has footage behind it, in manifest order. */
+export const MOTION_STILLS: string[] = Object.keys(MEDIA_VIDEOS);
+
+/**
+ * The signed-in creator's own library — the studio, the vault, the composer.
+ *
+ * "You" is not one of the sixteen, so there is no curated pool to draw from.
+ * The studio surfaces deal from a rotation across categories instead, which is
+ * both truer to a working creator's library and necessary for the geometry:
+ * the vault renders five tiles to a row, and a single five-photograph pool
+ * would put the same picture down every column. Six categories against five
+ * photographs gives thirty distinct frames before anything repeats, and
+ * consecutive tiles never share a category.
+ */
+const MY_CATS = ["life", "glow", "model", "trav", "art", "food"];
+
+export function myMediaFor(i: number): string {
+  const n = Math.abs(Math.floor(i));
+  return mediaFor(MY_CATS[n % MY_CATS.length], Math.floor(n / MY_CATS.length));
+}
+
 /** Moderation exhibit by name. Admin only — the fan app never calls this. */
 export function evidenceFor(key: string): string {
   return EVIDENCE[key] || "";
@@ -180,16 +206,89 @@ export function postVideoFor(p: Post): string {
 }
 
 /**
+ * Categories that can lend a photograph to their neighbour without the grid
+ * changing subject. A lifestyle creator's wall can carry a beauty frame, a
+ * travel frame and a food frame and still read as one person's work; it cannot
+ * carry a server rack. The relation is deliberately not symmetric-by-accident —
+ * each row was chosen for what the borrowing category can absorb, not for what
+ * the lender wants to give away.
+ */
+const NEIGHBOURS: Record<string, [string, string, string]> = {
+  life: ["glow", "trav", "food"],
+  stream: ["game", "tech", "music"],
+  pod: ["music", "edu", "tech"],
+  fit: ["life", "food", "dance"],
+  edu: ["tech", "art", "pod"],
+  vlog: ["trav", "life", "tech"],
+  trav: ["vlog", "life", "food"],
+  model: ["glow", "art", "life"],
+  music: ["pod", "dance", "com"],
+  com: ["music", "vlog", "dance"],
+  art: ["model", "glow", "edu"],
+  game: ["stream", "tech", "com"],
+  glow: ["model", "life", "art"],
+  tech: ["game", "edu", "stream"],
+  dance: ["music", "fit", "com"],
+  food: ["life", "trav", "fit"],
+};
+
+/**
+ * The 21 photographs a creator's profile grid draws from, in order.
+ *
+ * The grid renders 18 tiles and a category holds 5, so the naive deal repeats
+ * every sixth tile — three visible duplicates per wall, which is the kind of
+ * thing nobody consciously notices and everybody registers as cheap. Their own
+ * five lead, then their reel frame, and the remaining twelve come from three
+ * neighbouring categories.
+ *
+ * The neighbour frames are dealt a row at a time — three columns, three
+ * different categories per row — and the column each category lands in rotates
+ * every row, so the wall does not stripe vertically into three themed columns.
+ * 21 frames against 18 tiles means nothing repeats at all.
+ *
+ * Built once per handle and cached: the profile calls this eighteen times in a
+ * single render and the answer cannot change between those calls.
+ */
+const GRID_CACHE: Record<string, string[]> = {};
+
+function gridDeck(h: string): string[] {
+  const cached = GRID_CACHE[h];
+  if (cached) return cached;
+
+  const cat = poolFor(h);
+  const own = CATEGORY_MEDIA[cat] || CATEGORY_MEDIA[DEFAULT_CAT];
+  /* The reel frame joins the wall, but only when it is not already on it.
+     `REEL_IN_POOL` names the creators whose reel photograph is also one of
+     their five category frames; for those, appending the reel would paint the
+     same photograph twice at two different crops, which `deck.includes` cannot
+     catch because the two crops are two different files. */
+  const reel = REEL_IN_POOL[h] ? "" : REEL_STILLS[h];
+  const deck: string[] = reel ? [...own, reel] : [...own];
+
+  const nb = (NEIGHBOURS[cat] || NEIGHBOURS[DEFAULT_CAT]).map(
+    (n) => CATEGORY_MEDIA[n] || CATEGORY_MEDIA[DEFAULT_CAT],
+  );
+  const depth = Math.max(...nb.map((p) => p.length));
+  for (let d = 0; d < depth; d++) {
+    for (let col = 0; col < nb.length; col++) {
+      const pool = nb[(col + d) % nb.length];
+      const src = pool[d % pool.length];
+      if (!deck.includes(src)) deck.push(src);
+    }
+  }
+
+  GRID_CACHE[h] = deck;
+  return deck;
+}
+
+/**
  * A photograph for a creator's profile grid.
  *
- * The grid is a wall of their own work, so it draws the whole pool including
- * the reel frame — a creator's reel appearing among their posts on their own
- * profile is what the real products do.
+ * The grid is a wall of their own work, so it leads with their whole pool
+ * including the reel frame — a creator's reel appearing among their posts on
+ * their own profile is what the real products do.
  */
 export function gridFor(handle: string, i: number): string {
-  const h = handle.replace(/^@/, "");
-  const pool = CATEGORY_MEDIA[poolFor(h)] || CATEGORY_MEDIA[DEFAULT_CAT];
-  const reel = REEL_STILLS[h];
-  const all = reel ? [...pool, reel] : pool;
-  return all[i % all.length];
+  const deck = gridDeck(handle.replace(/^@/, ""));
+  return deck[((i % deck.length) + deck.length) % deck.length];
 }

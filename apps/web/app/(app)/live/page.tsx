@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { LIVE_LINES, LIVE_NAMES, useAppStore } from "@fanation/core";
-import { Avatar, Icon, Verified, bg } from "@fanation/ui";
+import { Avatar, Icon, Loop, Photo, Verified, reelFor } from "@fanation/ui";
 import { FollowBtn } from "../../../components/post-card";
 
 type ChatLine = [string, string, string];
@@ -57,6 +57,9 @@ export default function LivePage() {
       : t === "gift" ? ["rgba(93,221,144,.14)", "rgba(93,221,144,.36)", "var(--mint)"]
         : t === "sub" || t === "me" ? ["rgba(37,153,246,.14)", "rgba(37,153,246,.36)", "var(--blueL)"]
           : ["", "", "var(--text)"];
+  /* The stream itself: Elena's own 9:16 footage, the same reel her story and
+     her card draw from — one creator, one look. */
+  const { still, loop } = reelFor("elenalive");
   const sendChat = () => {
     const v = msg.trim();
     if (!v) return;
@@ -88,7 +91,19 @@ export default function LivePage() {
       </div>
       <div className="row gap20" style={{ alignItems: "stretch", flexWrap: "wrap" }}>
         <div className="grow" style={{ minWidth: 420 }}>
-          <div className="card" style={{ padding: 0, overflow: "hidden", position: "relative", height: 520, background: bg("liveelena") }}>
+          <div className="card" style={{ padding: 0, overflow: "hidden", position: "relative", height: 520 }}>
+            {/* Elena streams from a phone, so the source is 9:16 sitting inside
+                a wide player. Every real platform fills the dead space with a
+                blown-up blur of the same frame — black bars read as a broken
+                player, not as a stream. */}
+            {loop ? (
+              <>
+                <Photo src={still} seed="liveelena" blur={30} scale={1.2} />
+                <Loop src={loop} poster={still} fit="contain" style={{ background: "transparent" }} />
+              </>
+            ) : (
+              <Photo src={still} seed="liveelena" />
+            )}
             <div className="badge-live" style={{ position: "absolute", top: 16, left: 16, animation: "pulseglow 2s infinite" }}>
               <span className="dot" />LIVE · {mmss(dur)}
             </div>

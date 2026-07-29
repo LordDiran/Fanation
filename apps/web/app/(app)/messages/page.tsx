@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { DM_OPENERS, DM_THREADS, byHandle, useAppStore } from "@fanation/core";
-import { Avatar, Icon, Menu, Verified, bg } from "@fanation/ui";
+import { Avatar, Icon, Menu, Photo, Verified, mediaFor, poolFor } from "@fanation/ui";
 
 export default function MessagesPage() {
   const S = useAppStore();
@@ -12,6 +12,10 @@ export default function MessagesPage() {
   const mine = S.dms[key] ?? [];
   const unlocked = !!S.dmUnlocked[key];
   const creator = byHandle(key);
+  /* The paid attachment in the thread. One photograph, resolved once, so the
+     blurred teaser and the unlocked card are the same picture — paying has to
+     reveal what the blur was hiding, not swap in something else (D17). */
+  const dmShot = mediaFor(poolFor(key), 2);
   const send = () => {
     const v = txt.trim();
     if (!v) return;
@@ -67,14 +71,15 @@ export default function MessagesPage() {
             </div>
             {t.locked && (unlocked ? (
               <div className="card" style={{ alignSelf: "flex-start", width: 280, padding: 0, overflow: "hidden" }}>
-                <div style={{ height: 170, background: bg(`fan${creator.id}`), position: "relative" }}>
-                  <span className="chip-mint" style={{ position: "absolute", top: 8, left: 8 }}><Icon n="check" s={12} />Unlocked · 200</span>
+                <div style={{ height: 170, position: "relative", overflow: "hidden" }}>
+                  <Photo src={dmShot} seed={`dm${creator.id}`} />
+                  <span className="chip-mint" style={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}><Icon n="check" s={12} />Unlocked · 200</span>
                 </div>
                 <div className="t13" style={{ padding: "9px 12px" }}>Full BTS set from Friday&apos;s shoot 📸</div>
               </div>
             ) : (
               <div className="card locked" style={{ alignSelf: "flex-start", width: 280, height: 180 }}>
-                <div style={{ height: "100%", background: bg(`fan${creator.id}`), filter: "blur(3px)" }} />
+                <Photo src={dmShot} seed={`dm${creator.id}`} blur={9} scale={1.12} />
                 <div className="lockcover">
                   <Icon n="lock" c="var(--amber)" />
                   <div className="b7 t14" style={{ color: "#fff" }}>Locked message</div>

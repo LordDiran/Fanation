@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import { CREATORS, SEED_FEED, useAppStore } from "@fanation/core";
-import { Avatar, Icon, Verified, bg } from "@fanation/ui";
+import { Avatar, Icon, Photo, Verified, postMediaFor } from "@fanation/ui";
 import { FollowBtn } from "../../../components/post-card";
 
 export default function CollectionsPage() {
@@ -29,11 +29,17 @@ export default function CollectionsPage() {
         </div>
       ) : (
         <div className="grid g3 gap16">
-          {savedPosts.map((p) => (
+          {savedPosts.map((p) => {
+            /* A saved post keeps the photograph it had in the feed. One still
+               locked stays blurred here too — bookmarking a PPV drop is not a
+               way to see it for free. */
+            const lk = p.type === "locked" && !S.unlocked[p.id];
+            return (
             <div key={p.id} className="card" style={{ padding: 0, overflow: "hidden" }}>
-              <div style={{ height: 150, background: bg(`sv${p.id}`), position: "relative" }}>
-                {p.type === "locked" && !S.unlocked[p.id] && (
-                  <span className="chip-coin" style={{ position: "absolute", top: 8, left: 8, padding: "2px 7px" }}><Icon n="lock" s={11} />PPV</span>
+              <div style={{ height: 150, position: "relative", overflow: "hidden" }}>
+                <Photo src={postMediaFor(p)} seed={`sv${p.id}`} blur={lk ? 10 : undefined} scale={lk ? 1.12 : undefined} />
+                {lk && (
+                  <span className="chip-coin" style={{ position: "absolute", top: 8, left: 8, padding: "2px 7px", zIndex: 1 }}><Icon n="lock" s={11} />PPV</span>
                 )}
               </div>
               <div style={{ padding: 12 }}>
@@ -44,7 +50,8 @@ export default function CollectionsPage() {
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       ))}
       {tab === "Subscriptions" && (
