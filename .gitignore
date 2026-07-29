@@ -1,14 +1,20 @@
+# dependencies — three projects, three independent installs
 node_modules
-.next
-.turbo
+
+# build output
 dist
-out
+
+# environment — the repo is public, nothing but the example belongs here
 .env*
 !.env.example
+
+# hosting
 .vercel
+
+# editor and OS
 .DS_Store
 *.tsbuildinfo
-next-env.d.ts
 
-# generated media build cache — the derived files are committed, the sources are not
-packages/brand/assets/.cache
+# generated media build cache — the derived icons are committed, the sources
+# they were rendered from are not
+tools/brand-assets/.cache

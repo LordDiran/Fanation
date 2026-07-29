@@ -1,0 +1,21 @@
+# Netlify equivalent of vercel.json. Only the file matching your host is read —
+# shipping both means the project deploys on either without an edit.
+#
+# Note what is NOT here: a catch-all rewrite to index.html. The client and admin
+# projects need one because they are routers. The landing site is a single page
+# whose links are hash anchors, so an unknown path should return a real 404
+# rather than quietly rendering the homepage under the wrong URL.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "no-cache"

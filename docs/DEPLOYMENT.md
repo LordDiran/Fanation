@@ -1,245 +1,167 @@
 # Deployment
 
-Three Vercel projects, one repo, one branch. Vercel scope `timmydiran1-6323s-projects`
-(Pro). Repo `LordDiran/Fanation`, branch `main`.
+Three static sites, three deployments, no server runtime anywhere.
 
-This is the record of how it is wired and how to change it. It is not a to-do list — all
-three projects are already built and live.
+Each project builds to a folder of HTML, JavaScript and CSS. Nothing needs Node at request time, nothing needs environment variables at build time, and no project depends on another project's build. That means the hosting choice is open — Vercel, Netlify, Cloudflare Pages, S3 + CloudFront, Azure Static Web Apps or Nginx serving a folder all work without changing application code.
+
+Current hosting is Vercel. Everything below is written for Vercel first, with the equivalent for other hosts in §3.3.
 
 ---
 
-## 1. How the three projects differ
+## 1. The three projects
 
-They differ by **Root Directory** and nothing else.
+| Vercel project | Root directory | Build | Output | Production URL |
+|---|---|---|---|---|
+| `fanation` | `landing` | `npm run build` | `dist` | `fanation-creator.vercel.app` |
+| `fanation-app` | `client` | `npm run build` | `dist` | `fanation-app.vercel.app` |
+| `fanation-admin` | `admin` | `npm run build` | `dist` | `fanation-admin.vercel.app` |
 
-| Project | Root Directory | Production URL |
+`fanation-black.vercel.app` is an additional alias on the `fanation` project.
+
+All three point at the same GitHub repository, `github.com/LordDiran/Fanation`, and differ only in **Root Directory**. Framework preset is **Vite** for all three; Vercel then infers the build command and output directory, and the committed `vercel.json` in each folder pins them explicitly anyway.
+
+### 1.1 Setting a project up from scratch
+
+1. New Project → import `LordDiran/Fanation`.
+2. **Root Directory** → `landing`, `client` or `admin`. This is the only setting that differs between the three.
+3. Framework Preset → Vite. Build command `npm run build`, output directory `dist`, install command `npm install`.
+4. Node version → 20 or later.
+5. No environment variables. There are none yet; when the backend arrives the API base URL goes here, per environment, not in the repository.
+6. Deploy.
+
+### 1.2 Stop the other two rebuilding
+
+One repository feeding three projects means every push rebuilds all three by default. Under **Settings → Git → Ignored Build Step**, set:
+
+```bash
+git diff --quiet HEAD^ HEAD -- ./
+```
+
+Vercel runs this from the project's root directory. Exit 0 (no change in this folder) cancels the build; exit 1 (change) proceeds. A commit touching only `landing/` then rebuilds `fanation` alone.
+
+One thing to watch: this compares against the previous commit only. A squashed merge or a force-push can make a folder look unchanged when it is not. If a deployment goes missing after an unusual git operation, redeploy that project manually rather than debugging the ignore step.
+
+---
+
+## 2. Committed configuration
+
+Each project carries its own `vercel.json` **and** its own `netlify.toml`. A host reads only the file that belongs to it, so shipping both costs nothing and means these projects deploy on either platform with no dashboard configuration and no edit. The two files express the same three things: build command and output directory, the SPA rewrite, and caching headers.
+
+Everything below describes `vercel.json`; `netlify.toml` is the same rules in TOML.
+
+### 2.1 `client/vercel.json` and `admin/vercel.json`
+
+```json
+{ "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }] }
+```
+
+This is the one rule the hosting must get right — see §3.
+
+`admin/vercel.json` additionally sets three headers on every response:
+
+| Header | Value | Why |
 |---|---|---|
-| `fanation` | `apps/landing` | `fanation-creator.vercel.app`, `fanation-black.vercel.app` |
-| `fanation-app` | `apps/web` | `fanation-app.vercel.app` |
-| `fanation-admin` | `apps/admin` | `fanation-admin.vercel.app` — open, see §5 |
+| `X-Robots-Tag` | `noindex, nofollow` | Keeps the console out of search results |
+| `X-Frame-Options` | `DENY` | No embedding the console in an iframe |
+| `Referrer-Policy` | `no-referrer` | Console URLs do not leak to third parties |
 
-Framework preset Next.js on all three. Install command, build command and output directory
-stay on default — Vercel detects pnpm workspaces and Turborepo without help. There are no
-environment variables on any project.
+**None of these is access control.** See §4.
 
-One push to `main` triggers all three builds. Each build runs `pnpm install` at the
-workspace root, then builds only its own app.
+### 2.2 Caching, all three
 
----
+```json
+"/assets/(.*)"  → Cache-Control: public, max-age=31536000, immutable
+"/index.html"   → Cache-Control: no-cache
+```
 
-## 2. Where `vercel.json` lives
-
-`apps/landing/vercel.json`, not the repo root.
-
-Vercel reads `vercel.json` relative to the **Root Directory**, not the repository root. A
-`vercel.json` at the top of this repo would be ignored by all three projects. The landing
-page's cache headers are the only ones in play, and they sit in `apps/landing/`.
+Vite content-hashes every filename in `assets/`, so a one-year immutable cache is safe — a changed file gets a new name. `index.html` is the only file whose name is stable, so it must not be cached, or a deployment is invisible until the browser gives up on its copy.
 
 ---
 
-## 3. Adding a fourth app
+## 3. The SPA rewrite — the rule that matters
 
-1. Create the app under `apps/`. `pnpm-workspace.yaml` already globs `apps/*` — no edit
-   needed.
-2. Commit and push. The folder has to exist on the remote first; Vercel's Root Directory
-   picker only offers paths it can see on GitHub.
-3. Vercel → **Add New → Project → Import `LordDiran/Fanation`**.
-4. Root Directory → **Edit** → point at `apps/<name>`.
-5. Vercel warns the repo is already connected to another project. Accept it. That is the
-   whole pattern.
-6. Leave build, install and output settings on default. No environment variables.
+`client` and `admin` route in the browser. A user who opens `app.fanation.app/wallet` directly, or presses refresh while on it, sends a request for `/wallet` to the host. There is no file at that path.
 
-**Push before you create the project, not after.** Doing it the other way round leaves the
-Root Directory unselectable and the Application Preset falling back to "Other".
+**The host must answer with `index.html` and a 200.** React Router then reads the URL and renders the right page. Without this rule, every URL except the root 404s on direct load and on refresh — the application works perfectly while you click around and breaks the moment anyone shares a link.
 
----
+`landing` does not need this. One page, no router.
 
-## 4. Build settings — stopping the three-way rebuild
+### 3.1 Verifying it
 
-A push to `main` touches one repo, and without this every push would rebuild all three
-apps. Build CPU is metered on Pro, so a one-line landing-page tweak paying for three
-builds is waste.
+After any hosting change, load a deep route directly rather than clicking to it:
 
-Everything needed sits under **Settings → Build and Deployment → Root Directory**. Confirm
-both toggles below read Enabled on each of the three projects.
+```
+https://app.fanation.app/studio/analytics     ← must render, not 404
+https://admin.fanation.app/audit              ← must render, not 404
+```
 
-| Setting | Required state | Why |
-|---|---|---|
-| Include files outside the root directory in the Build Step | **Enabled** | Mandatory. Each app builds from its own root but still needs `pnpm-workspace.yaml`, `pnpm-lock.yaml` and `packages/`. Disable it and every build fails on install. |
-| Skip deployments when there are no changes to the root directory or its dependencies | **Enabled** | Vercel skips the build when nothing in that app's dependency graph moved. |
+Then refresh on each. Both must survive.
 
-It is dependency-aware, not path-matching. A change in `packages/core` still rebuilds
-`web` and `admin`, because both depend on it. A change confined to `apps/landing` rebuilds
-only `fanation`.
+### 3.2 The failure mode to expect in local preview
 
-**What it does not skip: anything at the repo root.** Commit `8de1bd9` touched only
-`README.md` and `docs/` — no app directory, no package — and all three projects built
-anyway. That is consistent, not a bug: with *Include files outside the root directory*
-enabled, the repo root is part of every project's build context, so a root-level change
-counts as a change for all three. `turbo.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`
-and the root `package.json` behave the same way, and for those it is the correct answer.
+`vite preview` answers *any* unknown path with `index.html` and a 200 — including a missing image. So a broken image URL comes back as a page of HTML with a 200 status rather than a 404, and any check that watches status codes will report a clean run over a site with no pictures in it. `tools/verify-responsive.mjs` was rewritten to ask each `<img>` whether it decoded for exactly this reason. Do not trust status codes for asset checks against a preview server.
 
-The saving is real but narrower than it sounds: it applies to work done inside one app's
-own folder, which is most day-to-day work. Documentation commits will rebuild everything.
-If that becomes annoying, batch doc changes rather than trying to defeat the toggle.
+### 3.3 Equivalents on other hosts
 
-**Ignored Build Step stays on *Automatic*.** Do not put `npx turbo-ignore` in that field.
-Vercel deprecated it in favour of the Skip Deployments toggle above and the dashboard
-throws a banner if you try: *"`turbo-ignore` is deprecated. Use the built-in Skip
-Deployments feature instead."* If a custom command is sitting there from an earlier
-attempt, set **Behavior → Automatic**, clear the field, and save.
-
-One trap worth naming: the argument to `turbo-ignore` was the workspace name, so
-`npx turbo-ignore landing` on the **admin** project would have told Vercel to watch the
-wrong app entirely. The native toggle takes no argument — it reads the project's own Root
-Directory. That is one fewer thing to get wrong.
-
-Node.js version is **24.x** on all three. Leave it.
-
----
-
-## 5. Deployment Protection on `fanation-admin`
-
-Sign-in in the prototype is mocked. Any input signs you in. That is acceptable behind
-Vercel Authentication and unacceptable on an open URL, because the admin console is where
-payouts, KYC decisions and bans live.
-
-**Settings → Deployment Protection → Vercel Authentication → Standard Protection.** This
-is already on and stored.
-
-### What Standard Protection actually covers
-
-Vercel exposes three modes. The API field is `ssoProtection.deploymentType`:
-
-| Dashboard label | API value | Covers | Cost |
-|---|---|---|---|
-| Standard Protection | `prod_deployment_urls_and_all_previews` | Every deployment URL and every branch URL. **Exempts the project's production domain by design.** | included |
-| All Deployments | `all` | Everything, production domain included | $150/month add-on |
-| Only Preview Deployments | `preview` | Previews only | included |
-
-Standard Protection is the mode in use, and its own dropdown text says what it does:
-*"Protect all except production Custom Domains for your project."* That exemption is not
-a misconfiguration and it is not something a Save button fixes — `fanation-admin.vercel.app`
-is the production domain, so it is deliberately left open.
-
-Verified against the live projects with unauthenticated requests:
-
-| URL | Result |
+| Host | Configuration |
 |---|---|
-| `fanation-admin.vercel.app` | **200 — serves the console** |
-| `fanation-admin-timmydiran1-6323s-projects.vercel.app` | 302 → `vercel.com/login` |
-| `fanation-admin-git-main-timmydiran1-6323s-projects.vercel.app` | 302 → `vercel.com/login` |
-| per-deployment URLs (`fanation-admin-<hash>-…`) | 302 → `vercel.com/login` |
-| `fanation-app-git-main-…vercel.app` | 302 → `vercel.com/login` |
-
-One hole, and it is the pretty alias. See the decision below before treating that as a
-defect to fix.
-
-### Current decision: leave it open
-
-`fanation-admin.vercel.app` stays. Deliberate, for the prototype stage only.
-
-The reasoning is that there is nothing behind the URL — mocked sign-in, no backend, no
-database, no processor, fabricated fixtures — and the business logic it reveals is in a
-public repo anyway. Handing devs one clean URL beats managing a Project Members list for a
-console that stores nothing.
-
-**The trigger that reverses this: the first real API call wired into `apps/admin`.** At
-that point mocked sign-in plus an open URL is an unauthenticated admin over payouts, KYC
-and bans. Two ways to close it, both reversible in under a minute:
-
-| Option | Cost | Effect |
-|---|---|---|
-| **Settings → Domains → remove `fanation-admin.vercel.app`** | free | Everyone moves to `fanation-admin-git-main-timmydiran1-6323s-projects.vercel.app`, already protected. Grant access under **Settings → Project Members**. |
-| **Deployment Protection → All Deployments** | $150/month | Clean URL kept, everything protected. |
-
-Nothing about this is one-way. Removing a domain does not touch the deployment; the branch
-URL serves the identical build, and re-adding the alias later takes the same minute.
-
-### Two things that will mislead you
-
-- **A greyed-out Save button means nothing is pending.** It does not mean the change
-  failed to save. If you toggle a setting and Save stays grey, the value on screen already
-  matches what is stored.
-- **`mcp__Vercel__web_fetch_vercel_url` and a browser you are already logged into both
-  bypass protection.** The only honest test is a private window, logged out — or curl.
-
-`noindex, nofollow` is set in the app's metadata. That is a search-engine instruction, not
-access control.
-
-### If a custom domain is added later
-
-A custom domain on `fanation-admin` inherits the same exemption — Standard Protection
-protects everything *except* production custom domains. `admin.fanation.com` would be as
-open as `fanation-admin.vercel.app` is now. That is consistent with today's decision, but
-it stops being acceptable at the same trigger: the first real API call. Do not assume a
-custom domain is more private than a `.vercel.app` one. It is not.
+| Vercel | `vercel.json` → `rewrites` — **committed** |
+| Netlify | `netlify.toml` → `[[redirects]]` — **committed** |
+| Cloudflare Pages | Automatic for SPA projects; otherwise `_redirects` in `public/`: `/*  /index.html  200` |
+| Nginx | `location / { try_files $uri $uri/ /index.html; }` |
+| Azure Static Web Apps | `staticwebapp.config.json` → `navigationFallback.rewrite: "/index.html"` |
+| S3 + CloudFront | Error document `index.html`; custom error responses mapping 403 and 404 → `/index.html` with response code 200 |
+| Apache | `.htaccess` → `FallbackResource /index.html` |
 
 ---
 
-## 6. Custom domains — optional
+## 4. Admin access control — open, and it must be closed
 
-Nothing on any of the three projects uses a custom domain today. Everything is
-`.vercel.app`, including the landing page at `fanation-creator.vercel.app`. Those URLs are
-production-grade and fine to hand to the devs — this section is only relevant once a
-domain is actually bought.
+The console is currently reachable by anyone with the URL.
 
-When it is: add each subdomain in **Project → Settings → Domains**, then create the
-records at the registrar (Namecheap, Cloudflare — wherever the apex lives):
+The `noindex` header keeps it out of Google. It does nothing against a shared link, a browser history, or a guess. For a prototype holding fabricated data that is a tolerable position. **It stops being tolerable the moment the first real API call is wired in**, and that is the deadline.
 
-| Host | Type | Value | Project |
-|---|---|---|---|
-| `app` | CNAME | `cname.vercel-dns.com` | `fanation-app` |
-| `admin` | CNAME | `cname.vercel-dns.com` | `fanation-admin` |
+Why it is open today: Vercel's Standard Protection covers preview deployments but exempts the production domain by design. Extending protection to production requires the *All Deployments* setting, which sits behind an add-on at roughly **$150/month**.
 
-Vercel shows the exact value to use on the Domains page and issues the certificate itself
-once the record resolves — usually minutes, occasionally an hour if the registrar's TTL is
-long. Leave the apex alone; that is the landing page.
+Three ways to close it, cheapest first:
 
-**Read §5 before putting a custom domain on `fanation-admin`.** Standard Protection exempts
-production custom domains, so `admin.fanation.com` would be publicly readable the moment
-DNS resolves — no more and no less than the current setup, but do not mistake it for a
-security upgrade.
+1. **Remove the `fanation-admin.vercel.app` production domain.** The project keeps deploying; admins use the git-branch URL, which Standard Protection already covers. Free. Costs a slightly uglier URL.
+2. **IP allowlist or VPN** in front of the console. Free to cheap depending on what already exists. Costs flexibility for anyone working from an unexpected network.
+3. **Buy All Deployments.** ~$150/month. Costs money and nothing else.
+
+Option 1 is the right first move. Whichever is chosen, it is a decision for infrastructure and it needs making before real user data sits behind that URL.
 
 ---
 
-## 7. Troubleshooting
+## 5. Secrets
 
-**A build fails and the site goes down.** It does not. Vercel never promotes a failed build;
-the previous deployment keeps serving. Fix and redeploy at your own pace.
+**The repository is public.**
 
-**`fanation` builds but the landing page looks wrong.** Root Directory is not
-`apps/landing` — no leading slash, no trailing slash — so `apps/landing/vercel.json` never
-loaded and the cache headers are missing. Fix the setting, then **Deployments → the failed
-one → Redeploy**.
+No credential, API key, token, connection string or private URL goes into it. Not in a source file, not in a comment, not in a `.env.example`, not in a commit message. When the backend arrives, every secret lives in **Vercel → Settings → Environment Variables**, scoped per environment, and reaches the build as an environment variable.
 
-**A build fails on `pnpm install`.** Do not override the install command; the default is
-correct. Read the log — a lockfile mismatch means `pnpm-lock.yaml` was not committed
-alongside a `package.json` change.
+Note that anything prefixed `VITE_` is inlined into the client bundle at build time and is therefore public by definition. Use that prefix only for values that are genuinely public — an API base URL, a publishable key. A secret with a `VITE_` prefix is a secret you have published.
 
-**`git push` is rejected as non-fast-forward.** Someone else pushed. `git pull --rebase`,
-resolve, push again. Do not force push over a deployed tip.
-
-**Saving a project setting did not deploy anything.** Correct — settings changes never
-trigger a build. Push, or **Deployments → ⋯ → Redeploy**.
-
-**Save is greyed out and the setting looks wrong.** Greyed means nothing is pending, not
-that the save failed. What is on screen is what is stored.
-
-**A deploy was skipped and shows no build log.** Expected — that is the Skip Deployments
-toggle in §4 doing its job. Nothing in that app's dependency graph changed. Force one
-anyway with **Deployments → ⋯ → Redeploy** if you need it.
-
-**The dashboard warns that `turbo-ignore` is deprecated.** Something is sitting in Ignored
-Build Step. Set **Behavior → Automatic** and clear the field. §4 has the replacement.
+**If a key is committed by accident:** tell Timmy so it can be rotated. Do not force-push over it. The commit already exists in every clone, in the platform's build cache and quite possibly in a fork; rotating the key is what actually closes the hole, and rewriting history only removes the evidence that it was open.
 
 ---
 
-## 8. Housekeeping
+## 6. Rollback
 
-`fanation-deploy-check` (`prj_fCfVG8u6C0vwW0P0JbJsYqR4jGrT`) is scratch from diagnostics. No
-repo attached, serves nothing. **Settings → bottom of the page → Delete Project.**
+Vercel keeps every deployment. To roll back: project → Deployments → find the last known-good one → **Promote to Production**. Instant, no rebuild, no git operation.
 
-The five ERROR deployments on `fanation-admin` predate the Git connection and are from
-upload-based attempts. None is a rollback candidate, no alias ever pointed at one. Ignore
-them or leave them; they cost nothing.
+Because the three projects deploy independently, rolling one back does not touch the other two. If a change spanned two projects, roll both back.
+
+---
+
+## 7. Pre-deployment checklist
+
+Run through this before promoting anything to a real domain.
+
+- [ ] `npm run build` clean in all three projects — the build typechecks first, so this covers types too
+- [ ] `md5sum client/src/lib/ui/styles.css admin/src/lib/ui/styles.css` — hashes match
+- [ ] `node tools/verify-responsive.mjs` — PASS, and **zero** broken images (a non-zero count means media is missing from the build)
+- [ ] `node tools/smoke.mjs` — 27 passed, 0 failed
+- [ ] Deep routes load directly on the deployed URL, not just by clicking (§3.1)
+- [ ] Open Graph tags in each `index.html` point at the real production domain — **currently hard-coded to `fanation.app` and `app.fanation.app`**, and `og:image` must be an absolute URL
+- [ ] `admin` access control decided and applied (§4) if any real API is connected
+- [ ] No secret anywhere in the diff (§5)

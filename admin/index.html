@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Icons. Vite injects nothing, so every one of these is declared by hand;
+         the files themselves come from `tools/brand-assets/generate-icons.mjs`.
+         No OG card here — the console is noindex, nothing will ever unfurl it. -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <title>Fanation Admin</title>
+    <meta name="description" content="Fanation admin console — users, KYC, moderation, finance, payouts, audit." />
+    <!-- Internal console. Never index it, and never follow a link out of it. -->
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="theme-color" content="#07091A" />
+  </head>
+  <!-- Dark is the default palette in `tokens.css`; `AdminChrome` overwrites this
+       attribute on mount. Declaring it here means the first paint is already the
+       right colour instead of flashing. -->
+  <body data-theme="dark">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

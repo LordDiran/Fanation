@@ -1,0 +1,11 @@
+/* Entry stylesheet. `@import` must stay the first rule in a CSS file, so the
+   design system comes in before anything is declared below it. */
+@import "./lib/ui/styles.css";
+
+/* Inter ships as a dependency (`@fontsource-variable/inter`, imported in
+   `main.tsx`) and is served from our own bundle — no runtime request to Google
+   and no flash of fallback text on a filtered network. `styles.css` reads this
+   variable for the body face. */
+:root {
+  --font-inter: "Inter Variable";
+}
