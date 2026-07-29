@@ -85,11 +85,27 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .label{font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:7px;display:block}
 /* app frame */
 :root{--topbar-h:66px;--tabbar-h:0px}
-.app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+/* The sidebar width is a variable rather than a literal for two reasons: one route
+   collapses it, and the reels stage has to subtract it from the viewport to size a
+   video. Declare it once here and neither can drift from the other. */
+.app{--side-w:248px;display:grid;grid-template-columns:var(--side-w) 1fr;min-height:100vh}
 .side{border-right:1px solid var(--line);padding:20px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;background:var(--bg)}
+.sidelogo{display:flex;padding:4px 8px 20px}
 .navi{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:12px;color:var(--muted);font-weight:600;font-size:14.5px;transition:.15s;cursor:pointer}
 .navi:hover{background:var(--fill);color:var(--text)}
 .navi.on{background:rgba(37,153,246,.14);color:var(--blueL)}
+/* Immersive routes (reels) collapse the sidebar to an icon rail — the labels go,
+   the destinations stay. Instagram does the same thing on its reels page, and for
+   the same reason: the video is the page, and 172px of nav text is 172px the video
+   does not get. Only `--side-w` and the padding change; nothing is hidden that a
+   user still needs to click. */
+.app.immersive{--side-w:76px}
+.immersive .side{padding:20px 12px}
+.immersive .sidelogo{padding:4px 0 20px;justify-content:center}
+/* Scoped to `.side` on purpose: the More drawer renders the same `.navi` markup
+   and is still a labelled list of destinations even while reels is the route. */
+.immersive .side .navi{justify-content:center;padding:11px 0;gap:0}
+.immersive .side .navlabel,.immersive .side .sidecap{display:none}
 .navi.on svg{color:var(--blueL)}
 .main{min-width:0}
 .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:16px;padding:14px 26px;border-bottom:1px solid var(--line);background:var(--topbar);backdrop-filter:blur(12px)}
@@ -118,19 +134,61 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
    chat panel. Both constraints are wrong on a phone and are lifted below. */
 .feedcol{max-width:640px}
 .stage{min-width:420px}
-/* Reels stage. Width and height are here, not inline, because the phone
-   breakpoint has to override them and an inline value always wins. */
-.reelstage{align-items:center}
-.reelcard{width:340px;height:600px}
-.reelrail{align-items:center}
+/* Reels. The stage is one full-height 9:16 frame with the caption in a column to
+   its left and the actions in a column to its right — the desktop shape Instagram
+   uses, and nothing like a fixed 340x600 card floating in the middle of a page.
+
+   The height drives everything. `--reel-h` is the smaller of the space the chrome
+   leaves and what the width can afford at 9:16, so `--reel-w` (`--reel-h * 9/16`)
+   can never exceed the available width: the frame is height-bound on a tall window
+   and width-bound on a short one, and fits either way with no clamp and no overflow.
+
+   `--reel-gutter` is the total horizontal space reserved outside the frame. Both
+   side columns sit inside it, so each is guaranteed `(gutter - 44) / 2` in the worst
+   case regardless of viewport width. 760 leaves 358px a side, which holds the 320px
+   caption column plus its 28px gap everywhere in this tier. Redefining the gutter
+   alone in a media query is enough — custom properties substitute at computed-value
+   time, so `--reel-h` and `--reel-w` reflow off it without being restated. */
+.reelroot{height:calc(100vh - var(--topbar-h) - var(--tabbar-h));overflow:hidden;
+  display:flex;align-items:center;justify-content:center;padding:18px 22px}
+.reelframe{position:relative;flex:none;
+  --reel-gutter:760px;
+  --reel-h:min(calc(100vh - var(--topbar-h) - var(--tabbar-h) - 36px),calc((100vw - var(--side-w) - var(--reel-gutter)) * 16 / 9));
+  --reel-w:calc(var(--reel-h) * 9 / 16);
+  width:var(--reel-w);height:var(--reel-h)}
+.reelcard{position:absolute;inset:0;border-radius:var(--r2);overflow:hidden;background:#000;cursor:pointer}
+/* Both side columns are positioned against the frame itself, so "outside it" is
+   `100% + gap` and "over it" is a plain inset — no arithmetic on `--reel-w` in
+   either direction. They are siblings of the card rather than children, so a click
+   on a caption or an action button can never reach the card's pause handler and
+   nothing here needs stopPropagation. */
+.reelmeta{position:absolute;bottom:4px;right:calc(100% + 28px);width:320px;color:var(--text)}
+.reelname{color:var(--text)}
+.reelcap{color:var(--text);line-height:1.45}
+.reelacts{position:absolute;bottom:4px;left:calc(100% + 28px);display:flex;flex-direction:column;align-items:center;gap:16px}
+.reelact{display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer}
+.reelic{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--fill);border:1px solid var(--line2);color:var(--muted);transition:.15s}
+.reelact:hover .reelic{background:var(--fill2);color:var(--text);transform:translateY(-1px)}
+.reelnum{font-size:12px;font-weight:600;color:var(--muted)}
+/* The heavy bottom wash only exists when the caption is sitting over the video. On
+   a wide screen the caption is beside it and the wash would darken nothing but the
+   picture. `Scrim` takes no className, so the toggle is this wrapper. */
+.reelscrim{display:none}
+.reelseek{position:absolute;left:0;right:0;bottom:0;height:3px;background:rgba(255,255,255,.22);z-index:4}
+.reelseek>i{display:block;height:100%;background:#fff;border-radius:0 3px 3px 0;transition:width .2s linear}
+/* Fixed, not absolute: Instagram's chevrons sit at the right edge of the window,
+   not at the edge of the video. */
+.reelnav{position:fixed;right:18px;top:50%;transform:translateY(-50%);z-index:30;display:flex;flex-direction:column;gap:12px}
+.reelnav button{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:var(--fill);border:1px solid var(--line2);color:var(--muted);transition:.15s}
+.reelnav button:hover{background:var(--fill2);color:var(--text)}
 /* Messages is a two-pane messenger — thread list beside the open conversation. Only
    one pane fits on a phone, so `data-pane` on `.dm` decides which one is showing and
    the back button in the thread header sends you the other way. */
 .dm{display:flex;align-items:stretch;height:calc(100vh - var(--topbar-h) - var(--tabbar-h))}
 .dm-list{flex:none;width:330px;border-right:1px solid var(--line);overflow-y:auto}
 .dm-thread{display:flex;flex-direction:column;flex:1;min-width:0}
-/* Reels is one full-height card at a time; same arithmetic as the messenger. */
-.stagefull{min-height:calc(100vh - var(--topbar-h) - var(--tabbar-h))}
 /* Bottom navigation and the drawer behind its More tab. Both are inert above 900px,
    where `.side` is doing this job — the drawer cannot even be opened, because the
    only button that opens it lives inside `.tabbar`. */
@@ -189,6 +247,21 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
 @keyframes floatup{0%{opacity:0;transform:translateY(10px) scale(.8)}15%{opacity:1;transform:translateY(0) scale(1)}80%{opacity:1}100%{opacity:0;transform:translateY(-120px) scale(1.05)}}
 .giftfly{position:absolute;animation:floatup 3.2s ease-out forwards;pointer-events:none;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px;background:rgba(93,221,144,.16);border:1px solid rgba(93,221,144,.4);color:var(--mint);padding:7px 11px;border-radius:999px;backdrop-filter:blur(6px)}
 @keyframes pulseglow{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.5)}50%{box-shadow:0 0 0 6px rgba(239,68,68,0)}}
+
+/* ── Reels, narrow desktop and tablet ────────────────────────────────────────
+   Below 1360 there is no longer room for a 320px caption column beside the frame
+   without shrinking the video into a strip — at 1240px a 760px gutter leaves a
+   232px frame, smaller than the card this replaced. So the caption goes back over
+   the video with its wash, the gutter drops to 240, and the action rail stays
+   outside on the right where (240 - 44) / 2 = 98px still clears its 74px. */
+@media(max-width:1359px){
+  .reelframe{--reel-gutter:240px}
+  .reelmeta{right:auto;left:16px;width:auto;max-width:calc(100% - 32px);bottom:22px;z-index:3;color:#fff}
+  .reelname{color:#fff}
+  .reelcap{color:#fff;text-shadow:0 1px 12px rgba(0,0,0,.5)}
+  .reelscrim{display:block}
+}
+
 /* ── Phone and small tablet ───────────────────────────────────────────────────
    Everything above is written desktop-first, so this is where the two-column frame
    comes apart. Three things happen at once and they depend on each other: the 248px
@@ -248,12 +321,25 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
      wide, which is narrower than the text inside it. */
   .gmain-15,.gmain-14,.gmain-13,.grail-14{grid-template-columns:1fr}
 
-  /* Reels: the control rail goes under the card instead of beside it, and the
-     card takes the width it is given. 340 + 16 + 44 does not fit in 390. */
-  .reelstage{flex-direction:column;width:100%}
-  .reelcard{width:100%;max-width:340px;
-    height:min(600px,calc(100vh - var(--topbar-h) - var(--tabbar-h) - 132px))}
-  .reelrail{flex-direction:row}
+  /* Reels on a phone is the full window, edge to edge, exactly as the app does
+     it. The aspect formula is dropped here rather than retuned: at 390px it lands
+     on a `--reel-w` of 390.0 and any subpixel rounding is a horizontal overflow.
+     `width:100%` cannot overflow by construction, and `object-fit:cover` inside
+     `Loop` absorbs the difference between the window's ratio and 9:16.
+
+     `--side-w` has to be reset on `.app.immersive` too, not just `.app` — the
+     immersive rule is (0,2,0) and would otherwise keep the 76px rail in the
+     arithmetic on a screen where the sidebar is display:none. */
+  .app,.app.immersive{--side-w:0px}
+  .reelroot{padding:0}
+  .reelframe{width:100%;height:100%}
+  .reelcard{border-radius:0}
+  .reelmeta{left:16px;right:82px;max-width:none;width:auto;bottom:22px}
+  .reelacts{left:auto;right:12px;bottom:18px;gap:14px}
+  .reelic{background:rgba(0,0,0,.42);border-color:rgba(255,255,255,.18);color:#fff}
+  .reelnum{color:#fff}
+  /* Nothing to click: the phone changes reels by swiping. */
+  .reelnav{display:none}
 
   .modal{max-width:none}
 }

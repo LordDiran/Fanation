@@ -1,7 +1,28 @@
 import { useEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { CREATORS, SEED_FEED, fhash, useAppStore } from "@/lib/core";
 import { Avatar, Icon, Loop, Photo, Scrim, Verified, reelFor } from "@/lib/ui";
 import { FollowBtn } from "@/components/post-card";
+
+/**
+ * Reels.
+ *
+ * The layout is Instagram's desktop one, deliberately: a single 9:16 frame that
+ * takes the height of the window, the caption in a column to its left, the
+ * actions in a column to its right, and the arrows pinned to the right edge of
+ * the viewport rather than to the video. The sizing lives in `.reelframe` in
+ * styles.css — height first, width derived from it, so nothing here needs to
+ * measure anything or listen for a resize.
+ *
+ * Three deliberate departures from a straight copy, all of them removals:
+ * there is no "Reel 3/16" counter, no "scroll or ↑ ↓" hint and no up-next
+ * thumbnail. None of the three exist in any version of Instagram and each one
+ * reads as scaffolding. The up-next *prefetch* those visuals were doing is
+ * kept below, just without a picture of itself on screen.
+ *
+ * One thing Instagram has that this does not: a mute button. Our clips carry no
+ * audio track at all, so it would be a control wired to nothing.
+ */
 
 /**
  * Copy for a reel.
@@ -38,7 +59,6 @@ export default function ReelsPage() {
   const c = CREATORS[ix];
   const isLiked = !!liked[ix];
   const { still, loop } = reelFor(c.handle);
-  const nextStill = reelFor(CREATORS[(ix + 1) % CREATORS.length].handle).still;
   const likes = likesFor(c.handle);
 
   useEffect(() => {
@@ -51,9 +71,31 @@ export default function ReelsPage() {
     return () => window.removeEventListener("keydown", h);
   }, []);
 
-  /* A snap feed answers the wheel — that is the whole interaction on a phone,
-     and a trackpad is the desktop equivalent. The cooldown is what stops one
-     flick of an inertial scroll from firing through six reels. */
+  /* Warm the next frame. The old build did this with a visible thumbnail in the
+     rail; the thumbnail was the part that had to go, not the prefetch. */
+  useEffect(() => {
+    const im = new Image();
+    im.src = reelFor(CREATORS[(ix + 1) % CREATORS.length].handle).still;
+  }, [ix]);
+
+  /* The seek line reads the real <video>. `Loop` is vendored and shared with the
+     admin build, and it exposes no ref — so rather than add a prop to a file that
+     has to stay byte-identical in two places, the element is found underneath the
+     card. `key` on the Loop remounts it per reel, so this re-runs and re-binds. */
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [prog, setProg] = useState(0);
+  useEffect(() => {
+    setProg(0);
+    const v = cardRef.current?.querySelector("video");
+    if (!v) return;
+    const on = () => { if (v.duration) setProg(v.currentTime / v.duration); };
+    v.addEventListener("timeupdate", on);
+    return () => v.removeEventListener("timeupdate", on);
+  }, [ix, loop]);
+
+  /* A snap feed answers the wheel — that is the desktop gesture, and a trackpad
+     is what most people will use. The cooldown is what stops one flick of an
+     inertial scroll from firing through six reels. */
   const cool = useRef(0);
   const onWheel = (e: React.WheelEvent) => {
     if (Math.abs(e.deltaY) < 12) return;
@@ -63,86 +105,106 @@ export default function ReelsPage() {
     setI((v) => v + (e.deltaY > 0 ? 1 : -1));
   };
 
+  /* …and the touch equivalent, which the page did not have at all: on a phone
+     there was previously no gesture that moved between reels, only arrows. A
+     drag past 45px inside 700ms is a swipe; anything shorter or slower is a tap
+     and falls through to the pause handler. `swiped` is reset on touchstart so
+     the tap that ends a swipe never also toggles playback. */
+  const touch = useRef<{ y: number; t: number } | null>(null);
+  const swiped = useRef(false);
+  const onTouchStart = (e: React.TouchEvent) => {
+    swiped.current = false;
+    touch.current = { y: e.touches[0].clientY, t: Date.now() };
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const s = touch.current;
+    touch.current = null;
+    if (!s) return;
+    const dy = e.changedTouches[0].clientY - s.y;
+    if (Math.abs(dy) < 45 || Date.now() - s.t > 700) return;
+    swiped.current = true;
+    setI((v) => v + (dy < 0 ? 1 : -1));
+  };
+  const onCardClick = () => { if (!swiped.current) setPaused((v) => !v); };
+
+  const act = (n: string, label: string, on: () => void, extra?: React.CSSProperties) => (
+    <div className="reelact" onClick={on}>
+      <div className="reelic"><Icon n={n} s={20} {...(extra || {})} /></div>
+      <span className="reelnum">{label}</span>
+    </div>
+  );
+
   return (
-    <div className="content row center stagefull" onWheel={onWheel}>
-      <div className="row gap16 reelstage">
-        <div className="card reelcard" onClick={() => setPaused((v) => !v)}
-          style={{ padding: 0, overflow: "hidden", position: "relative", cursor: "pointer" }}>
+    <div className="reelroot" onWheel={onWheel} onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+      <div className="reelframe">
+        <div className="reelcard" ref={cardRef} onClick={onCardClick}>
           {/* `key` forces a fresh <video> per reel: without it React reuses the
               element and the old frame hangs for a beat over the new source. */}
           {loop
             ? <Loop key={c.id} src={loop} poster={still} active={!paused} />
             : <Photo src={still} seed={c.id} />}
 
-          {/* The frames are real photographs now — a third of them are bright.
-              White chrome needs the wash or it disappears on the light ones. */}
-          <Scrim from={0.5} height="24%" top />
-          <Scrim from={0.85} height="48%" />
+          {/* The frames are real photographs and a third of them are bright, so
+              the top wash is unconditional — the live badge sits in it. The
+              bottom wash only exists when the caption is over the video, which
+              below 1360px it is; `.reelscrim` is display:none above that. */}
+          <Scrim from={0.42} height="20%" top />
+          <div className="reelscrim"><Scrim from={0.85} height="46%" /></div>
 
-          <div className="pill t12" style={{ position: "absolute", top: 14, left: 14 }}>Reel {ix + 1}/{CREATORS.length}</div>
           {c.live && (
-            <div className="badge-live" style={{ position: "absolute", top: 14, right: 14 }}><span className="dot" />LIVE</div>
+            <div className="badge-live" style={{ position: "absolute", top: 14, left: 14, zIndex: 3 }}>
+              <span className="dot" />LIVE
+            </div>
           )}
 
           {paused && (
-            <div className="row center" style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+            <div className="row center" style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 3 }}>
               <div className="feature-ic" style={{ width: 62, height: 62, background: "rgba(0,0,0,.42)" }}>
                 <Icon n="play" s={26} c="#fff" fill="#fff" />
               </div>
             </div>
           )}
 
-          <div style={{ position: "absolute", left: 14, right: 70, bottom: 16 }} onClick={(e) => e.stopPropagation()}>
-            <div className="row gap8" style={{ marginBottom: 8 }}>
-              <Avatar name={c.name} size={38} ring="#fff" />
-              <div className="row gap6 b7 t14" style={{ color: "#fff" }}>{c.name.split(" ")[0]} {c.v && <Verified s={13} />}</div>
-              <FollowBtn handle={c.handle} />
-            </div>
-            <div className="t14" style={{ color: "#fff", lineHeight: 1.45, textShadow: "0 1px 12px rgba(0,0,0,.45)" }}>{captionFor(c.handle)}</div>
-          </div>
-
-          <div className="col gap18" style={{ position: "absolute", right: 14, bottom: 20, alignItems: "center" }}
-            onClick={(e) => e.stopPropagation()}>
-            <div className="col center gap4" style={{ cursor: "pointer" }} onClick={() => setLiked((m) => ({ ...m, [ix]: !m[ix] }))}>
-              <div className="feature-ic" style={{ width: 44, height: 44, background: "rgba(0,0,0,.4)" }}>
-                <Icon n="heart" s={20} c={isLiked ? "var(--coral)" : "#fff"} fill={isLiked ? "var(--coral)" : undefined} />
-              </div>
-              <span className="t12" style={{ color: "#fff" }}>{kfmt(likes + (isLiked ? 1 : 0))}</span>
-            </div>
-            <div className="col center gap4" style={{ cursor: "pointer" }} onClick={() => S.toast("Comments open on the post view")}>
-              <div className="feature-ic" style={{ width: 44, height: 44, background: "rgba(0,0,0,.4)" }}><Icon n="comment" s={20} c="#fff" /></div>
-              <span className="t12" style={{ color: "#fff" }}>{kfmt(cmtsFor(c.handle))}</span>
-            </div>
-            <div className="col center gap4" style={{ cursor: "pointer" }} onClick={() => S.openModal("gift", c)}>
-              <div className="feature-ic" style={{ width: 44, height: 44, background: "rgba(0,0,0,.4)" }}><Icon n="gift" s={20} c="#fff" /></div>
-              <span className="t12" style={{ color: "#fff" }}>Gift</span>
-            </div>
-            <div className="col center gap4" style={{ cursor: "pointer" }} onClick={() => S.toast(`Link copied — fanation.app/r/${c.handle}`)}>
-              <div className="feature-ic" style={{ width: 44, height: 44, background: "rgba(0,0,0,.4)" }}><Icon n="repost" s={20} c="#fff" /></div>
-              <span className="t12" style={{ color: "#fff" }}>Share</span>
-            </div>
-          </div>
+          <div className="reelseek" aria-hidden><i style={{ width: `${Math.round(prog * 100)}%` }} /></div>
         </div>
 
-        {/* Beside the card on a desktop, underneath it on a phone — see `.reelrail`.
-            The wheel handler above is the desktop gesture; these two arrows are the
-            only way to move between reels on a touch screen, so the rail stays. */}
-        <div className="col gap10 reelrail">
-          <button className="feature-ic" style={{ width: 44, height: 44, background: "var(--fill)", border: "1px solid var(--line)" }} onClick={() => setI(i - 1)}>
-            <span style={{ transform: "rotate(-90deg)", display: "flex" }}><Icon n="arrow" s={18} c="var(--muted)" /></span>
-          </button>
-          <button className="feature-ic" style={{ width: 44, height: 44, background: "var(--fill)", border: "1px solid var(--line)" }} onClick={() => setI(i + 1)}>
-            <span style={{ transform: "rotate(90deg)", display: "flex" }}><Icon n="arrow" s={18} c="var(--muted)" /></span>
-          </button>
-          {/* Up next, at thumbnail size. It also warms the browser cache for the
-              frame the next flick of the wheel is about to need. */}
-          <div style={{ width: 44, height: 66, borderRadius: 9, position: "relative", overflow: "hidden", cursor: "pointer", marginTop: 4 }}
-            onClick={() => setI(i + 1)}>
-            <Photo src={nextStill} seed={`nx${ix}`} />
+        {/* Sibling of the card, not a child: a click here cannot bubble into the
+            pause handler, so none of this needs stopPropagation. */}
+        <div className="reelmeta">
+          <div className="row gap8" style={{ marginBottom: 9 }}>
+            <Link to={`/creator/${c.handle}`}><Avatar name={c.name} size={38} /></Link>
+            <Link to={`/creator/${c.handle}`} className="row gap6 b7 t14 reelname">
+              {c.name.split(" ")[0]} {c.v && <Verified s={13} />}
+            </Link>
+            <FollowBtn handle={c.handle} />
           </div>
-          {/* Desktop-only copy: there is no wheel on a phone. */}
-          <span className="muted2 t12 hide-sm" style={{ textAlign: "center", lineHeight: 1.3 }}>Scroll<br />or ↑ ↓</span>
+          <div className="t14 reelcap">{captionFor(c.handle)}</div>
         </div>
+
+        <div className="reelacts">
+          <div className="reelact" onClick={() => setLiked((m) => ({ ...m, [ix]: !m[ix] }))}>
+            <div className="reelic">
+              <Icon n="heart" s={20} {...(isLiked ? { c: "var(--coral)", fill: "var(--coral)" } : {})} />
+            </div>
+            <span className="reelnum">{kfmt(likes + (isLiked ? 1 : 0))}</span>
+          </div>
+          {act("comment", kfmt(cmtsFor(c.handle)), () => S.toast("Comments open on the post view"))}
+          {act("gift", "Gift", () => S.openModal("gift", c))}
+          {act("repost", "Share", () => S.toast(`Link copied — fanation.app/r/${c.handle}`))}
+          {act("more", "More", () => S.openModal("report", { id: `reel-${c.handle}`, h: c.handle }))}
+        </div>
+      </div>
+
+      {/* Pinned to the right edge of the window, not to the video — the same
+          place Instagram puts them. Hidden on a phone, where the swipe is the
+          gesture and a floating control would sit over the action rail. */}
+      <div className="reelnav">
+        <button aria-label="Previous reel" onClick={() => setI(i - 1)}>
+          <span style={{ transform: "rotate(-90deg)", display: "flex" }}><Icon n="arrow" s={18} /></span>
+        </button>
+        <button aria-label="Next reel" onClick={() => setI(i + 1)}>
+          <span style={{ transform: "rotate(90deg)", display: "flex" }}><Icon n="arrow" s={18} /></span>
+        </button>
       </div>
     </div>
   );

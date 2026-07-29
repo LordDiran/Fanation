@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAppStore } from "@/lib/core";
-import { Avatar, Icon, Logo } from "@/lib/ui";
+import { Avatar, FanationMark, Icon, Logo } from "@/lib/ui";
 import { FAN_NAV, FAN_TABS, STUDIO_NAV, STUDIO_TABS } from "@/components/nav";
 import { ThemeToggle } from "@/components/theme";
 import { ModalHost } from "@/components/modals";
@@ -26,6 +26,12 @@ export default function AppLayout() {
   const [menu, setMenu] = useState(false);
 
   const studio = pathname.startsWith("/studio");
+  /* Reels is the one route that wants the whole window. The sidebar stays — every
+     destination is still one click away — but it drops to an icon rail, which is
+     172px of width handed to a 9:16 video that is sized off exactly that number
+     (`--side-w`, in styles.css). Instagram collapses its own nav here for the
+     same reason. Nothing else in the shell changes. */
+  const immersive = pathname === "/reels";
   const nav = studio ? STUDIO_NAV : FAN_NAV;
   const tabs = studio ? STUDIO_TABS : FAN_TABS;
 
@@ -46,8 +52,8 @@ export default function AppLayout() {
   if (!authed) return null;
 
   const navLinks = nav.map(([href, label, icon]) => (
-    <Link key={href} to={href} className={"navi" + (pathname === href ? " on" : "")}>
-      <Icon n={icon} s={19} />{label}
+    <Link key={href} to={href} title={label} className={"navi" + (pathname === href ? " on" : "")}>
+      <Icon n={icon} s={19} /><span className="navlabel">{label}</span>
     </Link>
   ));
 
@@ -67,15 +73,31 @@ export default function AppLayout() {
     </div>
   );
 
+  /* The same two actions the account card carries, in a shape that collapses.
+     A 76px rail cannot hold a card with a handle in it, and an icon rail you
+     cannot sign out of is worse than a wide one. */
+  const accountRail = (
+    <div className="col gap4" style={{ marginTop: 12 }}>
+      <button className="navi" title={studio ? "Switch to Browsing" : "Switch to Creator Studio"}
+        onClick={() => navigate(studio ? "/feed" : "/studio")}>
+        <Icon n={studio ? "home" : "star"} s={19} />
+        <span className="navlabel">{studio ? "Switch to Browsing" : "Switch to Creator Studio"}</span>
+      </button>
+      <button className="navi" title="Sign out" onClick={() => { setAuthed(false); navigate("/login"); }}>
+        <Icon n="logout" s={19} /><span className="navlabel">Sign out</span>
+      </button>
+    </div>
+  );
+
   return (
-    <div className="app">
+    <div className={"app" + (immersive ? " immersive" : "")}>
       <div className="side">
-        <div style={{ padding: "4px 8px 20px" }}><Logo /></div>
+        <div className="sidelogo">{immersive ? <FanationMark size={30} title="Fanation" /> : <Logo />}</div>
         <div className="col gap4 grow" style={{ overflowY: "auto" }}>
-          <div className="up muted2" style={{ padding: "6px 13px 8px" }}>{studio ? "Creator surface" : "Fan surface"}</div>
+          <div className="up muted2 sidecap" style={{ padding: "6px 13px 8px" }}>{studio ? "Creator surface" : "Fan surface"}</div>
           {navLinks}
         </div>
-        {account}
+        {immersive ? accountRail : account}
       </div>
 
       <div className="main">
