@@ -248,6 +248,59 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .giftfly{position:absolute;animation:floatup 3.2s ease-out forwards;pointer-events:none;font-weight:700;font-size:13px;display:inline-flex;align-items:center;gap:6px;background:rgba(93,221,144,.16);border:1px solid rgba(93,221,144,.4);color:var(--mint);padding:7px 11px;border-radius:999px;backdrop-filter:blur(6px)}
 @keyframes pulseglow{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.5)}50%{box-shadow:0 0 0 6px rgba(239,68,68,0)}}
 
+/* auth (login / signup)
+   Split screen: the form on the left, a hero on the right built out of the same
+   creator photographs the product itself paints. Below 960 the hero stops being a
+   column and becomes a dimmed full-bleed background behind the form, which is the
+   only reason `.authwrap` is positioned — the hero is placed against it there. */
+.authwrap{position:relative;min-height:100vh;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.08fr)}
+.authform{position:relative;z-index:2;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:40px 44px}
+.authinner{width:100%;max-width:452px;margin:0 auto}
+.authbrand{display:flex;margin-bottom:22px;color:var(--text)}
+.authhero{position:relative;overflow:hidden;background:#05070f;display:flex;flex-direction:column;justify-content:flex-end;padding:46px 44px}
+/* Three columns of stills drifting at different speeds and directions. Each column
+   renders its three tiles twice and travels exactly half the strip, and the two
+   numbers that make that seamless are both in `.authtile`.
+
+   The spacing is a bottom margin rather than a flex `gap` so that every tile
+   occupies exactly the same h+14, including the last one — with `gap` the strip
+   is one gap short of two whole sets and -50% lands mid-tile.
+
+   The height is a share of the column rather than an aspect ratio so that one set
+   is always at least as tall as the window it is filling. h = 100%/3 - 28/3 makes
+   a set exactly `container + 14`, so after travelling one set there is still a
+   full container of tiles below the fold — no gap at the bottom of the loop at
+   any viewport size, which an aspect-derived height cannot promise: at 390px wide
+   a 3:4 tile is 175px and four of them do not reach the bottom of an 844px phone.
+   The pictures crop to whatever shape that leaves; `Photo` covers. */
+.authmosaic{position:absolute;inset:-6% -4%;display:flex;gap:14px;opacity:.55}
+.authcol{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;will-change:transform}
+.authcol.d1{animation:authdrift 46s linear infinite}
+.authcol.d2{animation:authdrift 62s linear infinite reverse}
+.authcol.d3{animation:authdrift 54s linear infinite}
+@keyframes authdrift{from{transform:translateY(0)}to{transform:translateY(-50%)}}
+.authtile{position:relative;width:100%;height:calc(33.3333% - 9.334px);margin-bottom:14px;
+  flex:none;border-radius:16px;overflow:hidden;background:var(--card2)}
+.authveil{position:absolute;inset:0;background:linear-gradient(175deg,rgba(5,7,15,.62) 0%,rgba(5,7,15,.42) 34%,rgba(5,7,15,.93) 82%,rgba(5,7,15,.97) 100%)}
+.authcopy{position:relative;z-index:2;color:#fff;max-width:560px}
+/* auto-fit rather than a fixed count: the hero column is 748px at 1440 and 411px
+   at 961, and four hand-set columns would wrap their labels at the narrow end. */
+.authstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:18px 20px}
+.authstat b{display:block;font-weight:900;font-size:26px;line-height:1.1;letter-spacing:-.01em;color:#fff}
+.authstat span{display:block;font-size:12.5px;color:rgba(255,255,255,.62);margin-top:3px}
+.authdiv{display:flex;align-items:center;gap:12px;margin:16px 0;color:var(--muted2);font-size:12px;font-weight:600;white-space:nowrap}
+.authdiv:before,.authdiv:after{content:"";flex:1;height:1px;background:var(--line)}
+/* Sits inside the field, so the input keeps its own padding on the right to stop
+   the value running under it. There is no `eye-off` glyph in the set — the state
+   is carried by colour, which is why the button is not just an icon swap. */
+.autheye{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;border-radius:9px;transition:.15s}
+.autheye:hover{background:var(--fill2)}
+.authlegal{font-size:11.5px;line-height:1.5;color:var(--muted2);text-align:center;margin-top:18px}
+.authlegal b{color:var(--muted);font-weight:600;cursor:pointer}
+/* A background that never stops moving is a background somebody has to look at. */
+@media(prefers-reduced-motion:reduce){.authcol{animation:none}}
+
 /* ── Reels, narrow desktop and tablet ────────────────────────────────────────
    Below 1360 there is no longer room for a 320px caption column beside the frame
    without shrinking the video into a strip — at 1240px a 760px gutter leaves a
@@ -260,6 +313,36 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
   .reelname{color:#fff}
   .reelcap{color:#fff;text-shadow:0 1px 12px rgba(0,0,0,.5)}
   .reelscrim{display:block}
+}
+
+/* ── Auth below the split ────────────────────────────────────────────────────
+   The hero stops being a column and becomes the background: same photographs,
+   same veil, dimmed further and pushed behind the form rather than beside it.
+
+   Fixed rather than absolute, so its height is the window rather than the
+   document. Signup is taller than a phone screen and an absolute hero would
+   stretch to the full scroll length, which both starves the tiles of size and
+   makes the drift crawl against a page that is already moving. Fixed, the
+   photographs hold still behind a form that scrolls over them.
+
+   Two columns instead of three below this width. A third of 390px is a 131px
+   sliver; a half is a photograph you can actually read through the veil. */
+@media(max-width:960px){
+  .authwrap{grid-template-columns:1fr}
+  .authform{padding:34px 20px;min-height:100vh}
+  .authbrand{color:#fff;justify-content:center}
+  .authhero{position:fixed;inset:0;z-index:0;padding:0}
+  .authcopy{display:none}
+  /* Dimmer than the desktop hero but not black. Measured off the render: the two
+     numbers multiply, so an .3 mosaic under an .82 veil transmits 5% of the
+     photograph and the background stops being photographic at all. .42 under .72
+     transmits 12%, which reads as pictures and still clears 4.5:1 for the
+     smallest text on the page — the legal line — against the brightest pixel a
+     tile can put behind it. */
+  .authmosaic{opacity:.42}
+  /* display:none, so the six <img> inside it are never requested either. */
+  .authcol.d3{display:none}
+  .authveil{background:linear-gradient(180deg,rgba(5,7,15,.86) 0%,rgba(5,7,15,.72) 42%,rgba(5,7,15,.94) 100%)}
 }
 
 /* ── Phone and small tablet ───────────────────────────────────────────────────
