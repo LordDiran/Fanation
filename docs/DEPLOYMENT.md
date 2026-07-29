@@ -26,20 +26,39 @@ All three point at the same GitHub repository, `github.com/LordDiran/Fanation`, 
 2. **Root Directory** → `landing`, `client` or `admin`. This is the only setting that differs between the three.
 3. Framework Preset → Vite. Build command `npm run build`, output directory `dist`, install command `npm install`.
 4. Node version → 20 or later.
-5. No environment variables. There are none yet; when the backend arrives the API base URL goes here, per environment, not in the repository.
-6. Deploy.
+5. **Settings → Build and Deployment** → turn *Include files outside the root directory in the Build Step* **off**. **Settings → Git** → turn *Skip deployments* **on**. Both default the wrong way for this repository — see §1.2.
+6. No environment variables. There are none yet; when the backend arrives the API base URL goes here, per environment, not in the repository.
+7. Deploy.
 
 ### 1.2 Stop the other two rebuilding
 
-One repository feeding three projects means every push rebuilds all three by default. Under **Settings → Git → Ignored Build Step**, set:
+One repository feeding three projects means every push rebuilds all three unless something stops it, and nothing that works here is on by default.
 
-```bash
-git diff --quiet HEAD^ HEAD -- ./
+Each `vercel.json` now carries:
+
+```json
+"ignoreCommand": "git diff --quiet HEAD^ HEAD -- ./"
 ```
 
-Vercel runs this from the project's root directory. Exit 0 (no change in this folder) cancels the build; exit 1 (change) proceeds. A commit touching only `landing/` then rebuilds `fanation` alone.
+Vercel runs it from the project's Root Directory. Exit 0 — nothing in this folder changed — cancels the build. Exit 1 — something changed — lets it proceed. A commit touching only `landing/` then rebuilds `fanation` alone.
 
-One thing to watch: this compares against the previous commit only. A squashed merge or a force-push can make a folder look unchanged when it is not. If a deployment goes missing after an unusual git operation, redeploy that project manually rather than debugging the ignore step.
+It sits in `vercel.json` rather than in the dashboard on purpose. `ignoreCommand` is one of the six keys `vercel.json` overrides (§1.3), so the rule travels with the repository and cannot silently differ between the three projects. The dashboard equivalent is **Settings → Build and Deployment → Ignored Build Step** — *Build and Deployment*, not Settings → Git, where it used to live. Leave that field on **Automatic**; the committed command takes precedence over it.
+
+Dashboard state as checked on 29 July 2026, before this commit:
+
+| Setting | Where | Found | Required |
+|---|---|---|---|
+| Ignored Build Step | Build and Deployment | `Automatic` on all three — no custom command had ever been set | `Automatic`, with `ignoreCommand` committed |
+| Include files outside the root directory in the Build Step | Build and Deployment | Enabled on all three | **Disabled** on all three |
+| Skip deployments when the root directory has no changes | Git | Enabled on `fanation-app` and `fanation-admin`, **Disabled** on `fanation` | Enabled on all three |
+
+An earlier revision of this section described the ignore step as configured. It never was, on any of the three — which is why every push since the repository was restructured has rebuilt all three projects, and why none of the recent deployments is marked `CANCELED`.
+
+*Include files outside the root directory* is a leftover from the pnpm-workspace layout these projects no longer use. With it enabled the whole repository sits inside every project's build context, so Vercel's native skip reads a change in any folder as a change to this project and never skips. The three folders are self-contained today — each with its own `package-lock.json`, no import crossing a folder boundary, `@` aliased to `./src` and nothing else — so turning it off is safe, and it is what makes the native skip work at all.
+
+Two things to watch. The ignore command compares against the previous commit only, so a squashed merge or a force-push can make a folder look unchanged when it is not; if a deployment goes missing after an unusual git operation, redeploy that project by hand rather than debugging the ignore step. And the commit that introduces `ignoreCommand` still rebuilds all three — it touches all three folders, and a `vercel.json` change has to build once before it applies. The saving starts on the push after it.
+
+Netlify expresses the same rule as `ignore` under `[build]`, committed alongside, same convention — exit 0 cancels. It compares `$CACHED_COMMIT_REF` against `$COMMIT_REF`, the last commit Netlify actually built rather than the previous commit in history, so the squash and force-push caveat above does not apply there.
 
 ### 1.3 Root Directory is dashboard-only
 
@@ -51,11 +70,36 @@ Two things make this survivable. A failed deployment never replaces the live one
 
 If the three folders are ever renamed again, treat the three dashboard updates as part of that commit's checklist, not as follow-up work.
 
+### 1.4 Build machine, and what a push costs
+
+Three projects and one push is three billed builds. The machine they run on is a team-wide default that has nothing to do with this repository, and it was set to the largest one available.
+
+Rates, from Team Settings → Build and Deployment:
+
+| Machine | Spec | Rate |
+|---|---|---|
+| Elastic | dynamic vCPU and memory | from $0.0035 per CPU minute |
+| Standard | 4 vCPU, 8 GB | $0.014 per build minute |
+| Enhanced | 8 vCPU, 16 GB | $0.028 per build minute |
+| **Turbo** | 30 vCPU, 60 GB | **$0.105 per build minute** |
+
+Turbo was the team default, so all three projects were building on 30 vCPUs at 7.5× the Standard rate. The workload cannot use it. `npm run build` is `tsc --noEmit && vite build`: `tsc` is single-threaded, and a rollup build at this module count gains nothing measurable past four cores. A production build of `client` measured 10 seconds of billed machine time end to end — deployment `dpl_G4RQWWy6sTfwJWZuoFjpdpCPdtki`, 11:15:38 to 11:15:48.
+
+At ten seconds a build, that is:
+
+| Configuration | Builds per push | Billed minutes | Cost per push |
+|---|---|---|---|
+| Turbo, no ignore step — as found | 3 | 0.50 | $0.0525 |
+| Standard, no ignore step | 3 | 0.50 | $0.0070 |
+| Standard, ignore step working, one folder touched | 1 | 0.17 | $0.0023 |
+
+Roughly 22× between the first row and the last, for identical output. Set the machine once at **Team Settings → Build and Deployment → Build Machines → All projects**; it applies to every project on the team, including any added later. Per-project overrides exist and are not needed here — three Vite builds of this size have no case for anything above Standard.
+
 ---
 
 ## 2. Committed configuration
 
-Each project carries its own `vercel.json` **and** its own `netlify.toml`. A host reads only the file that belongs to it, so shipping both costs nothing and means these projects deploy on either platform with no dashboard configuration and no edit. The two files express the same four things: install and build commands, output directory, the SPA rewrite, and caching headers.
+Each project carries its own `vercel.json` **and** its own `netlify.toml`. A host reads only the file that belongs to it, so shipping both costs nothing and means these projects deploy on either platform with no dashboard configuration and no edit. The two files express the same five things: the build command, the output directory, the build-ignore rule (§1.2), the SPA rewrite, and caching headers.
 
 Everything below describes `vercel.json`; `netlify.toml` is the same rules in TOML.
 
