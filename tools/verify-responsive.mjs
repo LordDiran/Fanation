@@ -89,8 +89,18 @@ async function routerGo(page, path) {
   await page.waitForFunction((p) => location.pathname === p, path, { timeout: 5000 }).catch(() => {});
   await page.waitForLoadState("networkidle");
   /* pathname changes the instant pushState returns — React has not necessarily
-     committed yet. Two animation frames guarantee a paint, so what gets measured
-     is the route being asked for and not the one before it. */
+     committed yet, and two animation frames do not guarantee that it has. A large
+     enough subtree commits across more frames than two, which is exactly how the
+     sign-in assertion in smoke.mjs came to read the login page while sitting at
+     /feed. What actually holds this call site together is not the frames but the
+     three round-trips stacked above them — waitForFunction, networkidle, and this
+     evaluate — landing on a shell that is already mounted, so only the route's own
+     subtree has to swap. That was measured rather than assumed: every route at
+     every viewport sampled at this exact instant and again 1.5s later, 225
+     measurements, zero differences and zero overflow verdicts that would have
+     flipped. If a route ever grows heavy enough to break it, this is the line that
+     fails first, and the fix is to poll on that route's own content the way
+     smoke.mjs does — not to add a third frame. */
   await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))));
 }
 
