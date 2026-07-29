@@ -183,9 +183,11 @@ One more trap in the same family, in the other direction: an `<img>` below the f
 
 ---
 
-## 4. Admin access control — open, and it must be closed
+## 4. Admin access control — decided: it travels with the code
 
-The console is currently reachable by anyone with the URL.
+**Decision, 29 July 2026.** This repository is a reference build. The dev team forks it and lifts the code into the production codebase rather than promoting `fanation-admin.vercel.app` into a real console. Access control therefore belongs to whoever wires the first real API, in that codebase. The rest of this section stays, because the constraint does not disappear by being moved — it moves.
+
+The console as deployed here is reachable by anyone with the URL.
 
 The `noindex` header keeps it out of Google. It does nothing against a shared link, a browser history, or a guess. For a prototype holding fabricated data that is a tolerable position. **It stops being tolerable the moment the first real API call is wired in**, and that is the deadline.
 
@@ -197,7 +199,7 @@ Three ways to close it, cheapest first:
 2. **IP allowlist or VPN** in front of the console. Free to cheap depending on what already exists. Costs flexibility for anyone working from an unexpected network.
 3. **Buy All Deployments.** ~$150/month. Costs money and nothing else.
 
-Option 1 is the right first move. Whichever is chosen, it is a decision for infrastructure and it needs making before real user data sits behind that URL.
+Option 1 is the cheapest and the right first move for a console that is actually in use. For this repository the position is simpler: `fanation-admin.vercel.app` serves fabricated data against no API, so it stays as it is. Put the requirement on the receiving codebase's backlog on day one. It is the kind of item that looks optional right up until it is not.
 
 ---
 
@@ -231,7 +233,7 @@ Run through this before promoting anything to a real domain.
 - [ ] `node tools/smoke.mjs` — 27 passed, 0 failed
 - [ ] Deep routes load directly on the deployed URL, not just by clicking (§3.1)
 - [ ] If any project folder was renamed or moved in this change, all three **Root Directory** settings re-checked in the dashboard (§1.3)
-- [ ] Open Graph tags in each `index.html` point at the real production domain — **currently hard-coded to `fanation.app` and `app.fanation.app`**, and `og:image` must be an absolute URL
 - [ ] Framework Preset reads **Vite**, not Next.js, on all three projects (§1.1)
-- [ ] `admin` access control decided and applied (§4) if any real API is connected
+- [ ] Open Graph tags — hard-coded to `fanation.app` and `app.fanation.app`, and **staying that way**. No custom domain is attached to this build, so previews will not render on the `*.vercel.app` demo URLs. Correct them in the integrating codebase, not here
+- [ ] `admin` access control — carried into the integrating codebase rather than closed here (§4). Re-read §4 before the first real API call
 - [ ] No secret anywhere in the diff (§5)

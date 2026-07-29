@@ -281,11 +281,13 @@ Do **not** also paste that command into Vercel's *Ignored Build Step* field. Lea
 
 Committed caching headers, already in each `vercel.json`: `/assets/*` is immutable for one year (safe — Vite content-hashes every filename), `index.html` is `no-cache` so a deployment is picked up on the next load.
 
-### 9.4 Admin access control — open item
+### 9.4 Admin access control — carried into the integrating codebase
 
 `admin` ships three headers: `X-Robots-Tag: noindex, nofollow`, `X-Frame-Options: DENY`, `Referrer-Policy: no-referrer`. **None of those is access control.** They keep the console out of search results; they do not stop anyone who has the URL.
 
 The console is currently reachable by URL. That is acceptable for a prototype holding fabricated data. **It must be closed before the first real API call is wired in.** Options, cheapest first: put the console behind the host's deployment protection with no production-domain exemption; drop the public domain and use the protected preview URL; or put it behind an IP allowlist or VPN. This is a decision for infrastructure and it needs making before, not after, real user data is behind it.
+
+**Decided 29 July 2026.** This repository is a reference build that the dev team lifts into the production codebase, so the deployed `fanation-admin` URL stays a demo and stays open. The requirement transfers with the code and falls due at the first real API call in the receiving codebase. DEPLOYMENT.md §4 carries the options and the costs.
 
 ---
 
@@ -370,13 +372,13 @@ One caveat on `verify-responsive.mjs`: it reports broken images by asking each `
 
 ## 14. Dependencies on your side
 
-| Item | Owner | Needed by |
-|---|---|---|
-| Confirm hosting platform and that SPA rewrite is supported | Dami | Before first deployment |
-| Confirm domain assignments for the three projects | Folasayo / Dami | Before first deployment |
-| Decide how `admin` is access-controlled | Dami | Before the first real API call |
-| Answer open questions 1 and 3 (§10.2) | Backend lead | Before backend work starts |
-| Provide API base URLs per environment | Backend lead | At integration |
+| Item | Owner | Needed by | Status |
+|---|---|---|---|
+| Confirm hosting platform and that SPA rewrite is supported | Dami | Before first deployment | Open |
+| Confirm domain assignments for the three projects | Folasayo / Dami | Before first deployment | **Closed 29 July 2026** — no custom domain for this build. The three `*.vercel.app` URLs are the demo surface; real domains are set in the integrating codebase (§16) |
+| Decide how `admin` is access-controlled | Integrating codebase | First real API call, there | **Reassigned 29 July 2026** — §9.4 |
+| Answer open questions 1 and 3 (§10.2) | Backend lead | Before backend work starts | Open — **blocking backend work** |
+| Provide API base URLs per environment | Backend lead | At integration | Open |
 
 ## 15. Out of scope for this build
 
@@ -388,6 +390,6 @@ Backend services, database, authentication, payment processing, media upload and
 
 Carried openly rather than closed quietly:
 
-1. **Open Graph tags hard-code `fanation.app` and `app.fanation.app`.** Each `index.html` carries an absolute `og:image` URL and canonical metadata. If the production domains differ, three files need one edit each before launch.
+1. **Open Graph tags hard-code `fanation.app` and `app.fanation.app`.** Each `index.html` carries an absolute `og:image` URL and canonical metadata. No custom domain is attached to this build and none is planned for it, so the tags do not resolve against the `*.vercel.app` demo URLs and link previews will not render there. Left deliberately: they describe the intended production domain. Three files need one edit each in the integrating codebase if the real domains differ.
 2. **No route-level code splitting.** Noted in §8. A decision to defer, not an oversight.
 3. **Source maps are published by default.** One line per `vite.config.ts` to change if that is not wanted on production.
