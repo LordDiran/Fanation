@@ -97,7 +97,7 @@ export function PasswordField({ id, value, onChange, placeholder = "••••
         autoComplete={autoComplete} onChange={(e) => onChange(e.target.value)} style={{ paddingRight: 46 }} />
       <button type="button" className="autheye" onClick={() => setShow((v) => !v)}
         aria-label={show ? "Hide password" : "Show password"}>
-        <Icon n="eye" s={17} c={show ? "var(--blue)" : "var(--muted)"} />
+        <Icon n="eye" s={17} c={show ? "var(--blue-ink)" : "var(--muted)"} />
       </button>
     </div>
   );

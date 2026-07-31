@@ -22,7 +22,7 @@ export default function VerifyPage() {
       <div className="card" style={{ padding: 24 }}>
         <div className="row between" style={{ marginBottom: 8 }}>
           <div className="row gap12">
-            <div className="feature-ic" style={{ background: "rgba(37,153,246,.16)" }}><Icon n="shield" c="var(--blueL)" /></div>
+            <div className="feature-ic" style={{ background: "rgba(37,153,246,.16)" }}><Icon n="shield" c="var(--blueL-ink)" /></div>
             <div className="col">
               <div className="b7 t20">Identity verification</div>
               <div className="muted t13">Unlock payouts and creator features.</div>
@@ -41,7 +41,7 @@ export default function VerifyPage() {
         {ITEMS.map((r) => (
           <div key={r[1]} className="row gap12" style={{ marginBottom: 12 }}>
             <div className="feature-ic" style={{ width: 38, height: 38, background: step >= r[3] ? "rgba(93,221,144,.14)" : "var(--fill)" }}>
-              <Icon n={step >= r[3] ? "check" : r[0]} s={17} c={step >= r[3] ? "var(--mint)" : "var(--muted)"} />
+              <Icon n={step >= r[3] ? "check" : r[0]} s={17} c={step >= r[3] ? "var(--mint-ink)" : "var(--muted)"} />
             </div>
             <div>
               <div className="b6 t14">{r[1]}</div>

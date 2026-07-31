@@ -35,10 +35,10 @@ export default function ReportsPage() {
       </div>
 
       <div className="grid g4 gap16" style={{ marginBottom: 18 }}>
-        <StatCard label="MRR" value="$128.4K" sub="+9.1% month on month" icon="dollar" color="var(--mint)" />
+        <StatCard label="MRR" value="$128.4K" sub="+9.1% month on month" icon="dollar" color="var(--mint-ink)" />
         <StatCard label="Paying fans" value="24.8K" sub="+1,120 this month" icon="users" />
-        <StatCard label="ARPPU" value="$18.60" sub="avg revenue / paying fan" icon="coin" color="var(--amber)" />
-        <StatCard label="Churn" value="3.2%" sub="-0.4pt vs June" icon="chart" color="var(--blueL)" />
+        <StatCard label="ARPPU" value="$18.60" sub="avg revenue / paying fan" icon="coin" color="var(--amber-ink)" />
+        <StatCard label="Churn" value="3.2%" sub="-0.4pt vs June" icon="chart" color="var(--blueL-ink)" />
       </div>
 
       <div className="grid gmain-13 gap16" style={{ marginBottom: 18 }}>

@@ -234,8 +234,8 @@ export function Loop({ src, poster, active = true, sound = false, radius, fit = 
 
 export function Verified({ s = 15 }: { s?: number }) {
   return (
-    <span style={{ color: "var(--blue)", display: "inline-flex" }}>
-      <Icon n="verified" s={s} fill="var(--blue)" />
+    <span style={{ color: "var(--blue-ink)", display: "inline-flex" }}>
+      <Icon n="verified" s={s} fill="var(--blue-ink)" />
     </span>
   );
 }
@@ -321,7 +321,7 @@ export function ToastStack({ list }: { list: ToastMsg[] }) {
       {list.map((t) => (
         <div key={t.id} className={"toast " + (t.tone || "")}>
           <Icon n={t.tone === "err" ? "x" : t.tone === "ok" ? "check" : "bell"} s={15}
-            c={t.tone === "err" ? "var(--coral)" : t.tone === "ok" ? "var(--mint)" : "var(--blueL)"} />
+            c={t.tone === "err" ? "var(--coral-ink)" : t.tone === "ok" ? "var(--mint-ink)" : "var(--blueL-ink)"} />
           <span>{t.msg}</span>
           {t.actionLabel && <button onClick={t.action}>{t.actionLabel}</button>}
         </div>

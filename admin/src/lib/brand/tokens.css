@@ -26,6 +26,29 @@
   --amber: #fca44b; /* coins, tips, anything with a value attached */
   --red: #ef4444; /* destructive, and live-broadcast state only */
 
+  /* ── Ink — the accents, but for text and standalone icons ───────────────── */
+  /* Every value here is identical to its base above, so in dark these are pure
+     aliases and swapping a call site from var(--blue) to var(--blue-ink) cannot
+     change a pixel. The light block is where they diverge.
+
+     This set exists because the accents have two jobs that pull in opposite
+     directions. As a fill or a border on a dark surface, #2599f6 is correct. As
+     14px text on #ffffff it is 2.9:1 and fails AA. Darkening the accent itself
+     would fix the text and wreck every button and chip that uses it as a
+     background. Splitting text off is the only move that fixes one without
+     touching the other.
+
+     Use -ink wherever a brand colour is the colour of a glyph — text, or an icon
+     that carries meaning on its own. Keep the base for backgrounds, borders and
+     fills. Never reach for a bare accent as light-mode text: the bases have no
+     light override by design, so it will fail contrast silently and nothing in
+     the build will catch it. */
+  --blue-ink: #2599f6;
+  --blueL-ink: #60b8fa;
+  --coral-ink: #f36a46;
+  --mint-ink: #5ddd90;
+  --amber-ink: #fca44b;
+
   /* ── Surfaces, dark (default) ───────────────────────────────────────────── */
   --bg: #07091a;
   --bg2: #0c1121;
@@ -53,6 +76,31 @@
 }
 
 [data-theme="light"] {
+  /* ── Ink, light ─────────────────────────────────────────────────────────── */
+  /* Measured against the *composited* surface each one actually renders on, not
+     against a plain background. Several sit on an accent tint over a card, and
+     the worst case is a tint on a tint. A value tuned against #ffffff passes on
+     paper and fails on the page — that mistake has already been made once here.
+
+     Two stacked-tint surfaces set the floor, and both were found by measuring
+     rather than by reasoning. The count badge on the active sidebar item is a
+     `.tag` carrying its own --fill over the --blue .14 wash that .navi.on
+     paints over --bg — three layers, resolving to #cddff1. The blue badge is
+     --blue .2 inside a --blue .07 panel. Which ink lands in the first of those
+     is data, not layout: a severity count picks the colour. So all five clear
+     it, not just the one that happens to render there today.
+
+     Thresholds: 4.5:1 for text (WCAG 1.4.3), 3:1 for a standalone icon (1.4.11).
+     Every value clears 4.5 regardless, so the icon allowance is headroom rather
+     than something already spent. The figure after each is the worst surface
+     that value has to survive. */
+  --blue-ink: #175f9a; /* 4.76 — badge, --blue .2 in a --blue .07 panel */
+  --blueL-ink: #346388; /* 4.55 — badge, --blue .2 in a --blue .07 panel */
+  --coral-ink: #9b442d; /* 4.56 — .tag on its own --coral .2 tint */
+  --mint-ink: #2d6a46; /* 4.58 — badge, --blue .2 in a --blue .07 panel */
+  --amber-ink: #825427; /* 4.61 — badge, --blue .2 in a --blue .07 panel */
+
+  /* ── Surfaces ───────────────────────────────────────────────────────────── */
   --bg: #f3f5fa;
   --bg2: #e9eef6;
   --panel: #e9eef6;
@@ -61,7 +109,12 @@
 
   --text: #0c1220;
   --muted: #5a6579;
-  --muted2: rgba(12, 18, 32, 0.5);
+  /* .62, not .5. At .5 this resolves to #80838d on --bg and misses 1.4.3 at
+     3.46 — and it is the sidebar section caption on every route, set at 11px.
+     The cost is that light's secondary grey now sits close to --muted; below
+     body text, light carries its hierarchy on size and weight rather than on a
+     third grey. Dark keeps .5 — it passes there. */
+  --muted2: rgba(12, 18, 32, 0.62);
 
   --line: rgba(12, 18, 32, 0.1);
   --line2: rgba(12, 18, 32, 0.17);

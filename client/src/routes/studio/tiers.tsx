@@ -7,7 +7,7 @@ const FEATS: Record<string, string[]> = {
   Premium: ["Everything in Basic", "Exclusive drops", "Live streams"],
   VIP: ["Everything in Premium", "Priority DMs", "Monthly video call", "Custom requests"],
 };
-const COLORS: Record<string, string> = { Basic: "var(--blue)", Premium: "var(--coral)", VIP: "var(--amber)" };
+const COLORS: Record<string, string> = { Basic: "var(--blue-ink)", Premium: "var(--coral-ink)", VIP: "var(--amber-ink)" };
 
 export default function TiersPage() {
   const S = useAppStore();
@@ -49,7 +49,7 @@ export default function TiersPage() {
               </div>
             )}
             {FEATS[t].map((f) => (
-              <div key={f} className="row gap8 t14" style={{ marginBottom: 8 }}><Icon n="check" s={15} c="var(--mint)" />{f}</div>
+              <div key={f} className="row gap8 t14" style={{ marginBottom: 8 }}><Icon n="check" s={15} c="var(--mint-ink)" />{f}</div>
             ))}
             <button className="btn btn-ghost btn-block btn-sm" style={{ marginTop: 8 }} onClick={() => { setEdit(t); setVal(String(prices[t])); }}>
               {edit === t ? "Editing…" : "Edit tier"}

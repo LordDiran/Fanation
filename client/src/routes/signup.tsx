@@ -37,7 +37,7 @@ export default function Signup() {
     ["Special char", /[^A-Za-z0-9]/.test(pw)],
   ];
   const score = rules.filter((r) => r[1]).length;
-  const scoreColor = score >= 4 ? "var(--mint)" : score >= 2 ? "var(--amber)" : "var(--muted)";
+  const scoreColor = score >= 4 ? "var(--mint-ink)" : score >= 2 ? "var(--amber-ink)" : "var(--muted)";
 
   return (
     <div className="authwrap">
@@ -90,7 +90,7 @@ export default function Signup() {
               <div className="progress" style={{ marginBottom: 12 }}><i style={{ width: `${score * 20}%` }} /></div>
               <div className="grid g2 gap8">
                 {rules.map((r) => (
-                  <div key={r[0]} className="row gap8 t13" style={{ color: r[1] ? "var(--mint)" : "var(--muted2)" }}>
+                  <div key={r[0]} className="row gap8 t13" style={{ color: r[1] ? "var(--mint-ink)" : "var(--muted2)" }}>
                     <Icon n="check" s={14} />{r[0]}
                   </div>
                 ))}

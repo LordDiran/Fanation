@@ -18,17 +18,17 @@ export default function WalletPage() {
       </div>
       <div className="grid g3 gap16" style={{ marginBottom: 20 }}>
         <div className="card" style={{ padding: 20 }}>
-          <div className="row between"><span className="up muted">Coin balance</span><Icon n="coin" c="var(--amber)" /></div>
+          <div className="row between"><span className="up muted">Coin balance</span><Icon n="coin" c="var(--amber-ink)" /></div>
           <div className="statnum amber" style={{ marginTop: 12 }}>{S.coins.toLocaleString()}</div>
           <div className="muted t13">≈ ${(S.coins / 100).toFixed(2)}</div>
         </div>
         <div className="card" style={{ padding: 20 }}>
-          <div className="row between"><span className="up muted">Earnings</span><Icon n="dollar" c="var(--mint)" /></div>
+          <div className="row between"><span className="up muted">Earnings</span><Icon n="dollar" c="var(--mint-ink)" /></div>
           <div className="statnum mint" style={{ marginTop: 12 }}>$4,280</div>
           <div className="muted t13">available to withdraw</div>
         </div>
         <div className="card" style={{ padding: 20 }}>
-          <div className="row between"><span className="up muted">This month</span><Icon n="gift" c="var(--coral)" /></div>
+          <div className="row between"><span className="up muted">This month</span><Icon n="gift" c="var(--coral-ink)" /></div>
           <div className="statnum" style={{ marginTop: 12 }}>$612</div>
           <div className="muted t13">gifted to creators</div>
         </div>
@@ -38,7 +38,7 @@ export default function WalletPage() {
           <div className="up muted" style={{ marginBottom: 10 }}>Payout requests</div>
           {S.payoutReqs.map((r, i) => (
             <div key={i} className="row gap10" style={{ padding: "6px 0" }}>
-              <Icon n="dollar" s={16} c="var(--mint)" />
+              <Icon n="dollar" s={16} c="var(--mint-ink)" />
               <span className="b7 t14">${r.amt.toLocaleString()}</span>
               <span className="muted t12">GTBank · {r.d}</span>
               <div className="grow" />
@@ -68,7 +68,7 @@ export default function WalletPage() {
                 </div>
                 <div className="col" style={{ alignItems: "flex-end" }}>
                   {t.a && <span className="b7 t14">{t.a}</span>}
-                  {t.coin && <span className="t13 b6" style={{ color: t.coin.startsWith("+") ? "var(--mint)" : "var(--amber)" }}>{t.coin} coins</span>}
+                  {t.coin && <span className="t13 b6" style={{ color: t.coin.startsWith("+") ? "var(--mint-ink)" : "var(--amber-ink)" }}>{t.coin} coins</span>}
                 </div>
               </div>
               {i < tx.length - 1 && <hr className="divider" />}

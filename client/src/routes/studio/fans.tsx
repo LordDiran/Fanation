@@ -12,9 +12,9 @@ export default function FansPage() {
     (seg === "Expiring" && f[4] === "Expiring") || (seg === "Expired" && f[4] === "Expired");
   const rows = FAN_SEED.filter(match);
   const stStyle = (st: string) =>
-    st === "Active" ? { color: "var(--mint)", borderColor: "rgba(93,221,144,.3)" }
-      : st === "Expired" ? { color: "var(--coral)", borderColor: "rgba(243,106,70,.3)" }
-        : { color: "var(--amber)", borderColor: "rgba(252,164,75,.3)" };
+    st === "Active" ? { color: "var(--mint-ink)", borderColor: "rgba(93,221,144,.3)" }
+      : st === "Expired" ? { color: "var(--coral-ink)", borderColor: "rgba(243,106,70,.3)" }
+        : { color: "var(--amber-ink)", borderColor: "rgba(252,164,75,.3)" };
   return (
     <div className="content">
       <div className="row between wrap" style={{ marginBottom: 18, gap: 12 }}>
@@ -27,10 +27,10 @@ export default function FansPage() {
         </button>
       </div>
       <div className="grid g4 gap16" style={{ marginBottom: 18 }}>
-        <StatCard label="Active" value="8,412" icon="users" color="var(--blue)" />
-        <StatCard label="New (wk)" value="214" icon="plus" color="var(--mint)" />
-        <StatCard label="Top spenders" value="126" icon="star" color="var(--amber)" />
-        <StatCard label="Expiring" value="38" icon="bell" color="var(--coral)" />
+        <StatCard label="Active" value="8,412" icon="users" color="var(--blue-ink)" />
+        <StatCard label="New (wk)" value="214" icon="plus" color="var(--mint-ink)" />
+        <StatCard label="Top spenders" value="126" icon="star" color="var(--amber-ink)" />
+        <StatCard label="Expiring" value="38" icon="bell" color="var(--coral-ink)" />
       </div>
       <div className="row gap8 wrap" style={{ marginBottom: 16 }}>
         {SEGS.map((t) => <span key={t} className={"tag" + (seg === t ? " on" : "")} style={{ cursor: "pointer" }} onClick={() => setSeg(t)}>{t}</span>)}

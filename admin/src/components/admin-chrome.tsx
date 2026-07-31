@@ -86,7 +86,7 @@ function ConfirmModal({ cfg, close }: { cfg: ConfirmCfg; close: () => void }) {
           onChange={(e) => setNote(e.target.value)} style={{ resize: "none", marginBottom: 12 }} />
         {cfg.confirmText && (
           <>
-            <label className="label">Type <b style={{ color: "var(--coral)" }}>{cfg.confirmText}</b> to confirm — this is irreversible</label>
+            <label className="label">Type <b style={{ color: "var(--coral-ink)" }}>{cfg.confirmText}</b> to confirm — this is irreversible</label>
             <input className="input" value={typed} onChange={(e) => setTyped(e.target.value)} placeholder={cfg.confirmText} style={{ marginBottom: 12 }} />
           </>
         )}

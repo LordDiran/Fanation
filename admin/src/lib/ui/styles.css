@@ -31,8 +31,7 @@ a{color:inherit;text-decoration:none}
    far more presence than Inter Bold; 900 is the visual equivalent and it is what the
    landing site already sets on every heading. Smallest use of this class is 18px. */
 .display{font-weight:900;letter-spacing:-.01em;line-height:1.02}
-.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.mint{color:var(--mint)} .amber{color:var(--amber)} .coral{color:var(--coral)} .blue{color:var(--blue)} .blueL{color:var(--blueL)}
+.mint{color:var(--mint-ink)} .amber{color:var(--amber-ink)} .coral{color:var(--coral-ink)} .blue{color:var(--blue-ink)} .blueL{color:var(--blueL-ink)}
 .muted{color:var(--muted)} .muted2{color:var(--muted2)}
 /* layout */
 .row{display:flex;align-items:center} .col{display:flex;flex-direction:column}
@@ -74,8 +73,14 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .badge-live{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:4px 9px;border-radius:var(--rp)}
 .badge-live .dot{background:#fff;animation:blink 1.4s infinite}
 @keyframes blink{50%{opacity:.35}}
-.chip-coin{display:inline-flex;align-items:center;gap:6px;background:rgba(252,164,75,.14);color:var(--amber);border:1px solid rgba(252,164,75,.3);padding:5px 10px;border-radius:var(--rp);font-weight:700;font-size:12px}
-.chip-mint{display:inline-flex;align-items:center;gap:6px;background:rgba(93,221,144,.14);color:var(--mint);border:1px solid rgba(93,221,144,.3);padding:5px 10px;border-radius:var(--rp);font-weight:700;font-size:12px}
+.chip-coin{display:inline-flex;align-items:center;gap:6px;background:rgba(252,164,75,.14);color:var(--amber-ink);border:1px solid rgba(252,164,75,.3);padding:5px 10px;border-radius:var(--rp);font-weight:700;font-size:12px}
+.chip-mint{display:inline-flex;align-items:center;gap:6px;background:rgba(93,221,144,.14);color:var(--mint-ink);border:1px solid rgba(93,221,144,.3);padding:5px 10px;border-radius:var(--rp);font-weight:700;font-size:12px}
+/* Over a photograph or a video, not over a page surface. The tint behind these is
+   whatever the picture happens to be, so the palette cannot help — the literal
+   accent stays, in both themes. Add `chip-onart` to any chip that renders on top
+   of media; leave it off everywhere else. */
+.chip-coin.chip-onart{color:var(--amber)}
+.chip-mint.chip-onart{color:var(--mint)}
 /* avatar */
 .av{border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;overflow:hidden}
 /* inputs */
@@ -93,7 +98,7 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .sidelogo{display:flex;padding:4px 8px 20px}
 .navi{display:flex;align-items:center;gap:12px;padding:11px 13px;border-radius:12px;color:var(--muted);font-weight:600;font-size:14.5px;transition:.15s;cursor:pointer}
 .navi:hover{background:var(--fill);color:var(--text)}
-.navi.on{background:rgba(37,153,246,.14);color:var(--blueL)}
+.navi.on{background:rgba(37,153,246,.14);color:var(--blueL-ink)}
 /* Immersive routes (reels) collapse the sidebar to an icon rail — the labels go,
    the destinations stay. Instagram does the same thing on its reels page, and for
    the same reason: the video is the page, and 172px of nav text is 172px the video
@@ -106,7 +111,7 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
    and is still a labelled list of destinations even while reels is the route. */
 .immersive .side .navi{justify-content:center;padding:11px 0;gap:0}
 .immersive .side .navlabel,.immersive .side .sidecap{display:none}
-.navi.on svg{color:var(--blueL)}
+.navi.on svg{color:var(--blueL-ink)}
 .main{min-width:0}
 .topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:16px;padding:14px 26px;border-bottom:1px solid var(--line);background:var(--topbar);backdrop-filter:blur(12px)}
 .content{padding:26px;max-width:1180px;margin:0 auto}
@@ -217,7 +222,7 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .toast{display:flex;align-items:center;gap:10px;background:var(--card2);border:1px solid var(--line2);color:var(--text);padding:11px 16px;border-radius:14px;font-size:13.5px;font-weight:600;box-shadow:0 14px 44px rgba(0,0,0,.45);animation:riseIn .25s ease both;pointer-events:auto;max-width:520px}
 .toast.ok{border-color:rgba(93,221,144,.5)}
 .toast.err{border-color:rgba(243,106,70,.55)}
-.toast button{color:var(--blueL);font-weight:700;font-size:13px;flex:none}
+.toast button{color:var(--blueL-ink);font-weight:700;font-size:13px;flex:none}
 @keyframes riseIn{from{opacity:0;transform:translateY(10px)}}
 /* dropdown menu */
 .menuwrap{position:relative;display:inline-flex}
@@ -229,7 +234,7 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
    `admin-chrome.tsx`, which already draws the danger radio in --coral and the confirm
    button in --red. This was a one-off #FF7A5C before, from the pre-reconciliation
    coral family. */
-.mi.danger{color:var(--coral)}
+.mi.danger{color:var(--coral-ink)}
 .mi.off{opacity:.45;cursor:default}
 /* admin drawer */
 .scrim{position:fixed;inset:0;background:rgba(4,6,16,.55);z-index:94}
@@ -361,7 +366,7 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
     border-top:1px solid var(--line);background:var(--topbar);backdrop-filter:blur(14px)}
   .tabi{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
     gap:3px;padding:0 2px;font-size:10.5px;font-weight:600;color:var(--muted);text-align:center}
-  .tabi.on{color:var(--blueL)}
+  .tabi.on{color:var(--blueL-ink)}
   .only-mobile{display:inline-flex}
 
   /* Topbar: search takes whatever the controls leave, the Browse/Studio pill moves

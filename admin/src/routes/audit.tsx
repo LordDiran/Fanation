@@ -30,7 +30,7 @@ export default function AuditPage() {
       </div>
 
       <div className="card row gap12" style={{ padding: "12px 16px", marginBottom: 16 }}>
-        <Icon n="lock" s={17} c="var(--blueL)" />
+        <Icon n="lock" s={17} c="var(--blueL-ink)" />
         <div className="t13 muted">
           Append-only and immutable. Every admin action is written here with actor, reason, and timestamp — entries cannot be edited or deleted, including by super admins.
         </div>

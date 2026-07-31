@@ -103,9 +103,9 @@ export const useAdminStore = create<AdminState>()((set) => ({
 
 export const stChipStyle = (st: string): CSSProperties =>
   st === "Active" || st === "Paid" || st === "Approved"
-    ? { color: "var(--mint)", borderColor: "rgba(93,221,144,.3)" }
+    ? { color: "var(--mint-ink)", borderColor: "rgba(93,221,144,.3)" }
     : st === "Suspended" || st === "Banned" || st === "Rejected" || st === "Removed"
-      ? { color: "var(--coral)", borderColor: "rgba(243,106,70,.3)" }
+      ? { color: "var(--coral-ink)", borderColor: "rgba(243,106,70,.3)" }
       : st === "Awaiting co-sign"
-        ? { color: "var(--blueL)", borderColor: "rgba(37,153,246,.35)" }
-        : { color: "var(--amber)", borderColor: "rgba(252,164,75,.3)" };
+        ? { color: "var(--blueL-ink)", borderColor: "rgba(37,153,246,.35)" }
+        : { color: "var(--amber-ink)", borderColor: "rgba(252,164,75,.3)" };

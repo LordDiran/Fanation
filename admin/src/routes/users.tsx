@@ -153,8 +153,8 @@ export default function UsersPage() {
               ) : (
                 <>
                   <button className="btn btn-ghost btn-block btn-sm" onClick={() => doWarn(view)}><Icon n="flag" s={14} />Warn — add strike</button>
-                  <button className="btn btn-ghost btn-block btn-sm" style={{ color: "var(--coral)" }} onClick={() => doSuspend(view)}><Icon n="lock" s={14} />Suspend…</button>
-                  <button className="btn btn-ghost btn-block btn-sm" style={{ color: "var(--coral)" }} onClick={() => doBan(view)}><Icon n="x" s={14} />Ban permanently…</button>
+                  <button className="btn btn-ghost btn-block btn-sm" style={{ color: "var(--coral-ink)" }} onClick={() => doSuspend(view)}><Icon n="lock" s={14} />Suspend…</button>
+                  <button className="btn btn-ghost btn-block btn-sm" style={{ color: "var(--coral-ink)" }} onClick={() => doBan(view)}><Icon n="x" s={14} />Ban permanently…</button>
                 </>
               )}
             </div>

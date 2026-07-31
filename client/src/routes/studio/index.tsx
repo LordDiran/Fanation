@@ -23,9 +23,9 @@ export default function StudioDashboard() {
         </div>
       </div>
       <div className="grid g4 gap16" style={{ marginBottom: 18 }}>
-        <StatCard label="Earnings (mo)" value="$4,280" sub="+18% vs last month" icon="dollar" color="var(--mint)" />
-        <StatCard label="Subscribers" value="8,412" sub="+214 this week" icon="users" color="var(--blue)" />
-        <StatCard label="Coins received" value="128K" sub="≈ $1,280" icon="coin" color="var(--amber)" />
+        <StatCard label="Earnings (mo)" value="$4,280" sub="+18% vs last month" icon="dollar" color="var(--mint-ink)" />
+        <StatCard label="Subscribers" value="8,412" sub="+214 this week" icon="users" color="var(--blue-ink)" />
+        <StatCard label="Coins received" value="128K" sub="≈ $1,280" icon="coin" color="var(--amber-ink)" />
         <StatCard label="Profile views" value="42.6K" sub="+9% this week" icon="eye" />
       </div>
       <div className="grid gmain-15 gap16">
@@ -44,7 +44,7 @@ export default function StudioDashboard() {
         </div>
         <div className="card" style={{ padding: 18 }}>
           <div className="b7" style={{ marginBottom: 14 }}>Recent activity</div>
-          {([["coin", "var(--amber)", "@jay_88 sent 500 coins", "2m"], ["user", "var(--blue)", "@superfan subscribed · $12/mo", "18m"], ["lock", "var(--coral)", "PPV unlocked · +150 coins", "1h"], ["gift", "var(--mint)", "$25 gift on live", "3h"]] as const).map((a, i) => (
+          {([["coin", "var(--amber-ink)", "@jay_88 sent 500 coins", "2m"], ["user", "var(--blue-ink)", "@superfan subscribed · $12/mo", "18m"], ["lock", "var(--coral-ink)", "PPV unlocked · +150 coins", "1h"], ["gift", "var(--mint-ink)", "$25 gift on live", "3h"]] as const).map((a, i) => (
             <div key={i} className="row gap12" style={{ padding: "9px 0" }}>
               <div className="feature-ic" style={{ width: 34, height: 34, background: "var(--fill)" }}>
                 <span style={{ color: a[1] }}><Icon n={a[0]} s={16} /></span>

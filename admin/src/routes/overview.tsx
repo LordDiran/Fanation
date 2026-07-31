@@ -23,14 +23,14 @@ export default function OverviewPage() {
         <span className="chip-mint"><span className="dot" style={{ background: "var(--mint)" }} />Systems normal</span>
       </div>
       <div className="grid g4 gap16" style={{ marginBottom: 18 }}>
-        <StatCard label="Total users" value="52,140" sub="+1,284 this week" icon="users" color="var(--blue)" />
-        <StatCard label="Active creators" value="12,006" sub="+96 this week" icon="star" color="var(--amber)" />
-        <StatCard label="Revenue (mo)" value="$212K" sub="platform take" icon="dollar" color="var(--mint)" />
-        <StatCard label="Coins in economy" value="8.4M" sub="≈ $84K liability" icon="coin" color="var(--coral)" />
+        <StatCard label="Total users" value="52,140" sub="+1,284 this week" icon="users" color="var(--blue-ink)" />
+        <StatCard label="Active creators" value="12,006" sub="+96 this week" icon="star" color="var(--amber-ink)" />
+        <StatCard label="Revenue (mo)" value="$212K" sub="platform take" icon="dollar" color="var(--mint-ink)" />
+        <StatCard label="Coins in economy" value="8.4M" sub="≈ $84K liability" icon="coin" color="var(--coral-ink)" />
       </div>
       <div className="grid g2 gap16">
         <div className="card" style={{ padding: 18 }}>
-          <div className="row gap8" style={{ marginBottom: 14 }}><Icon n="flag" s={18} c="var(--amber)" /><span className="b7">Needs attention</span></div>
+          <div className="row gap8" style={{ marginBottom: 14 }}><Icon n="flag" s={18} c="var(--amber-ink)" /><span className="b7">Needs attention</span></div>
           {attention.map((a, i) => (
             <div key={i} className="row gap10" style={{ padding: "10px 0", cursor: "pointer" }} onClick={() => navigate(a[3])}>
               <span className="dot" style={{ background: a[0], marginTop: 7 }} />

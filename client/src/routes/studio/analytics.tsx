@@ -9,16 +9,16 @@ export default function AnalyticsPage() {
     <div className="content">
       <h2 className="display t32" style={{ marginBottom: 18 }}>Analytics</h2>
       <div className="grid g4 gap16" style={{ marginBottom: 16 }}>
-        <StatCard label="Subscribers" value="8,412" sub="+20% MoM" icon="users" color="var(--blue)" />
-        <StatCard label="Watch time" value="18.4K h" sub="live + replays" icon="live" color="var(--coral)" />
-        <StatCard label="Engagement" value="12.8%" sub="likes+comments" icon="heart" color="var(--mint)" />
-        <StatCard label="Churn" value="3.1%" sub="-0.4% MoM" icon="chart" color="var(--amber)" />
+        <StatCard label="Subscribers" value="8,412" sub="+20% MoM" icon="users" color="var(--blue-ink)" />
+        <StatCard label="Watch time" value="18.4K h" sub="live + replays" icon="live" color="var(--coral-ink)" />
+        <StatCard label="Engagement" value="12.8%" sub="likes+comments" icon="heart" color="var(--mint-ink)" />
+        <StatCard label="Churn" value="3.1%" sub="-0.4% MoM" icon="chart" color="var(--amber-ink)" />
       </div>
       <div className="grid gmain-15 gap16">
         <div className="card" style={{ padding: 18 }}>
           <div className="b7" style={{ marginBottom: 14 }}>Subscriber growth</div>
           <svg viewBox="0 0 100 100" preserveAspectRatio="none" style={{ width: "100%", height: 170 }}>
-            <polyline points={pts} fill="none" stroke="var(--mint)" strokeWidth="2.5" vectorEffect="non-scaling-stroke" />
+            <polyline points={pts} fill="none" stroke="var(--mint-ink)" strokeWidth="2.5" vectorEffect="non-scaling-stroke" />
           </svg>
         </div>
         <div className="card" style={{ padding: 18 }}>

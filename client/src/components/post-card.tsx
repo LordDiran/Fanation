@@ -112,7 +112,7 @@ export function PostCard({ p }: { p: Post }) {
             <div className="row gap6">
               <span className="b7 t14">{p.who}</span>
               {p.v && <Verified />}
-              {isSub && !p.mine && <span className="tag" style={{ padding: "1px 8px", fontSize: 10.5, color: "var(--blueL)", borderColor: "rgba(37,153,246,.35)" }}>Subscribed</span>}
+              {isSub && !p.mine && <span className="tag" style={{ padding: "1px 8px", fontSize: 10.5, color: "var(--blueL-ink)", borderColor: "rgba(37,153,246,.35)" }}>Subscribed</span>}
               {p.mine && p.vis && <span className="tag" style={{ padding: "1px 8px", fontSize: 10.5 }}>{p.vis}</span>}
             </div>
             <div className="muted t13">@{p.h} · {p.t}</div>
@@ -135,7 +135,7 @@ export function PostCard({ p }: { p: Post }) {
                 style={{ position: "relative", padding: "11px 14px", borderRadius: 12, overflow: "hidden", cursor: voted == null ? "pointer" : "default", borderColor: voted === i ? "var(--blue)" : "var(--line)" }}>
                 <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${pct}%`, background: voted === i ? "rgba(37,153,246,.3)" : "rgba(37,153,246,.14)", transition: ".4s" }} />
                 <div className="row between" style={{ position: "relative" }}>
-                  <span className="row gap8 b6 t14">{voted === i && <Icon n="check" s={14} c="var(--blueL)" />}{o.label}</span>
+                  <span className="row gap8 b6 t14">{voted === i && <Icon n="check" s={14} c="var(--blueL-ink)" />}{o.label}</span>
                   <span className="muted t13">{pct}%</span>
                 </div>
               </div>
@@ -165,7 +165,7 @@ export function PostCard({ p }: { p: Post }) {
       {p.type === "locked" && isUnlocked && (
         <div style={{ height: MEDIA_H, borderRadius: 14, position: "relative", overflow: "hidden" }}>
           <Photo src={postMediaFor(p)} seed={p.seed} radius={14} />
-          <span className="chip-mint" style={{ position: "absolute", top: 10, left: 10, zIndex: 1 }}><Icon n="check" s={12} />Unlocked</span>
+          <span className="chip-mint chip-onart" style={{ position: "absolute", top: 10, left: 10, zIndex: 1 }}><Icon n="check" s={12} />Unlocked</span>
         </div>
       )}
 
@@ -173,11 +173,11 @@ export function PostCard({ p }: { p: Post }) {
           gaps — at 390px the default 20px spacing runs the row past the card. */}
       <div className="row between postbar" style={{ marginTop: 14 }}>
         <div className="row gap20 postacts" style={{ position: "relative" }}>
-          <button className="row gap6 muted" onClick={() => S.toggleLike(p.id)} style={{ color: liked ? "var(--coral)" : "" }}>
-            <Icon n="heart" s={19} fill={liked ? "var(--coral)" : undefined} />
+          <button className="row gap6 muted" onClick={() => S.toggleLike(p.id)} style={{ color: liked ? "var(--coral-ink)" : "" }}>
+            <Icon n="heart" s={19} fill={liked ? "var(--coral-ink)" : undefined} />
             {(p.likes + (liked ? 1 : 0)).toLocaleString()}
           </button>
-          <button className="row gap6 muted" onClick={() => setShowC((v) => !v)} style={{ color: showC ? "var(--blueL)" : "" }}>
+          <button className="row gap6 muted" onClick={() => setShowC((v) => !v)} style={{ color: showC ? "var(--blueL-ink)" : "" }}>
             <Icon n="comment" s={19} />{p.comments + myC.length}
           </button>
           <button className="row gap6 muted" onClick={() => S.toast("Reposted to your profile", "ok")}>

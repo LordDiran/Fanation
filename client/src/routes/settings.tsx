@@ -57,7 +57,7 @@ export default function SettingsPage() {
           <hr className="divider" />
           <div className="row gap12" style={{ padding: "14px 18px", cursor: "pointer" }}
             onClick={() => S.toast("Account deletion requires email confirmation — check your inbox", "err")}>
-            <Icon n="x" s={17} c="var(--coral)" /><span className="t14 b6 coral">Delete account</span>
+            <Icon n="x" s={17} c="var(--coral-ink)" /><span className="t14 b6 coral">Delete account</span>
           </div>
         </div>
       </div>

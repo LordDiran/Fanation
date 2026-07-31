@@ -31,10 +31,10 @@ export default function FinancePage() {
   );
 
   const chip = (s: string) =>
-    s === "Settled" ? { color: "var(--mint)", borderColor: "rgba(93,221,144,.3)" }
+    s === "Settled" ? { color: "var(--mint-ink)", borderColor: "rgba(93,221,144,.3)" }
       : s === "Failed" ? { color: "var(--muted)", borderColor: "var(--line2)" }
-        : s === "Refunded" ? { color: "var(--blueL)", borderColor: "rgba(37,153,246,.35)" }
-          : { color: "var(--coral)", borderColor: "rgba(243,106,70,.3)" }; // Chargeback / Flagged
+        : s === "Refunded" ? { color: "var(--blueL-ink)", borderColor: "rgba(37,153,246,.35)" }
+          : { color: "var(--coral-ink)", borderColor: "rgba(243,106,70,.3)" }; // Chargeback / Flagged
 
   const refund = (r: (typeof rows)[number]) => A.ask({
     title: `Refund ${r.a} — ${r.u}`,
@@ -53,16 +53,16 @@ export default function FinancePage() {
       </div>
 
       <div className="grid g4 gap16" style={{ marginBottom: 18 }}>
-        <StatCard label="Gross volume · today" value="$48.2K" sub="+12% vs yesterday" icon="dollar" color="var(--mint)" />
+        <StatCard label="Gross volume · today" value="$48.2K" sub="+12% vs yesterday" icon="dollar" color="var(--mint-ink)" />
         <StatCard label="Platform fee (20%)" value="$9.64K" sub="today" icon="chart" />
-        <StatCard label="Failed payments" value="3.1%" sub="Paystack retry queue: 14" icon="x" color="var(--amber)" />
-        <StatCard label="Open chargebacks" value="4" sub="$212 exposure" icon="flag" color="var(--coral)" />
+        <StatCard label="Failed payments" value="3.1%" sub="Paystack retry queue: 14" icon="x" color="var(--amber-ink)" />
+        <StatCard label="Open chargebacks" value="4" sub="$212 exposure" icon="flag" color="var(--coral-ink)" />
       </div>
 
       <div className="card row gap12" style={{ padding: "12px 16px", marginBottom: 16, borderColor: "rgba(252,164,75,.35)" }}>
-        <Icon n="chart" s={18} c="var(--amber)" />
+        <Icon n="chart" s={18} c="var(--amber-ink)" />
         <div className="t13 muted grow">
-          <b style={{ color: "var(--amber)" }}>Payment spike:</b> coin-pack volume is 3× the 7-day average. Velocity rules tightened automatically — review flagged rows below.
+          <b style={{ color: "var(--amber-ink)" }}>Payment spike:</b> coin-pack volume is 3× the 7-day average. Velocity rules tightened automatically — review flagged rows below.
         </div>
       </div>
 

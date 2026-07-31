@@ -41,7 +41,7 @@ export default function MassMessagingPage() {
           onChange={(e) => setTxt(e.target.value)} style={{ resize: "none", marginBottom: 12 }} />
         <div className="row between wrap gap12">
           <button className={"row gap6 t13 " + (lock ? "amber" : "muted")} onClick={() => setLock(!lock)}>
-            <Icon n="lock" s={16} c={lock ? "var(--amber)" : "var(--muted)"} />
+            <Icon n="lock" s={16} c={lock ? "var(--amber-ink)" : "var(--muted)"} />
             {lock ? "Locked · 150 coins ✓" : "Lock (PPV)"}
           </button>
           <button className="btn btn-blue" disabled={!txt.trim()} onClick={send}>

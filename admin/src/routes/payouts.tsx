@@ -91,15 +91,15 @@ export default function PayoutsPage() {
       </div>
 
       <div className="grid g4 gap16" style={{ marginBottom: 18 }}>
-        <StatCard label="In queue" value={fmt(pendingTotal)} sub={`${queue.length} requests`} icon="wallet" color="var(--amber)" />
-        <StatCard label="Paid this week" value="$41.2K" sub="38 creators" icon="check" color="var(--mint)" />
+        <StatCard label="In queue" value={fmt(pendingTotal)} sub={`${queue.length} requests`} icon="wallet" color="var(--amber-ink)" />
+        <StatCard label="Paid this week" value="$41.2K" sub="38 creators" icon="check" color="var(--mint-ink)" />
         <StatCard label="Next auto-batch" value="Fri 10:00" sub="UTC · standard payouts" icon="cal" />
-        <StatCard label="Co-sign threshold" value={fmt(COSIGN_AT)} sub="two admin signatures" icon="shield" color="var(--blueL)" />
+        <StatCard label="Co-sign threshold" value={fmt(COSIGN_AT)} sub="two admin signatures" icon="shield" color="var(--blueL-ink)" />
       </div>
 
       {queue.length === 0 && (
         <div className="card col center gap8" style={{ padding: 46 }}>
-          <Icon n="check" s={30} c="var(--mint)" />
+          <Icon n="check" s={30} c="var(--mint-ink)" />
           <div className="b7 t18">Payout queue is clear</div>
           <div className="muted t13">New withdrawal requests from creators appear here.</div>
         </div>

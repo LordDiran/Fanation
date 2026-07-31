@@ -14,7 +14,7 @@ export default function AdminLogin() {
         </div>
         <div className="card" style={{ padding: 28 }}>
           <div className="row gap10" style={{ marginBottom: 6 }}>
-            <div className="feature-ic" style={{ width: 38, height: 38, background: "rgba(37,153,246,.14)" }}><Icon n="shield" s={18} c="var(--blueL)" /></div>
+            <div className="feature-ic" style={{ width: 38, height: 38, background: "rgba(37,153,246,.14)" }}><Icon n="shield" s={18} c="var(--blueL-ink)" /></div>
             <div className="col"><div className="b7 t18">Admin console</div><div className="muted t12">Staff access only</div></div>
           </div>
           <hr className="divider" style={{ margin: "16px 0" }} />
@@ -23,7 +23,7 @@ export default function AdminLogin() {
           <label className="label">Password</label>
           <input className="input" type="password" placeholder="••••••••" style={{ marginBottom: 14 }} />
           <div className="row between hair" style={{ padding: "11px 14px", borderRadius: 12, marginBottom: 16 }}>
-            <div className="row gap8"><Icon n="shield" s={15} c="var(--mint)" /><span className="t13 b6">Two-factor authentication</span></div>
+            <div className="row gap8"><Icon n="shield" s={15} c="var(--mint-ink)" /><span className="t13 b6">Two-factor authentication</span></div>
             <span className="chip-mint">Required</span>
           </div>
           <button className="btn btn-blue btn-block" onClick={() => { setAuthed(true); navigate("/overview"); }}>Sign in to admin</button>

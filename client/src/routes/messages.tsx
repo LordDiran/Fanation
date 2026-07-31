@@ -42,7 +42,7 @@ export default function MessagesPage() {
               <div className="grow" style={{ minWidth: 0 }}>
                 <div className="b6 t14 row gap4">{c.name} <Verified s={12} /></div>
                 <div className="row gap6 muted t13" style={{ maxWidth: 190 }}>
-                  {c.locked && !S.dmUnlocked[c.handle] && <Icon n="lock" s={12} c="var(--amber)" />}
+                  {c.locked && !S.dmUnlocked[c.handle] && <Icon n="lock" s={12} c="var(--amber-ink)" />}
                   <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {(S.dms[c.handle] ?? []).length ? `You: ${(S.dms[c.handle] ?? []).slice(-1)[0]}` : c.preview}
                   </span>
@@ -83,7 +83,7 @@ export default function MessagesPage() {
               <div className="card" style={{ alignSelf: "flex-start", width: 280, padding: 0, overflow: "hidden" }}>
                 <div style={{ height: 170, position: "relative", overflow: "hidden" }}>
                   <Photo src={dmShot} seed={`dm${creator.id}`} />
-                  <span className="chip-mint" style={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}><Icon n="check" s={12} />Unlocked · 200</span>
+                  <span className="chip-mint chip-onart" style={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}><Icon n="check" s={12} />Unlocked · 200</span>
                 </div>
                 <div className="t13" style={{ padding: "9px 12px" }}>Full BTS set from Friday&apos;s shoot 📸</div>
               </div>
@@ -91,7 +91,7 @@ export default function MessagesPage() {
               <div className="card locked" style={{ alignSelf: "flex-start", width: 280, height: 180 }}>
                 <Photo src={dmShot} seed={`dm${creator.id}`} blur={9} scale={1.12} />
                 <div className="lockcover">
-                  <Icon n="lock" c="var(--amber)" />
+                  <Icon n="lock" c="var(--amber-ink)" />
                   <div className="b7 t14" style={{ color: "#fff" }}>Locked message</div>
                   <button className="btn btn-grad btn-sm" onClick={() => S.openModal("paidmsg", key)}>Unlock · 200 coins</button>
                 </div>

@@ -29,7 +29,7 @@ export default function ExplorePage() {
       </div>
       {liveList.length > 0 && (
         <>
-          <div className="up blue" style={{ marginBottom: 10, color: "var(--blue)" }}>Live now</div>
+          <div className="up blue" style={{ marginBottom: 10, color: "var(--blue-ink)" }}>Live now</div>
           <div className="row gap12" style={{ overflowX: "auto", marginBottom: 24, paddingBottom: 4 }}>
             {liveList.map((c, i) => (
               <div key={c.id} className="card" style={{ padding: 0, overflow: "hidden", minWidth: 200, flex: "none", cursor: "pointer" }}
@@ -50,7 +50,7 @@ export default function ExplorePage() {
           </div>
         </>
       )}
-      <div className="up" style={{ marginBottom: 12, color: "var(--blue)" }}>
+      <div className="up" style={{ marginBottom: 12, color: "var(--blue-ink)" }}>
         {cat === "Trending" ? "Top creators this week" : `${cat} creators`}
       </div>
       {list.length === 0 && (
@@ -73,7 +73,7 @@ export default function ExplorePage() {
                   reason: mint on a white studio wall is unreadable. */}
               <Scrim />
               <Scrim from={0.45} height="38%" top />
-              <div className="chip-mint" style={{ position: "absolute", top: 12, right: 12, background: "rgba(6,8,16,.55)", backdropFilter: "blur(6px)" }}>{c.avg} avg/mo</div>
+              <div className="chip-mint chip-onart" style={{ position: "absolute", top: 12, right: 12, background: "rgba(6,8,16,.55)", backdropFilter: "blur(6px)" }}>{c.avg} avg/mo</div>
               {c.live && <div className="badge-live" style={{ position: "absolute", top: 12, left: 12 }}><span className="dot" />LIVE</div>}
               <div style={{ position: "absolute", left: 14, bottom: 12 }}>
                 <div className="row gap6 b7" style={{ color: "#fff" }}>{c.name} {c.v && <Verified s={14} />}</div>

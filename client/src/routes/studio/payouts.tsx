@@ -34,7 +34,7 @@ export default function PayoutsPage() {
           <div key={i}>
             <div className="row between" style={{ padding: "13px 18px", background: p[1] === "Just now" ? "rgba(93,221,144,.05)" : "" }}>
               <div className="row gap12">
-                <Icon n="dollar" s={17} c="var(--mint)" />
+                <Icon n="dollar" s={17} c="var(--mint-ink)" />
                 <div className="col"><span className="b6 t14">{p[0]}</span><span className="muted t12">GTBank · {p[1]}</span></div>
               </div>
               {p[2] === "Paid" ? <span className="chip-mint">Paid</span> : <span className="chip-coin">{p[2]}</span>}

@@ -52,9 +52,9 @@ export default function LivePage() {
 
   const mmss = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
   const tone = (t: string): [string, string, string] =>
-    t === "coin" ? ["rgba(252,164,75,.13)", "rgba(252,164,75,.34)", "var(--amber)"]
-      : t === "gift" ? ["rgba(93,221,144,.14)", "rgba(93,221,144,.36)", "var(--mint)"]
-        : t === "sub" || t === "me" ? ["rgba(37,153,246,.14)", "rgba(37,153,246,.36)", "var(--blueL)"]
+    t === "coin" ? ["rgba(252,164,75,.13)", "rgba(252,164,75,.34)", "var(--amber-ink)"]
+      : t === "gift" ? ["rgba(93,221,144,.14)", "rgba(93,221,144,.36)", "var(--mint-ink)"]
+        : t === "sub" || t === "me" ? ["rgba(37,153,246,.14)", "rgba(37,153,246,.36)", "var(--blueL-ink)"]
           : ["", "", "var(--text)"];
   /* The stream itself: Elena's own 9:16 footage, the same reel her story and
      her card draw from — one creator, one look. */
@@ -84,7 +84,7 @@ export default function LivePage() {
         </div>
         <div className="row gap10">
           <span className="chip-coin"><Icon n="coin" s={13} />{S.coins.toLocaleString()}</span>
-          <button className="btn btn-ghost btn-sm" onClick={() => S.openModal("coins")}><Icon n="coin" s={15} c="var(--amber)" />Top up</button>
+          <button className="btn btn-ghost btn-sm" onClick={() => S.openModal("coins")}><Icon n="coin" s={15} c="var(--amber-ink)" />Top up</button>
           <button className="btn btn-grad btn-sm" onClick={() => sendGift("🎁", 200)}><Icon n="gift" s={15} />Send gift</button>
         </div>
       </div>
@@ -130,8 +130,8 @@ export default function LivePage() {
             </div>
             <div className="row gap10">
               <button className="btn btn-ghost btn-sm" onClick={() => { setHeart(!heart); setLikes((l) => l + (heart ? -1 : 1)); }}
-                style={heart ? { color: "var(--coral)", borderColor: "rgba(243,106,70,.4)" } : {}}>
-                <Icon n="heart" s={15} fill={heart ? "var(--coral)" : undefined} />{heart ? "Liked" : "Like"}
+                style={heart ? { color: "var(--coral-ink)", borderColor: "rgba(243,106,70,.4)" } : {}}>
+                <Icon n="heart" s={15} fill={heart ? "var(--coral-ink)" : undefined} />{heart ? "Liked" : "Like"}
               </button>
               <FollowBtn handle="elenalive" />
               <button className="btn btn-grad btn-sm" onClick={() => sendGift("🎁", 200)}><Icon n="gift" s={15} />Send gift</button>

@@ -194,18 +194,18 @@ export const SEED_FEED: Post[] = (() => {
  * product distinguishes system notices from social ones.
  */
 export const NOTIF_SEED: NotifItem[] = [
-  { icon: "coin", color: "var(--amber)", actor: "Jay Adeyemi", text: "@jay_88 sent you 500 coins", time: "2m ago" },
-  { icon: "heart", color: "var(--coral)", actor: "Sofia Amara", text: "Sofia Amara liked your comment", time: "9m ago" },
-  { icon: "user", color: "var(--blue)", actor: "Superfan X", text: "@superfan subscribed to you · VIP tier", time: "18m ago" },
-  { icon: "gift", color: "var(--mint)", actor: "Priscilla N.", text: "@priscilla sent a $25 gift on your live", time: "32m ago" },
-  { icon: "comment", color: "var(--blueL)", actor: "Marcus T.", text: "Marcus T. replied to your comment", time: "51m ago" },
-  { icon: "live", color: "var(--coral)", actor: "Elena Rusk", text: "Elena Rusk is live now — go watch", time: "1h ago" },
-  { icon: "lock", color: "var(--amber)", actor: "Mike W.", text: "@mikew unlocked your PPV post · +150 coins", time: "2h ago" },
-  { icon: "coin", color: "var(--amber)", actor: "Zara Ali", text: "@zaraali tipped you 1,000 coins", time: "3h ago" },
-  { icon: "user", color: "var(--blue)", actor: "Noah Kim", text: "@noahk started following you", time: "4h ago" },
-  { icon: "repost", color: "var(--mint)", actor: "Diego Santos", text: "Diego Santos reposted your video", time: "5h ago" },
-  { icon: "star", color: "var(--mint)", text: "You reached 8,400 subscribers 🎉", time: "7h ago" },
-  { icon: "dollar", color: "var(--mint)", text: "Your $2,480 payout was sent", time: "1d ago" },
+  { icon: "coin", color: "var(--amber-ink)", actor: "Jay Adeyemi", text: "@jay_88 sent you 500 coins", time: "2m ago" },
+  { icon: "heart", color: "var(--coral-ink)", actor: "Sofia Amara", text: "Sofia Amara liked your comment", time: "9m ago" },
+  { icon: "user", color: "var(--blue-ink)", actor: "Superfan X", text: "@superfan subscribed to you · VIP tier", time: "18m ago" },
+  { icon: "gift", color: "var(--mint-ink)", actor: "Priscilla N.", text: "@priscilla sent a $25 gift on your live", time: "32m ago" },
+  { icon: "comment", color: "var(--blueL-ink)", actor: "Marcus T.", text: "Marcus T. replied to your comment", time: "51m ago" },
+  { icon: "live", color: "var(--coral-ink)", actor: "Elena Rusk", text: "Elena Rusk is live now — go watch", time: "1h ago" },
+  { icon: "lock", color: "var(--amber-ink)", actor: "Mike W.", text: "@mikew unlocked your PPV post · +150 coins", time: "2h ago" },
+  { icon: "coin", color: "var(--amber-ink)", actor: "Zara Ali", text: "@zaraali tipped you 1,000 coins", time: "3h ago" },
+  { icon: "user", color: "var(--blue-ink)", actor: "Noah Kim", text: "@noahk started following you", time: "4h ago" },
+  { icon: "repost", color: "var(--mint-ink)", actor: "Diego Santos", text: "Diego Santos reposted your video", time: "5h ago" },
+  { icon: "star", color: "var(--mint-ink)", text: "You reached 8,400 subscribers 🎉", time: "7h ago" },
+  { icon: "dollar", color: "var(--mint-ink)", text: "Your $2,480 payout was sent", time: "1d ago" },
 ];
 
 export const TX_SEED: TxItem[] = [

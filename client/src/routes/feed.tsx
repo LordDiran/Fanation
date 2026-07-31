@@ -97,7 +97,7 @@ export default function FeedPage() {
               </div>
               <div className="row gap10">
                 <button className="btn btn-ghost btn-sm" onClick={() => navigate("/live")}>
-                  <Icon n="live" s={15} c="var(--coral)" />Go Live
+                  <Icon n="live" s={15} c="var(--coral-ink)" />Go Live
                 </button>
                 <button className="btn btn-blue btn-sm" onClick={() => S.openModal("compose")}>Post</button>
               </div>

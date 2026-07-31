@@ -13,9 +13,9 @@ const DURATIONS = ["24 hours", "7 days", "30 days", "Indefinite"];
 
 const sevStyle = (sev: string) =>
   sev === "High"
-    ? { color: "var(--coral)", borderColor: "rgba(243,106,70,.3)" }
+    ? { color: "var(--coral-ink)", borderColor: "rgba(243,106,70,.3)" }
     : sev === "Medium"
-      ? { color: "var(--amber)", borderColor: "rgba(252,164,75,.3)" }
+      ? { color: "var(--amber-ink)", borderColor: "rgba(252,164,75,.3)" }
       : { color: "var(--muted)", borderColor: "var(--line2)" };
 
 export default function ModerationPage() {
@@ -74,7 +74,7 @@ export default function ModerationPage() {
 
       {queue.length === 0 && (
         <div className="card col center gap8" style={{ padding: 46 }}>
-          <Icon n="shield" s={30} c="var(--mint)" />
+          <Icon n="shield" s={30} c="var(--mint-ink)" />
           <div className="b7 t18">Moderation queue is clear</div>
           <div className="muted t13">New reports from users and AI flags land here in real time.</div>
         </div>
@@ -87,7 +87,7 @@ export default function ModerationPage() {
           return (
             <div key={r.id} className="card" style={{ padding: 0, overflow: "hidden", borderColor: isOpen ? "var(--blue)" : undefined }}>
               <div className="row gap14 wrap" style={{ padding: 16, cursor: "pointer" }} onClick={() => setOpen(isOpen ? null : r.id)}>
-                <div className="feature-ic" style={{ width: 40, height: 40, background: "var(--fill)" }}><Icon n="flag" s={17} c={r.sev === "High" ? "var(--coral)" : "var(--amber)"} /></div>
+                <div className="feature-ic" style={{ width: 40, height: 40, background: "var(--fill)" }}><Icon n="flag" s={17} c={r.sev === "High" ? "var(--coral-ink)" : "var(--amber-ink)"} /></div>
                 <div className="col gap2" style={{ flex: 1.6, minWidth: 170 }}>
                   <span className="b7 t15">{r.t}</span>
                   <span className="muted t13">Reported by {r.who} · {r.n} {r.n === 1 ? "report" : "reports"}</span>
@@ -114,8 +114,8 @@ export default function ModerationPage() {
                     <button className="btn btn-ghost btn-sm" onClick={() => dismiss(r)}><Icon n="check" s={14} />Dismiss…</button>
                     <button className="btn btn-ghost btn-sm" onClick={() => escalate(r)}><Icon n="arrow" s={14} />Escalate to T&S…</button>
                     <div className="grow" />
-                    <button className="btn btn-ghost btn-sm" style={{ color: "var(--coral)" }} onClick={() => removeContent(r, false)}><Icon n="x" s={14} />Remove content…</button>
-                    <button className="btn btn-ghost btn-sm" style={{ color: "var(--coral)" }} onClick={() => removeContent(r, true)}><Icon n="flag" s={14} />Remove + warn…</button>
+                    <button className="btn btn-ghost btn-sm" style={{ color: "var(--coral-ink)" }} onClick={() => removeContent(r, false)}><Icon n="x" s={14} />Remove content…</button>
+                    <button className="btn btn-ghost btn-sm" style={{ color: "var(--coral-ink)" }} onClick={() => removeContent(r, true)}><Icon n="flag" s={14} />Remove + warn…</button>
                     <button className="btn btn-sm" style={{ background: "var(--red)", color: "#fff" }} onClick={() => suspendTarget(r)}><Icon n="lock" s={14} />Suspend @{r.target}…</button>
                   </div>
                 </div>
@@ -131,7 +131,7 @@ export default function ModerationPage() {
           <div className="card" style={{ padding: 0, overflow: "hidden" }}>
             {closed.map((r, i) => (
               <div key={r.id} className="row gap12" style={{ padding: "12px 18px", borderBottom: i < closed.length - 1 ? "1px solid var(--line)" : "none" }}>
-                <Icon n="check" s={15} c="var(--mint)" />
+                <Icon n="check" s={15} c="var(--mint-ink)" />
                 <div className="col grow"><span className="b6 t14">{r.t}</span><span className="muted t12">{r.reason} · {r.outcome}</span></div>
                 <span className="tag" style={r.st === "Dismissed" ? { color: "var(--muted)", borderColor: "var(--line2)" } : stChipStyle(r.st === "Resolved" ? "Approved" : r.st)}>{r.st}</span>
               </div>

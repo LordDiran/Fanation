@@ -62,7 +62,7 @@ export default function KycPage() {
       </div>
 
       <div className="card row gap12" style={{ padding: "12px 16px", marginBottom: 16 }}>
-        <Icon n="shield" s={18} c="var(--blueL)" />
+        <Icon n="shield" s={18} c="var(--blueL-ink)" />
         <div className="t13 muted">
           Identity checks run through the KYC provider before landing here. Approval enables payouts and the verified badge — every decision is audit-logged with a reason.
         </div>
@@ -70,7 +70,7 @@ export default function KycPage() {
 
       {queue.length === 0 && (
         <div className="card col center gap8" style={{ padding: 46 }}>
-          <Icon n="check" s={30} c="var(--mint)" />
+          <Icon n="check" s={30} c="var(--mint-ink)" />
           <div className="b7 t18">KYC queue is clear</div>
           <div className="muted t13">New applications appear here the moment creators submit documents.</div>
         </div>
@@ -99,7 +99,7 @@ export default function KycPage() {
             </div>
             <div className="row gap8">
               <button className="btn btn-ghost btn-sm" onClick={() => requestInfo(k)}>Request info…</button>
-              <button className="btn btn-ghost btn-sm" style={{ color: "var(--coral)" }} onClick={() => reject(k)}>Reject…</button>
+              <button className="btn btn-ghost btn-sm" style={{ color: "var(--coral-ink)" }} onClick={() => reject(k)}>Reject…</button>
               <button className="btn btn-blue btn-sm" onClick={() => approve(k)}><Icon n="check" s={14} />Approve</button>
             </div>
           </div>

@@ -151,7 +151,7 @@ function PpvModal({ p }: { p: Post }) {
   const short = coins < price;
   return (
     <div className="col center" style={{ gap: 12, textAlign: "center" }}>
-      <div className="feature-ic" style={{ background: "rgba(37,153,246,.16)" }}><Icon n="lock" c="var(--blueL)" /></div>
+      <div className="feature-ic" style={{ background: "rgba(37,153,246,.16)" }}><Icon n="lock" c="var(--blueL-ink)" /></div>
       <div className="b7 t20">Unlock this content</div>
       <div className="muted t14">Pay {price} coins to permanently unlock this drop{p?.who ? ` from ${p.who}` : ""}.</div>
       <div className="row between hair wfull" style={{ padding: "12px 14px", borderRadius: 12 }}>
@@ -252,7 +252,7 @@ function ComposeModal({ defaultVis }: { defaultVis?: string }) {
         {media ? (
           <>
             <Photo src={myMediaFor(1)} seed="composeMedia" />
-            <span className="chip-mint" style={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}><Icon n="check" s={12} />Media attached — click to remove</span>
+            <span className="chip-mint chip-onart" style={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}><Icon n="check" s={12} />Media attached — click to remove</span>
           </>
         ) : (
           <div className="row center gap8 muted"><Icon n="upload" s={18} />Add photos or video</div>
@@ -272,7 +272,7 @@ function ComposeModal({ defaultVis }: { defaultVis?: string }) {
       </div>
       {vis === "Pay-per-view" && (
         <div className="row hair" style={{ padding: "0 14px", borderRadius: 14, marginBottom: 12, gap: 8 }}>
-          <Icon n="coin" s={16} c="var(--amber)" />
+          <Icon n="coin" s={16} c="var(--amber-ink)" />
           <input className="input" style={{ border: "none", background: "none" }} value={price} onChange={(e) => setPrice(e.target.value.replace(/[^0-9]/g, ""))} />
           <span className="muted t13">coins to unlock</span>
         </div>
@@ -328,7 +328,7 @@ function PaidMsgModal({ threadKey }: { threadKey: string }) {
   const short = coins < 200;
   return (
     <div className="col center" style={{ gap: 12, textAlign: "center" }}>
-      <div className="feature-ic" style={{ background: "rgba(252,164,75,.16)" }}><Icon n="lock" c="var(--amber)" /></div>
+      <div className="feature-ic" style={{ background: "rgba(252,164,75,.16)" }}><Icon n="lock" c="var(--amber-ink)" /></div>
       <div className="b7 t20">Unlock this message</div>
       <div className="muted t14">Pay 200 coins to view this locked message and its media.</div>
       <div className="row between hair wfull" style={{ padding: "12px 14px", borderRadius: 12 }}>

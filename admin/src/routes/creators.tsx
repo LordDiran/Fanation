@@ -38,7 +38,7 @@ export default function CreatorsPage() {
               <div className="row gap6 wrap" style={{ marginTop: 10 }}>
                 <span className="tag" style={stChipStyle(u.st)}>{u.st}</span>
                 {A.featured[u.h] && <span className="chip-coin" style={{ padding: "3px 9px" }}>★ Featured</span>}
-                {A.frozen[u.h] && <span className="tag" style={{ color: "var(--coral)", borderColor: "rgba(243,106,70,.35)" }}>Payouts frozen</span>}
+                {A.frozen[u.h] && <span className="tag" style={{ color: "var(--coral-ink)", borderColor: "rgba(243,106,70,.35)" }}>Payouts frozen</span>}
               </div>
               <div className="grid g3 gap10" style={{ marginTop: 12 }}>
                 <div><div className="muted t12">Subs</div><div className="b7 t14">8.4K</div></div>

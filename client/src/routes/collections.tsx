@@ -38,7 +38,7 @@ export default function CollectionsPage() {
               <div style={{ height: 150, position: "relative", overflow: "hidden" }}>
                 <Photo src={postMediaFor(p)} seed={`sv${p.id}`} blur={lk ? 10 : undefined} scale={lk ? 1.12 : undefined} />
                 {lk && (
-                  <span className="chip-coin" style={{ position: "absolute", top: 8, left: 8, padding: "2px 7px", zIndex: 1 }}><Icon n="lock" s={11} />PPV</span>
+                  <span className="chip-coin chip-onart" style={{ position: "absolute", top: 8, left: 8, padding: "2px 7px", zIndex: 1 }}><Icon n="lock" s={11} />PPV</span>
                 )}
               </div>
               <div style={{ padding: 12 }}>

@@ -117,7 +117,7 @@ export default function AppLayout() {
           </div>
           <ThemeToggle />
           <button className="btn btn-ghost btn-sm" onClick={() => openModal("coins")}>
-            <Icon n="coin" s={15} c="var(--amber)" />{coins.toLocaleString()}
+            <Icon n="coin" s={15} c="var(--amber-ink)" />{coins.toLocaleString()}
           </button>
           <button className="btn btn-blue btn-sm" onClick={() => openModal("compose")}>
             <Icon n="plus" s={15} /><span className="hide-sm">Create</span>

@@ -32,7 +32,7 @@ export default function AdminLayout() {
 
   const badge = (n: number) =>
     n > 0 ? (
-      <span className="tag" style={{ marginLeft: "auto", padding: "1px 8px", fontSize: 11, color: "var(--amber)", borderColor: "rgba(252,164,75,.3)" }}>{n}</span>
+      <span className="tag" style={{ marginLeft: "auto", padding: "1px 8px", fontSize: 11, color: "var(--amber-ink)", borderColor: "rgba(252,164,75,.3)" }}>{n}</span>
     ) : null;
 
   return (
