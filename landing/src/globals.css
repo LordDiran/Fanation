@@ -38,15 +38,38 @@
   --line2:rgba(255,255,255,0.15);
   --fill:rgba(255,255,255,0.05);
 
-  /* The hero is a photographic band and stays dark in both themes. In dark
-     it must compute to `rgba(0, 0, 0, 0)` exactly as it does today, hence
-     `transparent` rather than a repeat of `--bg`. */
+  /* The hero used to be exempt: a photographic band that stayed dark whatever
+     the rest of the page did, on the argument that a cinema keeps the lights
+     down whatever colour the lobby is. In practice it read as a dark island
+     bolted to the top of a light page — the one section that did not follow the
+     switch, and the first thing anybody sees. The photo stays; what changes is
+     the treatment over it, which is a pale wash in light instead of a dark one,
+     and the ink on top, which follows.
+
+     `--hero-bg` is still `transparent` in dark so the computed background is
+     `rgba(0, 0, 0, 0)` — byte-identical to before. In light it is a real
+     colour, because `.hero-slide` paints from a background-image that loads
+     asynchronously and without a floor the page background flashes through. */
   --hero-bg:transparent; --hero-ink:#F0F4FF;
+
+  /* Every value below is the literal that used to sit inline in `Hero.tsx`, so
+     lifting them out moves nothing here. Each needs a token because its light
+     value is not derivable from an existing one: the eyebrow's ink is a pale
+     tint of coral rather than coral itself, the avatar rings are cut out of the
+     page floor, and both shadows are tuned to a dark ground. */
+  --hero-chip-bg:rgba(243,106,70,0.08);
+  --hero-chip-line:rgba(243,106,70,0.28);
+  --hero-chip-ink:#F8A98A;
+  --hero-ring:#07091A;
+  --hero-earn-line:rgba(93,221,144,0.28);
+  --hero-earn-shadow:0 20px 60px rgba(0,0,0,0.5);
+  --hero-badge-shadow:0 4px 20px rgba(0,0,0,0.5);
 
   --scrim:rgba(7,9,26,0.98);
   --nav-bar:rgba(7,9,26,0.96);
   --nav-shadow:0 4px 40px rgba(0,0,0,0.4);
-  /* Unscrolled, the nav floats over the hero photo — dark in both themes. */
+  /* Unscrolled, the nav floats over the hero. It follows the hero rather than
+     the page: dark chrome over a dark band, pale chrome over a pale one. */
   --nav-veil:linear-gradient(180deg, rgba(7,9,26,0.75) 0%, transparent 100%);
 
   --stat-from:#fff; --stat-to:#60B8FA;
@@ -105,12 +128,34 @@
   --line2:rgba(12,18,32,.17);
   --fill:rgba(12,24,48,.045);
 
-  --hero-bg:#07091A; --hero-ink:#F0F4FF;
+  /* The floor under the carousel, picked to sit between `--bg` and `--band` so
+     the gap before the first photo decodes reads as the page rather than as a
+     hole in it. The ink flips with it: the `<h1>` has no colour of its own and
+     inherits from `.hero-section`, so leaving `--hero-ink` near-white would put
+     a white heading on a near-white wash. */
+  --hero-bg:#edf1f8; --hero-ink:#0c1220;
+
+  /* #F8A98A is coral lightened *away* from a dark ground; the light value goes
+     the other way and lands on `--coral-ink`, which is already solved to 4.56.
+     The two tints around it are restated in the ink's hue rather than the base
+     accent's, so a 1px border and the text inside it belong to each other. */
+  --hero-chip-bg:rgba(155,68,45,0.07);
+  --hero-chip-line:rgba(155,68,45,0.30);
+  --hero-chip-ink:#9b442d;
+  /* The rings punch the avatars apart against whatever is behind them, so they
+     are the page floor, not a colour: #07091A in dark, white here. */
+  --hero-ring:#ffffff;
+  --hero-earn-line:rgba(45,106,70,0.32);
+  /* Both shadows are the same shape at a fraction of the weight. A 0.5 black
+     drop is a glow on a dark ground and a smudge on a pale one. */
+  --hero-earn-shadow:0 18px 50px rgba(12,24,48,0.14);
+  --hero-badge-shadow:0 4px 18px rgba(12,24,48,0.20);
 
   --scrim:rgba(243,245,250,.98);
   --nav-bar:rgba(255,255,255,.9);
   --nav-shadow:0 4px 40px rgba(12,18,32,0.1);
-  --nav-veil:linear-gradient(180deg, rgba(7,9,26,0.75) 0%, transparent 100%);
+  /* The pale mirror of dark's veil, over a hero that is now pale itself. */
+  --nav-veil:linear-gradient(180deg, rgba(243,245,250,0.82) 0%, transparent 100%);
 
   --stat-from:#0c1220; --stat-to:#346388;
   --cta-from:#9b442d; --cta-to:#175f9a;
@@ -260,18 +305,15 @@ details[open] .faq-body { animation: slide-down 0.2s ease; }
 }
 
 /* ── Hero ────────────────────────────────────────────────────────
-   Photographic band: it stays dark in light mode, the way a cinema keeps
-   the lights down whatever colour the lobby is. Two things follow.
+   Photographic band, in both palettes. The photo is the same photo; the
+   difference is which direction it is pushed. In dark the carousel is
+   dimmed to a third of its brightness and a near-black gradient is laid
+   over it, so a colour-cast shadow is what reaches the eye. In light it
+   is opened up and bleached instead, and the gradient over it is white —
+   the same picture read as a frosted pane rather than a dark one.
 
-   `--hero-bg` is `transparent` in dark so the computed background is
-   `rgba(0, 0, 0, 0)` — byte-identical to today. In light it becomes a real
-   #07091A, because `.hero-slide` paints from a background-image that loads
-   asynchronously; without a floor underneath, the page background flashes
-   through as white for the length of that request.
-
-   `color` is set explicitly because the `<h1>` has no colour of its own and
-   inherits from `body`. Once `body` is `var(--text)`, an un-anchored heading
-   would go near-black on a near-black photo in light. */
+   Everything downstream falls out of that one decision, which is why the
+   ink, the rings, the chips and the two shadows are all tokens now. */
 .hero-section {
   padding: 80px 0 60px;
   background: var(--hero-bg);
@@ -279,17 +321,111 @@ details[open] .faq-body { animation: slide-down 0.2s ease; }
 }
 @media (min-width: 1024px) { .hero-section { padding: 120px 0 80px; } }
 
+/* The mesh sat inline on the element, where an inline style beats every
+   selector and no `[data-theme]` rule could reach it. Dark is restated
+   here to the character; light lifts the same four tints, because a wash
+   that reads at 9% over near-black disappears entirely over near-white. */
+.hero-mesh {
+  background:
+    radial-gradient(ellipse 60% 55% at 65% 45%,rgba(37,153,246,.09) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 45% at 20% 70%,rgba(252,164,75,.06) 0%,transparent 55%),
+    radial-gradient(ellipse 40% 40% at 80% 10%,rgba(93,221,144,.05) 0%,transparent 50%),
+    radial-gradient(ellipse 50% 45% at 85% 80%,rgba(243,106,70,.13) 0%,transparent 55%);
+}
+[data-theme="light"] .hero-mesh {
+  background:
+    radial-gradient(ellipse 60% 55% at 65% 45%,rgba(37,153,246,.16) 0%,transparent 60%),
+    radial-gradient(ellipse 50% 45% at 20% 70%,rgba(252,164,75,.12) 0%,transparent 55%),
+    radial-gradient(ellipse 40% 40% at 80% 10%,rgba(93,221,144,.10) 0%,transparent 50%),
+    radial-gradient(ellipse 50% 45% at 85% 80%,rgba(243,106,70,.20) 0%,transparent 55%);
+}
+
+/* Eyebrow chip. The left rule and the pulsing dot are `--coral-ink`, which
+   is the base accent in dark and so cannot move it; the fill, the hairline
+   and the label each need a token because their light values are tints of
+   the ink rather than of the accent. */
+.hero-eyebrow {
+  background: var(--hero-chip-bg);
+  border: 1px solid var(--hero-chip-line);
+  border-left: 2px solid var(--coral-ink);
+  color: var(--hero-chip-ink);
+}
+.hero-eyebrow-dot { background: var(--coral-ink); }
+
+/* Secondary CTA. Was `text-white` plus an inline border plus a pair of
+   `onMouseEnter`/`onMouseLeave` handlers writing white literals back onto
+   the element — three places for one button, none of them reachable by a
+   theme. `--heading` is #FFFFFF and `--line2` is rgba(255,255,255,0.15) in
+   dark, and `--ink-rgb` carries the hover alphas, so nothing moves there. */
+.hero-ghost {
+  color: var(--heading);
+  border: 1px solid var(--line2);
+  transition: border-color .2s, background .2s;
+}
+.hero-ghost:hover {
+  border-color: rgba(var(--ink-rgb),0.35);
+  background: rgba(var(--ink-rgb),0.05);
+}
+
+/* Earnings widget. `--card2` is #18223C in dark and white in light, which is
+   the whole move; the border and the drop shadow follow it. */
+.hero-earnings {
+  background: var(--card2);
+  border: 1px solid var(--hero-earn-line);
+  box-shadow: var(--hero-earn-shadow);
+}
+
+/* App-store pills stay black in both palettes — that is the platform's
+   artwork, not ours. Only the shadow under them is ours. */
+.hero-badge { box-shadow: var(--hero-badge-shadow); }
+
+/* Chips that sit on a photograph.
+
+   Every one of these was built the same way — an accent at 15% fill, the same
+   accent at 30% for the hairline, the accent again for the label — and every
+   one of them was unreadable. At 15% the fill is not a surface, it is a tint;
+   what actually sits behind an 11px letter is the photograph, and the
+   photograph is whatever it happens to be. Measured over the real images the
+   coin chip scored 1.00:1 and the earnings chip 1.07:1, which is to say the
+   text and its ground were the same colour and the label had simply vanished.
+   The cards do carry a gradient scrim, but it opens at 30–40% down and these
+   chips are pinned to the top edge, above where it starts.
+
+   The answer was already in the file one line away: the LIVE badge passes,
+   because it is a solid surface with the accent doing the work and not the
+   ink. This is the same move with the roles kept — a near-opaque card-dark
+   ground so the chip is its own surface, and the accent left where it was, on
+   the label and the hairline, where it now has something fixed to contrast
+   against. The mosaic is a dark object in both palettes, so this is one value
+   and not two: the cards' own scrims are `rgba(7,9,26,…)` in light as well.
+
+   0.86 rather than 1 deliberately. A trace of the photograph still moves under
+   the chip, which is what keeps it looking laid on the image rather than
+   punched through it, and at 0.86 the worst case the picture can push the
+   ground to is still far inside the bar. */
+.hero-artchip {
+  background: rgba(7, 9, 26, 0.86);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
 /* ── Nav ─────────────────────────────────────────────────────────
-   The header has two lives. Floating, it sits over the hero photo and must
-   read as dark-surface chrome whatever the theme; solid, it becomes an
-   opaque bar on the page and has to follow the theme. `data-solid` is the
-   switch, and every override below fires only in the solid state.
+   The header has two lives. Floating, it sits over the hero; solid, it is an
+   opaque bar on the page. `data-solid` is the switch, and it used to be the
+   only switch: the floating state was hard-coded white chrome on the argument
+   that it always had a dark photo underneath it. It does not any more, so the
+   floating state has a light branch of its own — the `[data-theme="light"]`
+   rules paired with each literal below.
+
+   Two selectors, then, and the pairing matters. `.fanav .x` in light is (0,2,0)
+   and `.fanav[data-solid="1"] .x` is (0,2,1), so solid still wins inside light
+   without needing the theme repeated on it.
 
    Solid is `scrolled || menuOpen`, not just scrolled. The mobile scrim is
    `--scrim`, near-white in light — leave the bar floating over it and the
-   veil paints a dark gradient across the top of a light overlay with dark
-   ink on it. Opening the menu is the same surface change as scrolling, so
-   it takes the same branch.
+   veil paints its gradient across the top of a full-screen overlay. Opening
+   the menu is the same surface change as scrolling, so it takes the same
+   branch.
 
    Dark computes identically either way with the menu closed, `--muted`
    being #7A8FB8 and `--heading` #FFFFFF there. */
@@ -304,15 +440,20 @@ details[open] .faq-body { animation: slide-down 0.2s ease; }
 
 .nav-link                               { color: #7A8FB8; }
 .nav-link:hover                         { color: #FFFFFF; }
+[data-theme="light"] .nav-link          { color: var(--muted); }
+[data-theme="light"] .nav-link:hover    { color: var(--heading); }
 .fanav[data-solid="1"] .nav-link        { color: var(--muted); }
 .fanav[data-solid="1"] .nav-link:hover  { color: var(--heading); }
 
 .nav-word                               { color: #FFFFFF; }
+[data-theme="light"] .nav-word          { color: var(--heading); }
 .fanav[data-solid="1"] .nav-word        { color: var(--heading); }
 
-/* Hamburger bars. Over the hero they are white; on the solid bar they are
-   standalone controls and need 3:1 against it, which `--heading` gives. */
+/* Hamburger bars. Over the hero they take the hero's ink; on the solid bar
+   they are standalone controls and need 3:1 against it, which `--heading`
+   gives in both palettes. */
 .nav-bar-ic                             { background: #FFFFFF; }
+[data-theme="light"] .nav-bar-ic        { background: var(--heading); }
 .fanav[data-solid="1"] .nav-bar-ic      { background: var(--heading); }
 
 /* Theme toggle. The only route to light mode on this site, so it is in the
@@ -322,8 +463,9 @@ details[open] .faq-body { animation: slide-down 0.2s ease; }
 
    34px to match the logo tile it sits opposite. The floating values are the
    literals that the solid ones resolve to in dark, so the control does not
-   change appearance as you scroll a dark page; in light the solid state
-   flips it to dark-on-light. `currentColor` on the icon means the two SVGs
+   change appearance as you scroll a dark page; the light branch keeps that
+   property in light, where all four states now resolve through `--heading`,
+   `--fill` and `--line2`. `currentColor` on the icon means the two SVGs
    inherit all of this and neither carries a colour of its own. */
 .nav-toggle {
   width: 34px;
@@ -340,6 +482,12 @@ details[open] .faq-body { animation: slide-down 0.2s ease; }
   transition: color .3s, background .2s, border-color .3s;
 }
 .nav-toggle:hover                            { background: rgba(255,255,255,0.12); }
+[data-theme="light"] .nav-toggle {
+  color: var(--heading);
+  background: var(--fill);
+  border-color: var(--line2);
+}
+[data-theme="light"] .nav-toggle:hover       { background: rgba(var(--ink-rgb),0.12); }
 .fanav[data-solid="1"] .nav-toggle {
   color: var(--heading);
   background: var(--fill);
@@ -410,6 +558,26 @@ details[open] .faq-body { animation: slide-down 0.2s ease; }
 .hero-carousel-overlay {
   position: absolute; inset: 0;
   background: linear-gradient(180deg, rgba(7,9,26,0.35) 0%, rgba(7,9,26,0.08) 45%, rgba(7,9,26,0.5) 100%);
+}
+
+/* Light. `brightness(0.32)` is what makes the carousel a shadow; inverting the
+   band means inverting that, and contrast has to come down with it or the
+   opened-up photo turns into a poster. Saturation is pulled back too — the
+   same colour that reads as a tint at a third brightness reads as a stain at
+   one and a half. */
+[data-theme="light"] .hero-slide {
+  filter: blur(24px) brightness(1.62) saturate(0.72) contrast(0.5);
+}
+/* Two layers, and the first one paints on top. It runs across rather than
+   down: the copy occupies the left half and needs a near-solid ground under
+   it, while the right half keeps enough of the photo to still be a photograph
+   behind the mosaic. The second is the vertical fade dark already had, in
+   reverse, closing on `--band` so the ticker strip below reads as the next
+   thing down rather than as an edge. */
+[data-theme="light"] .hero-carousel-overlay {
+  background:
+    linear-gradient(100deg, rgba(255,255,255,0.93) 0%, rgba(255,255,255,0.86) 34%, rgba(255,255,255,0.58) 64%, rgba(255,255,255,0.42) 100%),
+    linear-gradient(180deg, rgba(243,245,250,0.62) 0%, rgba(243,245,250,0.34) 42%, rgba(233,238,246,0.92) 100%);
 }
 
 /* ── Hero particles ──────────────────────────────────────── */

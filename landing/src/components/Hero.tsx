@@ -87,14 +87,11 @@ export default function Hero() {
         <div className="hero-carousel-overlay" />
       </div>
 
-      {/* ── Mesh gradient ── */}
-      <div className="absolute inset-0 pointer-events-none" style={{
-        zIndex: 1,
-        background: `radial-gradient(ellipse 60% 55% at 65% 45%,rgba(37,153,246,.09) 0%,transparent 60%),
-                     radial-gradient(ellipse 50% 45% at 20% 70%,rgba(252,164,75,.06) 0%,transparent 55%),
-                     radial-gradient(ellipse 40% 40% at 80% 10%,rgba(93,221,144,.05) 0%,transparent 50%),
-                     radial-gradient(ellipse 50% 45% at 85% 80%,rgba(243,106,70,.13) 0%,transparent 55%)`
-      }} />
+      {/* ── Mesh gradient ──
+          The four tints live in `globals.css` now. An inline background beats
+          every selector, so while this sat here there was no way for the light
+          palette to reach it. */}
+      <div className="hero-mesh absolute inset-0 pointer-events-none" style={{ zIndex: 1 }} />
 
       {/* ── Floating particles ── */}
       <div ref={particlesRef} className="absolute inset-0 overflow-hidden pointer-events-none" style={{ zIndex: 1 }} />
@@ -104,17 +101,19 @@ export default function Hero() {
 
           {/* ── Left copy ── */}
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-bold mb-7"
-              style={{ background: 'rgba(243,106,70,0.08)', border: '1px solid rgba(243,106,70,0.28)', color: '#F8A98A', borderLeft: '2px solid #F36A46' }}>
-              <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: '#F36A46', animation: 'blink 2s ease-in-out infinite' }} />
+            <div className="hero-eyebrow inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-bold mb-7">
+              <span className="hero-eyebrow-dot w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ animation: 'blink 2s ease-in-out infinite' }} />
               Turn followers into fans. Turn fans into income.
             </div>
 
             <h1 className="font-black leading-[1.04] mb-6"
               style={{ fontSize: 'clamp(40px,5vw,72px)', letterSpacing: '-0.04em' }}>
               Turn Your Audience Into<br />
+              {/* The same two stops as the closing CTA's gradient, and the same
+                  reason for the pair: #F36A46 → #2599F6 in dark, and the light
+                  values already solved against a pale ground. */}
               <em className="not-italic" style={{
-                background: 'linear-gradient(90deg, #F36A46 0%, #2599F6 100%)',
+                background: 'linear-gradient(90deg, var(--cta-from) 0%, var(--cta-to) 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
                 backgroundClip: 'text',
@@ -122,7 +121,7 @@ export default function Hero() {
               That Pays You Back.
             </h1>
 
-            <p className="leading-[1.78] mb-10 max-w-[440px]" style={{ fontSize: 17, color: '#7A8FB8' }}>
+            <p className="leading-[1.78] mb-10 max-w-[440px]" style={{ fontSize: 17, color: 'var(--muted)' }}>
               Build a loyal fan community, earn recurring income, share exclusive content, host live experiences,
               and own your relationship with your audience — all from one platform.
             </p>
@@ -136,21 +135,19 @@ export default function Hero() {
                 Start Creating Today →
               </a>
               <a href="#features"
-                className="inline-flex items-center text-white font-semibold"
-                style={{ fontSize: 16, padding: '17px 34px', borderRadius: '100px', border: '1px solid rgba(255,255,255,0.15)', transition: 'border-color .2s, background .2s' }}
-                onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor='rgba(255,255,255,0.35)'; el.style.background='rgba(255,255,255,0.05)'; }}
-                onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.borderColor='rgba(255,255,255,0.15)'; el.style.background=''; }}>
+                className="hero-ghost inline-flex items-center font-semibold"
+                style={{ fontSize: 16, padding: '17px 34px', borderRadius: '100px' }}>
                 See How It Works
               </a>
             </div>
 
             {/* App store badges */}
             <div className="hidden sm:flex items-center gap-3 flex-wrap mb-10">
-              <span className="text-xs mr-1" style={{ color: '#7A8FB8' }}>Available on</span>
+              <span className="text-xs mr-1" style={{ color: 'var(--muted)' }}>Available on</span>
               {/* Apple App Store */}
               <a href="#"
-                className="inline-flex items-center gap-3 hover:opacity-90 transition-opacity"
-                style={{ background: '#000', border: '1px solid rgba(255,255,255,0.18)', padding: '9px 18px', borderRadius: 14, boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
+                className="hero-badge inline-flex items-center gap-3 hover:opacity-90 transition-opacity"
+                style={{ background: '#000', border: '1px solid rgba(255,255,255,0.18)', padding: '9px 18px', borderRadius: 14 }}>
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="white" aria-hidden="true">
                   <path d="M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.54 9.103 1.519 12.09 1.013 1.459 2.208 3.09 3.792 3.029 1.52-.065 2.09-.987 3.925-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.391-2.376-2-.156-3.675 1.09-4.6 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701"/>
                 </svg>
@@ -161,8 +158,8 @@ export default function Hero() {
               </a>
               {/* Google Play */}
               <a href="#"
-                className="inline-flex items-center gap-3 hover:opacity-90 transition-opacity"
-                style={{ background: '#000', border: '1px solid rgba(255,255,255,0.18)', padding: '9px 18px', borderRadius: 14, boxShadow: '0 4px 20px rgba(0,0,0,0.5)' }}>
+                className="hero-badge inline-flex items-center gap-3 hover:opacity-90 transition-opacity"
+                style={{ background: '#000', border: '1px solid rgba(255,255,255,0.18)', padding: '9px 18px', borderRadius: 14 }}>
                 <svg width="20" height="22" viewBox="0 0 24 27" fill="none" aria-hidden="true">
                   <path d="M1.5 0.8L14.5 13.5L1.5 26.2C0.9 25.9 0.5 25.3 0.5 24.5V2.5C0.5 1.7 0.9 1.1 1.5 0.8Z" fill="#4285F4"/>
                   <path d="M19.5 9L14.5 13.5L19.5 18L22.8 16.2C23.7 15.7 23.7 14.8 23.7 13.5C23.7 12.2 23.7 11.3 22.8 10.8L19.5 9Z" fill="#FBBC05"/>
@@ -177,11 +174,11 @@ export default function Hero() {
             </div>
 
             {/* Social proof */}
-            <div className="flex items-center gap-4 pt-8" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+            <div className="flex items-center gap-4 pt-8" style={{ borderTop: '1px solid var(--line)' }}>
               <div className="flex">
                 {AVATARS.map((a, i) => (
                   <div key={i} className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0"
-                    style={{ border: '2px solid #07091A', marginLeft: i === 0 ? 0 : -9 }}>
+                    style={{ border: '2px solid var(--hero-ring)', marginLeft: i === 0 ? 0 : -9 }}>
                     <img
                       src={`/images/${a.file}`}
                       alt={a.name}
@@ -195,8 +192,8 @@ export default function Hero() {
                 ))}
               </div>
               <div>
-                <p className="text-sm font-bold text-white leading-tight">12,000+ creators</p>
-                <p className="text-xs" style={{ color: '#7A8FB8' }}>creators, influencers, educators, coaches &amp; entertainers</p>
+                <p className="text-sm font-bold leading-tight" style={{ color: 'var(--heading)' }}>12,000+ creators</p>
+                <p className="text-xs" style={{ color: 'var(--muted)' }}>creators, influencers, educators, coaches &amp; entertainers</p>
               </div>
             </div>
           </div>
@@ -215,20 +212,18 @@ export default function Hero() {
                 <img src="/images/creator-amara.jpg" alt=""
                   style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 40%,rgba(7,9,26,0.92) 100%)' }} />
-                <div className="absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"
-                  style={{ fontSize: 11, background: 'rgba(37,153,246,0.15)', border: '1px solid rgba(37,153,246,0.3)', color: '#60B8FA' }}>
+                <div className="hero-artchip absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"
+                  style={{ fontSize: 11, border: '1px solid rgba(37,153,246,0.45)', color: '#60B8FA' }}>
                   8,400 subscribers
                 </div>
                 {/* Gift stream */}
                 <div className="absolute flex flex-col gap-2 items-end z-10" style={{ right: 10, bottom: 56 }}>
                   {GIFTS.map((g, i) => (
                     <div key={i}
-                      className="flex items-center gap-1.5 text-white font-bold whitespace-nowrap rounded-full px-2.5 py-1.5"
+                      className="hero-artchip flex items-center gap-1.5 text-white font-bold whitespace-nowrap rounded-full px-2.5 py-1.5"
                       style={{
                         fontSize: 11,
-                        background: 'rgba(243,106,70,0.18)',
-                        border: '1px solid rgba(243,106,70,0.38)',
-                        backdropFilter: 'blur(6px)',
+                        border: '1px solid rgba(243,106,70,0.5)',
                         animation: `giftPop 3.6s ease-in-out ${g.delay} infinite`,
                       }}>
                       {g.icon} {g.text} from <span style={{ color: '#F36A46' }}>{g.user}</span>
@@ -251,8 +246,8 @@ export default function Hero() {
                   style={{ fontSize: 11, background: 'var(--red-solid)' }}>
                   <span style={{ fontSize: 8 }}>●</span>LIVE
                 </div>
-                <div className="absolute top-3 right-3 font-bold rounded-full px-2.5 py-1"
-                  style={{ fontSize: 11, background: 'rgba(93,221,144,0.15)', border: '1px solid rgba(93,221,144,0.32)', color: '#5DDD90' }}>
+                <div className="hero-artchip absolute top-3 right-3 font-bold rounded-full px-2.5 py-1"
+                  style={{ fontSize: 11, border: '1px solid rgba(93,221,144,0.45)', color: '#5DDD90' }}>
                   +$340 today
                 </div>
                 <div className="absolute bottom-3 left-3 right-3 z-10">
@@ -267,8 +262,8 @@ export default function Hero() {
                 <img src="/images/creator-marcus.jpg" alt=""
                   style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 30%,rgba(7,9,26,0.9) 100%)' }} />
-                <div className="absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"
-                  style={{ fontSize: 11, background: 'rgba(252,164,75,0.15)', border: '1px solid rgba(252,164,75,0.3)', color: '#FCA44B' }}>
+                <div className="hero-artchip absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"
+                  style={{ fontSize: 11, border: '1px solid rgba(252,164,75,0.45)', color: '#FCA44B' }}>
                   🪙 12,400 coins earned
                 </div>
                 <div className="absolute bottom-3 left-3 right-3 z-10">
@@ -279,20 +274,12 @@ export default function Hero() {
             </div>
 
             {/* Earnings widget — bottom left, overlaps Sofia card */}
-            <div className="absolute flex items-center gap-3"
-              style={{
-                bottom: 8, left: 0, zIndex: 10,
-                background: '#18223C',
-                border: '1px solid rgba(93,221,144,0.28)',
-                borderRadius: 14,
-                padding: '14px 18px',
-                boxShadow: '0 20px 60px rgba(0,0,0,0.5)',
-                minWidth: 200,
-              }}>
+            <div className="hero-earnings absolute flex items-center gap-3"
+              style={{ bottom: 8, left: 0, zIndex: 10, borderRadius: 14, padding: '14px 18px', minWidth: 200 }}>
               <span className="text-2xl leading-none">💰</span>
               <div>
-                <p className="mb-0.5" style={{ fontSize: 11, color: '#7A8FB8' }}>This month&apos;s earnings</p>
-                <p className="font-black leading-none" style={{ fontSize: 22, color: '#5DDD90', letterSpacing: '-0.02em' }}>$4,280.00</p>
+                <p className="mb-0.5" style={{ fontSize: 11, color: 'var(--muted)' }}>This month&apos;s earnings</p>
+                <p className="font-black leading-none" style={{ fontSize: 22, color: 'var(--mint-ink)', letterSpacing: '-0.02em' }}>$4,280.00</p>
               </div>
             </div>
           </div>
