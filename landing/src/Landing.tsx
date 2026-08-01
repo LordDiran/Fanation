@@ -296,7 +296,7 @@ export default function Page() {
                     <div>
                       <div className="flex flex-col gap-2 mb-2">
                         {LIVE_GIFTS.map((g, i) => (
-                          <div key={i} className="flex items-center gap-2 text-white rounded-full px-3.5 py-2"
+                          <div key={i} className="giftpop flex items-center gap-2 text-white rounded-full px-3.5 py-2"
                             style={{
                               fontSize: 12, fontWeight: 600,
                               background: 'rgba(255,255,255,0.1)',

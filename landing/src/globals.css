@@ -688,9 +688,14 @@ details[open] .faq-body { animation: slide-down 0.2s ease; }
   filter: blur(20px) brightness(0.32) saturate(1.6);
   opacity: 0;
   transition: opacity 2s ease;
-  will-change: opacity, transform;
   transform: translateZ(0);
 }
+/* No `will-change` here, deliberately. There are four of these, each a
+   full-viewport-and-a-half blurred layer, and three of them are transparent at
+   any moment. `will-change` would hold a composited texture for all four for
+   the life of the page — and buy nothing, because `filter: blur()` promotes the
+   element on its own. It was paying four times over for a layer the filter
+   already guarantees. */
 .hero-slide.active { opacity: 1; }
 .hero-carousel-overlay {
   position: absolute; inset: 0;
@@ -804,4 +809,49 @@ details[open] .faq-body { animation: slide-down 0.2s ease; }
   position: absolute; opacity: 0;
   animation: floatUp var(--dur,10s) var(--del,0s) ease-in-out infinite;
   user-select: none; pointer-events: none;
+}
+
+/* ── Motion, and when not to have any ─────────────────────── */
+
+/* The hero is one viewport of a page that runs to about eight, so for most of a
+   scroll everything below is animating where nobody can see it: eighteen
+   particles compositing, an eyebrow dot blinking, four gift chips cycling. The
+   observer in `lib/motion.ts` hangs `.hero-still` on the section the moment it
+   leaves, and pausing beats unmounting — the animations resume mid-cycle
+   instead of snapping back to frame zero when the visitor scrolls up. */
+.hero-still *,
+.hero-still *::before,
+.hero-still *::after { animation-play-state: paused !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* The near-zero duration rather than `animation: none`, because several of
+     these keyframes carry the element's visible state — `pulse-dot`, `blink`
+     and `slide-down` all resolve to opacity 1 — and switching them off entirely
+     would leave whatever the base rule said. Running them once, instantly,
+     lands every one on the frame it was going to rest at anyway. */
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-delay: 0s !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+
+  html { scroll-behavior: auto !important; }
+
+  /* Two exceptions, both because `giftPop` and `floatUp` end at opacity 0.
+     Under the rule above they would run to their last frame and stop there,
+     which for the gift chips means deleting four lines of readable content —
+     "$25 from @jayden" is information, not decoration. So the chips get pinned
+     to their visible state instead. The particles genuinely are decoration and
+     are already skipped in `Hero.tsx`; this covers the case where the setting
+     is turned on after they exist. */
+  .giftpop {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .particle { display: none !important; }
 }

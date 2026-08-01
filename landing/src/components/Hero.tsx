@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { useInView, useReducedMotion } from '../lib/motion'
 
 // Carousel: platform-consistent photos that look dramatic blurred
 // Uses creators-section photos (different from hero mosaic) + atmospheric new additions
@@ -29,15 +30,24 @@ export default function Hero() {
   const [slide, setSlide] = useState(0)
   const slideEls = useRef<(HTMLDivElement | null)[]>([])
   const particlesRef = useRef<HTMLDivElement>(null)
+  const calm = useReducedMotion()
+  const [sectionRef, inView] = useInView<HTMLElement>()
+  /* Every effect below is gated on this. The preference is the visitor's answer
+     to whether the motion should exist at all; the observer is the answer to
+     whether anyone can currently see it. Neither is worth spending a frame on
+     alone. */
+  const moving = !calm && inView
 
   // Auto-advance carousel every 5s
   useEffect(() => {
+    if (!moving) return
     const id = setInterval(() => setSlide(s => (s + 1) % CAROUSEL_PHOTOS.length), 5000)
     return () => clearInterval(id)
-  }, [])
+  }, [moving])
 
   // Parallax on scroll
   useEffect(() => {
+    if (!moving) return
     let ticking = false
     const onScroll = () => {
       if (!ticking) {
@@ -53,10 +63,14 @@ export default function Hero() {
     }
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  }, [moving])
 
   // Floating particles
   useEffect(() => {
+    /* Not gated on `inView` — these are created once and then paused by CSS
+       when the hero leaves. Tearing eighteen nodes down and rebuilding them on
+       every crossing would cost more than leaving them parked. */
+    if (calm) return
     const container = particlesRef.current
     if (!container) return
     for (let i = 0; i < 18; i++) {
@@ -67,10 +81,11 @@ export default function Hero() {
       container.appendChild(el)
     }
     return () => { if (container) container.innerHTML = '' }
-  }, [])
+  }, [calm])
 
   return (
-    <section className="hero-section relative min-h-screen flex items-center overflow-hidden">
+    <section ref={sectionRef}
+      className={'hero-section relative min-h-screen flex items-center overflow-hidden' + (inView ? '' : ' hero-still')}>
 
       {/* ── Blurred carousel background ── */}
       <div className="hero-carousel-bg">
@@ -224,7 +239,7 @@ export default function Hero() {
                 <div className="absolute flex flex-col gap-2 items-end z-10" style={{ right: 10, bottom: 56 }}>
                   {GIFTS.map((g, i) => (
                     <div key={i}
-                      className="hero-artchip flex items-center gap-1.5 text-white font-bold whitespace-nowrap rounded-full px-2.5 py-1.5"
+                      className="hero-artchip giftpop flex items-center gap-1.5 text-white font-bold whitespace-nowrap rounded-full px-2.5 py-1.5"
                       style={{
                         fontSize: 11,
                         border: '1px solid rgba(243,106,70,0.5)',
