@@ -52,6 +52,24 @@
      asynchronously and without a floor the page background flashes through. */
   --hero-bg:transparent; --hero-ink:#F0F4FF;
 
+  /* The hero copy's secondary ink, and the reason it cannot be `--muted`:
+     `--muted` is solved against `--bg` and `--band`, which are flat surfaces of
+     a known value. The hero's ground is a photograph under a wash — different
+     on every one of the four slides, and on two of them nowhere near as dark as
+     the page. One value was never going to be right for both jobs.
+
+     #7A8FB8 was the value here, inherited from `--muted`, and measured one
+     slide at a time it puts the 17px subhead at 3.49 over creator-tobi and the
+     app-store line at 3.84 over the same frame. That has been true since the
+     hero shipped; it went unseen because a contrast pass that samples whichever
+     photograph happens to be showing sampled the dark one. This is the same
+     slate carried up its own ramp until the brightest frame clears — hue and
+     saturation held, lightness raised from 0.60 to 0.70. 4.91 on the worst
+     measured ground, and still plainly secondary to the `#F0F4FF` heading
+     above it. Nothing under it moves: the photographs and the veil over them
+     are untouched, so the band looks exactly as alive as it did. */
+  --hero-muted:#9BABCA; /* 4.91 on the worst measured slide ground */
+
   /* Every value below is the literal that used to sit inline in `Hero.tsx`, so
      lifting them out moves nothing here. Each needs a token because its light
      value is not derivable from an existing one: the eyebrow's ink is a pale
@@ -147,11 +165,28 @@
      a white heading on a near-white wash. */
   --hero-bg:#edf1f8; --hero-ink:#0c1220;
 
+  /* Measured per slide, the worst ground under the subhead is #cccccc. `--muted`
+     lands 3.97 there. This is the same slate taken down until it clears on the
+     darkest frame rather than on the average one — hue 0.595 against `--muted`'s
+     0.601, so it reads as the same colour, not a new one. #48525f was tried
+     first and gave 4.94, which is a pass with no margin on a ground that moves;
+     this one holds 5.42. */
+  --hero-muted:#434c58; /* 5.42 on the worst measured slide ground */
+
   /* #F8A98A is coral lightened *away* from a dark ground; the light value goes
      the other way and lands on `--coral-ink`, which is already solved to 4.56.
-     The two tints around it are restated in the ink's hue rather than the base
-     accent's, so a 1px border and the text inside it belong to each other. */
-  --hero-chip-bg:rgba(155,68,45,0.07);
+     The line stays a restatement of the ink's hue, so the hairline and the text
+     inside it still belong to each other.
+
+     The fill cannot stay a tint. 7% is not a surface — it is a wash that lets
+     whatever is behind it decide the contrast, and behind this chip is a
+     photograph that changes every five seconds. Across the four slides it put
+     #9b442d at 4.14. So the fill becomes a real ground: warm enough to still
+     read as part of the coral family, opaque enough to be the same ground on
+     every frame. 5.93 for the ink, 6.17 for the 2px rule down its left edge.
+     Dark keeps its tint, because what sits behind it there is a photograph
+     already taken down to 0.32 brightness. */
+  --hero-chip-bg:rgba(253,246,242,0.94); /* 5.93 for the ink · 6.17 for the rule */
   --hero-chip-line:rgba(155,68,45,0.30);
   --hero-chip-ink:#9b442d;
   /* The rings punch the avatars apart against whatever is behind them, so they
@@ -166,8 +201,15 @@
   --scrim:rgba(243,245,250,.98);
   --nav-bar:rgba(255,255,255,.9);
   --nav-shadow:0 4px 40px rgba(12,18,32,0.1);
-  /* The pale mirror of dark's veil, over a hero that is now pale itself. */
-  --nav-veil:linear-gradient(180deg, rgba(243,245,250,0.82) 0%, transparent 100%);
+  /* The pale mirror of dark's veil, over a hero that is now pale itself — but
+     it cannot decay the way dark's does. Dark's veil falls onto a photograph
+     already dimmed to 0.32 brightness and only has to deepen it. This one is
+     the entire ground under the nav links, and a 0.82-to-transparent ramp
+     reaches barely 0.41 where those links actually sit, halfway down a 70px
+     bar. So it holds nearly flat through the link row and falls away under it.
+     The strip is 70px of a ~900px hero: covering it does not hide the carousel,
+     which is the whole point of the band. 5.34 for `--muted` at the link row. */
+  --nav-veil:linear-gradient(180deg, rgba(243,245,250,0.96) 0%, rgba(243,245,250,0.92) 66%, rgba(243,245,250,0.34) 88%, transparent 100%);
 
   --stat-from:#0c1220; --stat-to:#346388;
   --cta-from:#9b442d; --cta-to:#175f9a;

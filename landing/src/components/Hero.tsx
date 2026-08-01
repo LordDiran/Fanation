@@ -121,7 +121,11 @@ export default function Hero() {
               That Pays You Back.
             </h1>
 
-            <p className="leading-[1.78] mb-10 max-w-[440px]" style={{ fontSize: 17, color: 'var(--muted)' }}>
+            {/* `--hero-muted`, not `--muted`: everything in this column sits on
+                the carousel rather than on the page, and the two grounds are
+                not the same colour. The earnings widget further down keeps
+                `--muted` because it has a card of its own to sit on. */}
+            <p className="leading-[1.78] mb-10 max-w-[440px]" style={{ fontSize: 17, color: 'var(--hero-muted)' }}>
               Build a loyal fan community, earn recurring income, share exclusive content, host live experiences,
               and own your relationship with your audience — all from one platform.
             </p>
@@ -143,7 +147,7 @@ export default function Hero() {
 
             {/* App store badges */}
             <div className="hidden sm:flex items-center gap-3 flex-wrap mb-10">
-              <span className="text-xs mr-1" style={{ color: 'var(--muted)' }}>Available on</span>
+              <span className="text-xs mr-1" style={{ color: 'var(--hero-muted)' }}>Available on</span>
               {/* Apple App Store */}
               <a href="#"
                 className="hero-badge inline-flex items-center gap-3 hover:opacity-90 transition-opacity"
@@ -193,7 +197,7 @@ export default function Hero() {
               </div>
               <div>
                 <p className="text-sm font-bold leading-tight" style={{ color: 'var(--heading)' }}>12,000+ creators</p>
-                <p className="text-xs" style={{ color: 'var(--muted)' }}>creators, influencers, educators, coaches &amp; entertainers</p>
+                <p className="text-xs" style={{ color: 'var(--hero-muted)' }}>creators, influencers, educators, coaches &amp; entertainers</p>
               </div>
             </div>
           </div>
