@@ -87,8 +87,17 @@ const harvest = (props) =>
     return el.tagName + '|' + props.map((p) => cs[p]).join('|');
   });
 
+/* Desktop is the default because that is where the palette was authored and where
+   almost every rule lands. But a breakpoint can bring a rule to life that was
+   dead at 1440 — a `@media (max-width:767px)` block that nothing ever entered
+   until an element picked up the class it hangs off. Overriding the viewport
+   lets the same byte-identity claim be made at the widths where those rules run,
+   instead of assumed from the one width where they never execute. */
+const VW = Number(process.env.DARKDIFF_W) || 1440;
+const VH = Number(process.env.DARKDIFF_H) || 900;
+
 async function walk(origin) {
-  const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const page = await browser.newPage({ viewport: { width: VW, height: VH } });
   /* Freeze animation before anything paints. The LIVE badge pulses its box-shadow
      via `pulseglow`, so two harvests of the *same* build disagree on that element
      — a rgba(239,68,68,.21)/.184 alpha wobble that has nothing to do with this
