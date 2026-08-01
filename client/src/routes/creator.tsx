@@ -69,8 +69,8 @@ export default function CreatorProfilePage() {
                   <div key={i} className="card" style={{ padding: 0, overflow: "hidden", aspectRatio: "1", position: "relative", cursor: "pointer" }}
                     onClick={() => { if (i % 4 === 0) S.openModal("ppv", { id: `pm${i}`, price: 150, who: c.name }); }}>
                     <Photo src={gridFor(c.handle, i)} seed={`prof${i}`} />
-                    {i % 4 === 0 && <div className="chip-coin chip-onart" style={{ position: "absolute", top: 8, left: 8, padding: "2px 7px" }}><Icon n="lock" s={11} />PPV</div>}
-                    {i % 5 === 2 && <div className="pill t12" style={{ position: "absolute", bottom: 8, right: 8, background: "rgba(0,0,0,.5)", border: "none", color: "#fff" }}><Icon n="play" s={11} /></div>}
+                    {i % 4 === 0 && <div className="chip-coin onart" style={{ position: "absolute", top: 8, left: 8, padding: "2px 7px" }}><Icon n="lock" s={11} />PPV</div>}
+                    {i % 5 === 2 && <div className="pill t12 onart" style={{ position: "absolute", bottom: 8, right: 8 }}><Icon n="play" s={11} /></div>}
                   </div>
                 ))}
               </div>

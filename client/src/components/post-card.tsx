@@ -45,7 +45,7 @@ function PostMedia({ p, onToggle, playing }: { p: Post; playing: boolean; onTogg
         </div>
       )}
       {p.dur && (
-        <div className="pill t12" style={{ position: "absolute", bottom: 10, right: 10, background: "rgba(0,0,0,.55)", border: "none", color: "#fff" }}>
+        <div className="pill t12 onart" style={{ position: "absolute", bottom: 10, right: 10 }}>
           {p.dur}
         </div>
       )}
@@ -165,7 +165,7 @@ export function PostCard({ p }: { p: Post }) {
       {p.type === "locked" && isUnlocked && (
         <div style={{ height: MEDIA_H, borderRadius: 14, position: "relative", overflow: "hidden" }}>
           <Photo src={postMediaFor(p)} seed={p.seed} radius={14} />
-          <span className="chip-mint chip-onart" style={{ position: "absolute", top: 10, left: 10, zIndex: 1 }}><Icon n="check" s={12} />Unlocked</span>
+          <span className="chip-mint onart" style={{ position: "absolute", top: 10, left: 10, zIndex: 1 }}><Icon n="check" s={12} />Unlocked</span>
         </div>
       )}
 

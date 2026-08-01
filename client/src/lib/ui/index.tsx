@@ -173,13 +173,28 @@ export function Photo({ src, seed, alt = "", radius, blur, scale, priority, fill
  * flat tint, so it darkens the corner the caption actually sits in and leaves
  * the middle of the picture alone. Pass `top` for the chrome that hangs off
  * the top edge instead.
+ *
+ * `hold` is the fraction of the band that stays at full strength before the
+ * decay starts. Without it the wash is already a third of the way down by the
+ * time it reaches a two-line caption, which is how a name over a bright frame
+ * ends up at 2.35. Holding first and decaying after covers the whole caption
+ * without having to darken the entire card to get there. It emits no extra
+ * colour stop at `hold=0`, so every call site that does not ask for it paints
+ * exactly the gradient string it painted before.
  */
-export function Scrim({ from = 0.8, height = "58%", top = false }: { from?: number; height?: number | string; top?: boolean }) {
+export function Scrim({ from = 0.8, height = "58%", top = false, hold = 0 }: { from?: number; height?: number | string; top?: boolean; hold?: number }) {
+  const knee = hold + (1 - hold) * 0.44;
+  const stops = [
+    `rgba(6,8,16,${from}) 0%`,
+    ...(hold > 0 ? [`rgba(6,8,16,${from}) ${(hold * 100).toFixed(0)}%`] : []),
+    `rgba(6,8,16,${(from * 0.42).toFixed(3)}) ${(knee * 100).toFixed(0)}%`,
+    `rgba(6,8,16,0) 100%`,
+  ];
   return (
     <div aria-hidden style={{
       position: "absolute", left: 0, right: 0, height,
       ...(top ? { top: 0 } : { bottom: 0 }),
-      background: `linear-gradient(${top ? 180 : 0}deg, rgba(6,8,16,${from}) 0%, rgba(6,8,16,${(from * 0.42).toFixed(3)}) 44%, rgba(6,8,16,0) 100%)`,
+      background: `linear-gradient(${top ? 180 : 0}deg, ${stops.join(", ")})`,
       pointerEvents: "none",
     }} />
   );

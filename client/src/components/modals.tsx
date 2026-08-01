@@ -252,7 +252,7 @@ function ComposeModal({ defaultVis }: { defaultVis?: string }) {
         {media ? (
           <>
             <Photo src={myMediaFor(1)} seed="composeMedia" />
-            <span className="chip-mint chip-onart" style={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}><Icon n="check" s={12} />Media attached — click to remove</span>
+            <span className="chip-mint onart" style={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}><Icon n="check" s={12} />Media attached — click to remove</span>
           </>
         ) : (
           <div className="row center gap8 muted"><Icon n="upload" s={18} />Add photos or video</div>

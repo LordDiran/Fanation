@@ -83,7 +83,7 @@ export default function MessagesPage() {
               <div className="card" style={{ alignSelf: "flex-start", width: 280, padding: 0, overflow: "hidden" }}>
                 <div style={{ height: 170, position: "relative", overflow: "hidden" }}>
                   <Photo src={dmShot} seed={`dm${creator.id}`} />
-                  <span className="chip-mint chip-onart" style={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}><Icon n="check" s={12} />Unlocked · 200</span>
+                  <span className="chip-mint onart" style={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}><Icon n="check" s={12} />Unlocked · 200</span>
                 </div>
                 <div className="t13" style={{ padding: "9px 12px" }}>Full BTS set from Friday&apos;s shoot 📸</div>
               </div>

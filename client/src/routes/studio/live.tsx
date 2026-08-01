@@ -47,8 +47,8 @@ export default function GoLivePage() {
           {live && (
             <>
               <div className="badge-live" style={{ position: "absolute", top: 16, left: 16, animation: "pulseglow 2s infinite" }}><span className="dot" />LIVE · {mmss(sec)}</div>
-              <div className="pill t12" style={{ position: "absolute", top: 16, right: 16 }}><Icon n="eye" s={13} />{v.toLocaleString()} watching</div>
-              <span className="chip-coin chip-onart" style={{ position: "absolute", bottom: 16, left: 16 }}>{g.toLocaleString()} coins gifted</span>
+              <div className="pill t12 onart" style={{ position: "absolute", top: 16, right: 16 }}><Icon n="eye" s={13} />{v.toLocaleString()} watching</div>
+              <span className="chip-coin onart" style={{ position: "absolute", bottom: 16, left: 16 }}>{g.toLocaleString()} coins gifted</span>
             </>
           )}
           <div style={{ position: "absolute", bottom: 16, right: 16 }}>

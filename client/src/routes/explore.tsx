@@ -40,7 +40,7 @@ export default function ExplorePage() {
                   <Photo src={mediaFor(poolFor(c.handle), 0)} seed={c.id} />
                   <Scrim from={0.5} height="46%" top />
                   <div className="badge-live" style={{ position: "absolute", top: 10, left: 10 }}><span className="dot" />LIVE</div>
-                  <div className="pill t12" style={{ position: "absolute", top: 10, right: 10 }}><Icon n="eye" s={12} />{i + 1}.2K</div>
+                  <div className="pill t12 onart" style={{ position: "absolute", top: 10, right: 10 }}><Icon n="eye" s={12} />{i + 1}.2K</div>
                 </div>
                 <div style={{ padding: 12 }} className="row gap8">
                   <Avatar name={c.name} size={30} /><div className="b6 t13">{c.name.split(" ")[0]}</div>
@@ -71,9 +71,9 @@ export default function ExplorePage() {
                   decoration — half the pool is a bright room. The top wash
                   carries the earnings chip and the live badge for the same
                   reason: mint on a white studio wall is unreadable. */}
-              <Scrim />
+              <Scrim from={0.86} height="62%" hold={0.34} />
               <Scrim from={0.45} height="38%" top />
-              <div className="chip-mint chip-onart" style={{ position: "absolute", top: 12, right: 12, background: "rgba(6,8,16,.55)", backdropFilter: "blur(6px)" }}>{c.avg} avg/mo</div>
+              <div className="chip-mint onart" style={{ position: "absolute", top: 12, right: 12 }}>{c.avg} avg/mo</div>
               {c.live && <div className="badge-live" style={{ position: "absolute", top: 12, left: 12 }}><span className="dot" />LIVE</div>}
               <div style={{ position: "absolute", left: 14, bottom: 12 }}>
                 <div className="row gap6 b7" style={{ color: "#fff" }}>{c.name} {c.v && <Verified s={14} />}</div>

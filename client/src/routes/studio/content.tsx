@@ -50,7 +50,7 @@ export default function ContentStudioPage() {
             {mediaOn ? (
               <>
                 <Photo src={myMediaFor(0)} seed="studioMedia" />
-                <span className="chip-mint chip-onart" style={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}><Icon n="check" s={12} />Media attached</span>
+                <span className="chip-mint onart" style={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}><Icon n="check" s={12} />Media attached</span>
               </>
             ) : (
               <div className="row center gap8 muted"><Icon n="upload" s={18} />Drag media or click to upload</div>
@@ -115,8 +115,8 @@ export default function ContentStudioPage() {
                 every existing thumbnail down one. */}
             <div style={{ height: 118, position: "relative", overflow: "hidden" }}>
               <Photo src={myMediaFor(fhash(c[0]))} seed={`pub${i}${c[0]}`} />
-              <div className="tag" style={{ position: "absolute", top: 10, left: 10, fontSize: 11, zIndex: 1 }}>{c[1]}</div>
-              {c[2] === "Just now" && <span className="chip-mint chip-onart" style={{ position: "absolute", top: 10, right: 10, padding: "2px 7px", zIndex: 1 }}>New</span>}
+              <div className="tag onart" style={{ position: "absolute", top: 10, left: 10, fontSize: 11, zIndex: 1 }}>{c[1]}</div>
+              {c[2] === "Just now" && <span className="chip-mint onart" style={{ position: "absolute", top: 10, right: 10, padding: "2px 7px", zIndex: 1 }}>New</span>}
             </div>
             <div style={{ padding: 12 }}>
               <div className="b6 t14" style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{c[0]}</div>

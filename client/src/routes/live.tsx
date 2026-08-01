@@ -106,13 +106,13 @@ export default function LivePage() {
             <div className="badge-live" style={{ position: "absolute", top: 16, left: 16, animation: "pulseglow 2s infinite" }}>
               <span className="dot" />LIVE · {mmss(dur)}
             </div>
-            <div className="pill t12" style={{ position: "absolute", top: 16, right: 16 }}><Icon n="eye" s={13} /> {viewers.toLocaleString()} watching</div>
+            <div className="pill t12 onart" style={{ position: "absolute", top: 16, right: 16 }}><Icon n="eye" s={13} /> {viewers.toLocaleString()} watching</div>
             {flies.map((f) => <div key={f.id} className="giftfly" style={{ left: `${f.x}%`, bottom: 96 }}>{f.txt}</div>)}
-            <div className="glass row gap6" style={{ position: "absolute", right: 16, bottom: 92, padding: "7px 11px" }}>
+            <div className="glass onart row gap6" style={{ position: "absolute", right: 16, bottom: 92, padding: "7px 11px" }}>
               <Icon n="heart" s={14} c="var(--coral)" fill="var(--coral)" />
               <span className="b7 t13">{likes.toLocaleString()}</span>
             </div>
-            <div className="glass row gap10" style={{ position: "absolute", left: 16, bottom: 16, padding: "10px 14px" }}>
+            <div className="glass onart row gap10" style={{ position: "absolute", left: 16, bottom: 16, padding: "10px 14px" }}>
               <div className="feature-ic" style={{ width: 34, height: 34, background: "rgba(93,221,144,.15)" }}><Icon n="dollar" s={15} c="var(--mint)" /></div>
               <div className="col">
                 <span className="muted2 t12">Earned this stream</span>

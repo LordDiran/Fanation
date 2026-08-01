@@ -80,8 +80,8 @@ export default function VaultPage() {
             {/* A video item shows a frame that actually has footage behind it,
                 so the play badge is not a lie. */}
             <Photo radius={12} seed={`v${x.id}`} src={coverFor(x)} />
-            {!x.used && !sel[x.id] && <span className="chip-coin chip-onart" style={{ position: "absolute", top: 8, left: 8, padding: "2px 7px" }}>Unused</span>}
-            {x.kind === "Videos" && <span className="pill t12" style={{ position: "absolute", bottom: 8, right: 8, background: "rgba(0,0,0,.5)", border: "none", color: "#fff" }}><Icon n="play" s={11} /></span>}
+            {!x.used && !sel[x.id] && <span className="chip-coin onart" style={{ position: "absolute", top: 8, left: 8, padding: "2px 7px" }}>Unused</span>}
+            {x.kind === "Videos" && <span className="pill t12 onart" style={{ position: "absolute", bottom: 8, right: 8 }}><Icon n="play" s={11} /></span>}
             {sel[x.id] && (
               <span className="feature-ic" style={{ position: "absolute", top: 8, right: 8, width: 22, height: 22, background: "var(--blue)" }}>
                 <Icon n="check" s={13} c="#04122a" />

@@ -75,12 +75,21 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
 @keyframes blink{50%{opacity:.35}}
 .chip-coin{display:inline-flex;align-items:center;gap:6px;background:rgba(252,164,75,.14);color:var(--amber-ink);border:1px solid rgba(252,164,75,.3);padding:5px 10px;border-radius:var(--rp);font-weight:700;font-size:12px}
 .chip-mint{display:inline-flex;align-items:center;gap:6px;background:rgba(93,221,144,.14);color:var(--mint-ink);border:1px solid rgba(93,221,144,.3);padding:5px 10px;border-radius:var(--rp);font-weight:700;font-size:12px}
-/* Over a photograph or a video, not over a page surface. The tint behind these is
-   whatever the picture happens to be, so the palette cannot help — the literal
-   accent stays, in both themes. Add `chip-onart` to any chip that renders on top
-   of media; leave it off everywhere else. */
-.chip-coin.chip-onart{color:var(--amber)}
-.chip-mint.chip-onart{color:var(--mint)}
+/* Over a photograph or a video, not over a page surface. A 14% tint is not a
+   surface — the picture underneath decides the contrast, and the picture can be
+   anything. So `onart` stops asking the palette for help and lays down a real
+   ground of its own, dark enough that the worst frame a photograph can produce
+   still clears the bar. Add it to any chip, pill, tag or glass panel that renders
+   on top of media; leave it off everywhere else. Solved against a pure-white
+   frame: #F6F8FC 9.99, amber 5.34, mint 6.18.
+
+   Admin has no such surface today — it is all tables and panels. The rule is
+   here so the two stylesheets keep one vocabulary, not because anything uses it. */
+.onart{background:rgba(6,8,16,.78);border-color:rgba(255,255,255,.22);color:#F6F8FC;backdrop-filter:blur(7px)}
+.chip-coin.onart{color:var(--amber);border-color:rgba(252,164,75,.45)}
+.chip-mint.onart{color:var(--mint);border-color:rgba(93,221,144,.45)}
+.onart .muted,.onart .muted2{color:rgba(246,248,252,.72)}
+.onart .mint{color:var(--mint)} .onart .amber{color:var(--amber)}
 /* avatar */
 .av{border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;overflow:hidden}
 /* inputs */
