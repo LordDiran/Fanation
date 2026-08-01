@@ -396,23 +396,72 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
    Stops that invert on a very short window clamp to the previous one, which
    degrades to a steeper ramp in the right place rather than to a wrong one. */
 [data-theme="light"] .authhero{background:var(--bg2)}
-/* Held at .82 — the black floor a tile can paint is what that number protects.
-   The photographs read louder here than anywhere else in light, though, because
-   the veil above the ramp is thin by design, so a little saturation comes out to
-   put them in the same register as the rest of the palette. */
-[data-theme="light"] .authmosaic{opacity:.82;filter:saturate(.92)}
-[data-theme="light"] .authveil{background:linear-gradient(175deg,
-  rgba(246,248,252,.56) 0,
-  rgba(246,248,252,.40) 30%,
-  rgba(246,248,252,.46) calc(100% - 820px),
-  rgba(247,249,252,.70) calc(100% - 640px),
-  rgba(245,247,251,.88) calc(100% - 490px),
-  rgba(243,245,250,.96) calc(100% - 380px),
-  rgba(243,245,250,.97) 100%)}
+   Everything above is the reasoning that produced the ramp below it, and the
+   ramp below it was wrong. Not by a ratio — every role in this hero passed, and
+   `tools/artcopy.mjs` re-measures them at eight points around the drift loop to
+   say so. Wrong because of what it cost: the ground under the copy measured
+   #ebedf2, which is the page background. The photographs were contributing
+   nothing at all to the bottom half of this panel. Six of the nine tiles a
+   person sees were a white rectangle with a shape somewhere inside it.
+
+   The mistake is structural, not numeric, and it is the same one the landing
+   hero was carrying. A veil at 175deg is flat across the panel, so the only
+   place it can put its opacity is a horizontal band — which means every pixel
+   at the copy's height gets whatever the copy needs, right to the far edge,
+   whether there is a glyph within 500px of it or not. Anchoring that band in
+   pixels was right and is kept. Making it the whole width was not.
+
+   Two things change together, and neither works without the other.
+
+   The wash becomes a shape instead of a band. It is an ellipse anchored just
+   below the bottom-left corner, where the copy actually is: 132% of the panel
+   wide so it reaches past the stats, and 700px tall in pixels rather than
+   percent for exactly the reason the old ramp was pinned that way — the copy
+   block is a measured 319px with a one-line title and 358px with two, and it
+   does not scale with the window. Past the copy it falls away in both axes at
+   once, so the top-right of the panel and the right column below it come back
+   to nearly full photograph. Under the type it is stronger than the old ramp
+   was, not weaker.
+
+   And the secondary ink stops being --muted. This is the part that buys the
+   room. --muted is #5a6579, which is 5.05:1 against the page background — the
+   whole surface, before any photograph is admitted. There was never more than
+   half a point of headroom there, which is why the old veil had to run to .96.
+   #434c58 is the same grey the landing hero settled on for the same job, and
+   it clears 4.5:1 down to a ground of 186 rather than 225. Thirty-nine values
+   of ground is the difference between a photograph and a rectangle.
+
+   The title and the statistics were never the constraint: --text at 38px/900
+   and 26px/900 are large text, so they clear 3:1 down to a ground near 97 and
+   were measuring 15.8 and 16.0. They keep their token. */
+/* .82 held the black floor a tile could paint against a veil that was about to
+   cover it anyway. With the veil pulled back to a shape, the tiles are the
+   surface, and .82 over --bg2 is a 18% white sheet laid across every one of
+   them. It goes to .95 — enough to keep a tile's darkest pixel from reading as
+   a hole punched in a light page, not enough to be a wash. The saturation goes
+   the other way for the same reason it did on the landing carousel: .92 was
+   reasoned from a photograph seen through a heavy veil, where colour stains.
+   Seen through a thin one it is the first thing to disappear. */
+[data-theme="light"] .authmosaic{opacity:.95;filter:saturate(1.06)}
+[data-theme="light"] .authveil{background:
+  radial-gradient(132% 700px at 20% calc(100% + 20px),
+    rgba(246,248,252,.96) 0%,
+    rgba(246,248,252,.94) 40%,
+    rgba(246,248,252,.82) 58%,
+    rgba(246,248,252,.46) 74%,
+    rgba(246,248,252,.13) 88%,
+    rgba(246,248,252,0) 100%),
+  linear-gradient(175deg,
+    rgba(246,248,252,.22) 0%,
+    rgba(246,248,252,.11) 38%,
+    rgba(244,246,251,.08) 66%,
+    rgba(243,245,250,.14) 100%)}
 [data-theme="light"] .authcopy{color:var(--text)}
-[data-theme="light"] .authsub{color:var(--muted)}
+/* Not --muted. See above: --muted spends the entire contrast budget on the page
+   background and leaves none for the picture. */
+[data-theme="light"] .authsub{color:#434c58}
 [data-theme="light"] .authstat b{color:var(--text)}
-[data-theme="light"] .authstat span{color:var(--muted)}
+[data-theme="light"] .authstat span{color:#434c58}
 /* auto-fit rather than a fixed count: the hero column is 748px at 1440 and 411px
    at 961, and four hand-set columns would wrap their labels at the narrow end. */
 .authstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:18px 20px}
