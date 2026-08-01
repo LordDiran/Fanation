@@ -4,6 +4,11 @@ node_modules
 # build output
 dist
 
+# a second build of the *baseline* commit, served on its own port so darkdiff can
+# diff two live documents rather than two source trees. Scaffolding for a check,
+# never an input to one
+dist-base
+
 # environment — the repo is public, nothing but the example belongs here
 .env*
 !.env.example

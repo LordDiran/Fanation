@@ -28,6 +28,11 @@ const ROUTES = {
      `/` is the whole of it. */
   landing: ['/'],
 };
+/* Routes that render outside the shell, walked before the sign-in click.
+   These were a blind spot: `/login` and `/signup` are the only two screens that
+   carry their own frame, they are the first thing anyone sees, and nothing in
+   this pass looked at them until the auth hero got a light palette of its own. */
+const PRE = { client: ['/login', '/signup'], admin: [], landing: [] };
 /* `null` means the app has no signed-out boundary to cross. */
 const SIGNIN = { client: 'button.btn-blue', admin: "button:has-text('Sign in')", landing: null };
 
@@ -47,25 +52,19 @@ const PROPS = ['color', 'backgroundColor', 'borderTopColor', 'borderRightColor',
    `tagName` is uppercase for HTML and as-authored for SVG, which is why the
    glyph's three nodes are lowercase. `'*'` declares an addition on every route of
    that app, for the things that come from index.html and are therefore on all of
-   them. */
-const ADDED = {
-  /* `querySelectorAll('*')` does not care that this one is display:none. The
-     pre-paint script paints nothing; it shows up because the walk counts nodes,
-     not pixels, and it is in the document of all three apps. */
-  client: { '*': [['SCRIPT', 1, 'the pre-paint theme script, which renders nothing']] },
-  admin: { '*': [['SCRIPT', 1, 'the pre-paint theme script, which renders nothing']] },
-  landing: {
-    '*': [['SCRIPT', 1, 'the pre-paint theme script, which renders nothing']],
-    /* The product had a toggle in its signed-in chrome before any of this; the
-       marketing site had nothing, so its control is genuinely new DOM. */
-    '/': [
-      ['BUTTON', 1, 'the theme toggle — the only route to light mode on this site'],
-      ['svg', 1, 'the sun glyph inside it, shown because this walk is in dark'],
-      ['circle', 1, "the sun's disc"],
-      ['path', 1, "the sun's rays, one path of eight strokes"],
-    ],
-  },
-};
+   them.
+
+   Empty is the normal state. It was not empty while the light-mode work was
+   uncommitted: the pre-paint script in all three index.html files was declared
+   under `'*'`, and landing's theme toggle — BUTTON, svg, circle, path — under
+   `'/'`. Both of those are now *in* the baseline. `6c2cfcc` shipped the script
+   and `a5835fd` shipped the toggle, and the baseline this runs against is
+   `a5835fd`, so the nodes exist on both sides and there is nothing left to
+   forgive. Leaving the declarations in place failed all 25 client routes on the
+   never-appeared check, which is the guard working: a rule outlived its change
+   and said so instead of rotting quietly. Empty it again after every rebase of
+   the baseline. */
+const ADDED = {};
 
 /* Paint this change is allowed to alter in dark, as [before, after, why].
 
@@ -99,6 +98,15 @@ async function walk(origin) {
       document.head.appendChild(s);
     });
   });
+  const out = new Map();
+  /* Signed-out first, by `goto`, because these are the routes a fresh document
+     actually lands on and the click below is one-way. */
+  for (const r of PRE[KIND]) {
+    await page.goto(origin + r, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(450);
+    const rows = await page.evaluate(harvest, PROPS);
+    out.set(r, rows.map((s) => s.replaceAll(origin, '«origin»')));
+  }
   await page.goto(origin + '/', { waitUntil: 'networkidle' });
   if (SIGNIN[KIND]) {
     await page.click(SIGNIN[KIND]);
@@ -108,7 +116,6 @@ async function walk(origin) {
      every time. React Router listens on popstate, which is what this drives. On
      landing there is no router and the one route is where we already stand, so
      both lines are no-ops and the wait is just settle time. */
-  const out = new Map();
   for (const r of ROUTES[KIND]) {
     await page.evaluate((to) => { history.pushState({}, '', to); dispatchEvent(new PopStateEvent('popstate')); }, r);
     await page.waitForTimeout(450);
@@ -147,7 +154,7 @@ const LIMIT = process.env.DARKDIFF_ALL ? Infinity : 3;
 const shownAdds = new Set();
 
 let routes = 0, els = 0, diffs = 0, forgiven = 0;
-for (const r of ROUTES[KIND]) {
+for (const r of [...PRE[KIND], ...ROUTES[KIND]]) {
   let A = a.get(r);
   const B = b.get(r);
   routes++;
