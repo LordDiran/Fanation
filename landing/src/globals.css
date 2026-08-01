@@ -572,24 +572,51 @@ details[open] .faq-body { animation: slide-down 0.2s ease; }
   background: linear-gradient(180deg, rgba(7,9,26,0.35) 0%, rgba(7,9,26,0.08) 45%, rgba(7,9,26,0.5) 100%);
 }
 
-/* Light. `brightness(0.32)` is what makes the carousel a shadow; inverting the
-   band means inverting that, and contrast has to come down with it or the
-   opened-up photo turns into a poster. Saturation is pulled back too — the
-   same colour that reads as a tint at a third brightness reads as a stain at
-   one and a half. */
+/* Light. The carousel advances on a timer that knows nothing about the theme,
+   so both palettes have always been changing photograph every five seconds.
+   Light just could not show it. Two things were erasing the picture, and each
+   of them looked reasonable on its own.
+
+   `contrast(0.5)` was the first. Halving contrast pulls every pixel toward the
+   middle of the range, so a photograph becomes one flat grey card; `brightness`
+   at 1.62 then pushed that card up against white and clipped what was left.
+   Between them there was no image to see, only a lighter rectangle — and one
+   lighter rectangle looks exactly like the next one, which is why the change
+   never registered.
+
+   So the filter now lifts and drains rather than flattens: brightness moves
+   just enough to put the photo in the upper register, saturation comes down
+   because a colour that reads as a tint under a third of the brightness reads
+   as a stain at full, and contrast stays near where it was — that is what keeps
+   the picture legible as a picture through 22px of blur. */
 [data-theme="light"] .hero-slide {
-  filter: blur(24px) brightness(1.62) saturate(0.72) contrast(0.5);
+  filter: blur(22px) brightness(1.18) saturate(0.66) contrast(0.82);
 }
-/* Two layers, and the first one paints on top. It runs across rather than
-   down: the copy occupies the left half and needs a near-solid ground under
-   it, while the right half keeps enough of the photo to still be a photograph
-   behind the mosaic. The second is the vertical fade dark already had, in
-   reverse, closing on `--band` so the ticker strip below reads as the next
-   thing down rather than as an edge. */
+/* The veil was the second. Two layers, and the first one paints on top. It runs
+   across rather than down: the copy occupies the left half and needs a near
+   solid ground under it, while the right half keeps enough of the photo to
+   still be a photograph behind the mosaic. That intent was right. The values
+   were not — the vertical layer was carrying 0.34 white through the whole
+   middle of the band, and alpha compounds, so the open right edge was really
+   sitting under 0.62 rather than the 0.42 it appeared to ask for.
+
+   The horizontal ramp is held where the copy is and opened much further past
+   it. The vertical layer is stripped back to almost nothing until it closes on
+   `--band` at the foot, which is the only job it actually had: making the
+   ticker strip below read as the next thing down rather than as an edge.
+
+   What the copy then sits on was worked out here by arithmetic and got it
+   wrong: this comment used to claim the ground lands near #e5e5e5, carrying
+   the eyebrow at 5.01. Measured, one slide at a time, it is #cccccc to #d4cecc
+   and the eyebrow was 4.14. The lesson is that a wash over four photographs has
+   four grounds and averaging them is not measuring them — `tools/hero-probe.mjs`
+   exists because of this line. The ink and the chip were re-solved against the
+   worst frame; the veil itself was left as it is, because opening it is what
+   made the carousel visible in the first place. */
 [data-theme="light"] .hero-carousel-overlay {
   background:
-    linear-gradient(100deg, rgba(255,255,255,0.93) 0%, rgba(255,255,255,0.86) 34%, rgba(255,255,255,0.58) 64%, rgba(255,255,255,0.42) 100%),
-    linear-gradient(180deg, rgba(243,245,250,0.62) 0%, rgba(243,245,250,0.34) 42%, rgba(233,238,246,0.92) 100%);
+    linear-gradient(100deg, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.82) 34%, rgba(255,255,255,0.40) 64%, rgba(255,255,255,0.16) 100%),
+    linear-gradient(180deg, rgba(243,245,250,0.10) 0%, rgba(243,245,250,0.02) 42%, rgba(233,238,246,0.85) 100%);
 }
 
 /* ── Hero particles ──────────────────────────────────────── */
