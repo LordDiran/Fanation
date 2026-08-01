@@ -63,10 +63,11 @@ export function AuthHero({ title, sub }: { title: string; sub: string }) {
       <div className="authveil" aria-hidden />
 
       <div className="authcopy">
-        <div className="display" style={{ fontSize: 38, marginBottom: 12 }}>{title}</div>
-        <div style={{ fontSize: 15.5, lineHeight: 1.55, color: "rgba(255,255,255,.72)", marginBottom: 32, maxWidth: 460 }}>
-          {sub}
-        </div>
+        {/* Both of these were inline styles until light mode needed to reach the
+            two colours in them. Values transcribed exactly — see `.authtitle`
+            and `.authsub` in styles.css — so the dark render did not move. */}
+        <div className="display authtitle">{title}</div>
+        <div className="authsub">{sub}</div>
         <div className="authstats">
           {STATS.map(([v, l]) => (
             <div key={v} className="authstat"><b>{v}</b><span>{l}</span></div>

@@ -285,6 +285,11 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
    would sit on a line box and leave a strip of `--card` showing under it. */
 .authtoggle{position:absolute;top:18px;right:20px;z-index:3;display:flex;border-radius:var(--rp);
   background:var(--card);box-shadow:0 6px 20px rgba(4,8,20,.32)}
+/* A 32%-black drop shadow is how a white pill reads as lifted off a near-black
+   hero. Over the light hero the same shadow is a smudge, and `--card` is #fff
+   against a composite that runs 229–248 — so the lift comes from a hairline
+   instead, with the shadow kept only as the softest hint of one. */
+[data-theme="light"] .authtoggle{box-shadow:0 0 0 1px rgba(12,18,32,.09),0 4px 14px rgba(12,18,32,.10)}
 .authhero{position:relative;overflow:hidden;background:#05070f;display:flex;flex-direction:column;justify-content:flex-end;padding:46px 44px}
 /* Three columns of stills drifting at different speeds and directions. Each column
    renders its three tiles twice and travels exactly half the strip, and the two
@@ -311,6 +316,44 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
   flex:none;border-radius:16px;overflow:hidden;background:var(--card2)}
 .authveil{position:absolute;inset:0;background:linear-gradient(175deg,rgba(5,7,15,.62) 0%,rgba(5,7,15,.42) 34%,rgba(5,7,15,.93) 82%,rgba(5,7,15,.97) 100%)}
 .authcopy{position:relative;z-index:2;color:#fff;max-width:560px}
+.authtitle{font-size:38px;margin-bottom:12px}
+.authsub{font-size:15.5px;line-height:1.55;color:rgba(255,255,255,.72);margin-bottom:32px;max-width:460px}
+/* ── The hero in light ───────────────────────────────────────────────────────
+   The hero was the one surface in the product that stayed dark when the palette
+   went light: a near-black column welded to the right of a white form. Nothing
+   about it is load-bearing — the photographs are the point and the dark was only
+   ever the thing they were composited against.
+
+   Three things change and they are one system. The base goes to --bg2 so the
+   tiles have a light surface to sit on. The mosaic goes .55 → .82, because .55
+   over a light base lifts the photographs' blacks to a mid grey and they stop
+   reading as photographs at all; at .82 the darkest pixel a tile can paint lands
+   near 119 through the thin part of the veil against 248 for the brightest,
+   which is a picture rather than a ghost of one.
+
+   And the veil's opaque end is anchored in pixels rather than in percent. The
+   dark veil can put it at 82% because white on near-black has ~19:1 of margin
+   and a short window only ever spends some of it. Dark ink on near-white has
+   nothing like that: at 1440x700 the 82% stop leaves the sub-line sitting on a
+   composite of ~201, which is 3.9:1 for --muted and a fail. The copy block is a
+   measured 319px tall with a one-line title and 358px with two — it does not
+   scale with the window, it is pinned to the bottom of it — so the wash is
+   pinned the same way. Fully opaque from 400px off the floor, ramping from 500,
+   and the copy is inside that band at every height the hero has. Stops that
+   invert on a very short window clamp to the previous one, which degrades to a
+   steeper ramp in the right place rather than to a wrong one. */
+[data-theme="light"] .authhero{background:var(--bg2)}
+[data-theme="light"] .authmosaic{opacity:.82}
+[data-theme="light"] .authveil{background:linear-gradient(175deg,
+  rgba(246,248,252,.58) 0,
+  rgba(246,248,252,.34) 32%,
+  rgba(246,248,252,.36) calc(100% - 500px),
+  rgba(243,245,250,.95) calc(100% - 400px),
+  rgba(243,245,250,.97) 100%)}
+[data-theme="light"] .authcopy{color:var(--text)}
+[data-theme="light"] .authsub{color:var(--muted)}
+[data-theme="light"] .authstat b{color:var(--text)}
+[data-theme="light"] .authstat span{color:var(--muted)}
 /* auto-fit rather than a fixed count: the hero column is 748px at 1440 and 411px
    at 961, and four hand-set columns would wrap their labels at the narrow end. */
 .authstats{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:18px 20px}
@@ -360,28 +403,24 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
   .authform{padding:34px 20px;min-height:100vh}
   .authbrand{color:#fff;justify-content:center}
   /* Below 960 everything outside the `.card` reads against the veiled
-     photographs rather than against `--bg`, and that veil is near-black in
-     both palettes. On dark nothing moves. On light the inks invert and the
-     heading, the sub-line and the legal line all go dark on dark — which is
-     the problem `.authbrand` above was already solving, one element at a time,
-     back when dark was the only palette and it was the only element that
-     needed it.
+     photographs rather than against `--bg`. That used to mean four elements —
+     the heading, the sub-line, the legal line and its two links — carried
+     hard-coded dark-palette inks here, because the veil was near-black in both
+     palettes and light's inks would have gone dark on dark.
 
-     The literals are the dark palette's `--text`, `--muted` and `--muted2`,
-     hard-coded rather than referenced: the point is that this text sits on a
-     dark surface irrespective of the palette chosen, so it wants the dark
-     surface's inks, and a `var()` here would resolve to the light ones. The
-     legal line is the smallest type on the page, and the veil arithmetic above
-     was measured for exactly this ink against exactly this backdrop.
+     The veil is no longer near-black in both palettes; it follows the palette,
+     same as the desktop hero does. So those four overrides are gone rather than
+     inverted, and the elements simply take `--text`, `--muted` and `--muted2`
+     like every other piece of text on a light surface. `.authbrand` is the one
+     that stays, because its dark-mode value was never a light-mode problem — it
+     is a flat `#fff` that predates the palette split.
 
-     Direct children only, and scoped to light so the dark render stays
-     byte-for-byte what it was. `.card` is white on light, and the muted text
-     inside it — the checkbox label, the "Don't have an account?" line — has to
-     stay dark. */
-  [data-theme="light"] .authinner > .display{color:#f6f8fc}
-  [data-theme="light"] .authinner > .muted{color:#7a8fb8}
-  [data-theme="light"] .authinner > .authlegal{color:rgba(255,255,255,.5)}
-  [data-theme="light"] .authinner > .authlegal b{color:#7a8fb8}
+     The smallest type on the page is the legal line at 11.5px carrying
+     `--muted2`. Against the mid-band composite of ~221 it measures 4.6:1, which
+     is what set the veil's .86 and the mosaic's .62 below — one notch stronger
+     and one notch dimmer than the desktop pair, because here the form scrolls
+     over the whole gradient instead of sitting beside its opaque end. */
+  [data-theme="light"] .authbrand{color:var(--text)}
   .authhero{position:fixed;inset:0;z-index:0;padding:0}
   .authcopy{display:none}
   /* Dimmer than the desktop hero but not black. Measured off the render: the two
@@ -394,6 +433,12 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
   /* display:none, so the six <img> inside it are never requested either. */
   .authcol.d3{display:none}
   .authveil{background:linear-gradient(180deg,rgba(5,7,15,.86) 0%,rgba(5,7,15,.72) 42%,rgba(5,7,15,.94) 100%)}
+  /* These two have to be restated, not inherited. `[data-theme="light"]
+     .authmosaic` is (0,2,0) and the `.authmosaic` above it is (0,1,0), so
+     without a light rule inside this query the desktop light values win here
+     and the phone gets a .82 mosaic under a veil measured for .62. */
+  [data-theme="light"] .authmosaic{opacity:.62}
+  [data-theme="light"] .authveil{background:linear-gradient(180deg,rgba(246,248,252,.92) 0%,rgba(243,245,250,.86) 42%,rgba(243,245,250,.96) 100%)}
 }
 
 /* ── Phone and small tablet ───────────────────────────────────────────────────
