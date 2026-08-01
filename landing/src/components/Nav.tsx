@@ -81,79 +81,95 @@ export default function Nav() {
   }, [])
 
   return (
-    <header
-      className="fanav fixed top-0 inset-x-0 z-50 transition-all duration-300"
-      data-solid={scrolled || open ? '1' : '0'}>
-      {/* `relative z-20` keeps the bar above the overlay below it. Without it
-          the scrim covers its own close button: the three bars are already
-          animated into an X on open, and until now nobody could reach it. */}
-      <div className="max-w-[1180px] mx-auto px-6 flex items-center justify-between relative z-20" style={{ height: 70 }}>
-        <a href="/" aria-label="Fanation home"><Logo /></a>
+    /* Fragment, not a wrapper — the overlay has to be a sibling of the header
+       rather than a child of it. `.fanav[data-solid="1"]` carries a
+       `backdrop-filter`, and a filtered element becomes the containing block
+       for every `position:fixed` descendant under it. Opening the menu sets
+       `data-solid="1"`, so the menu was the thing that created the box that
+       trapped it: `fixed inset-0` stopped meaning the viewport and started
+       meaning the header's own 70px strip. The scrim painted into that strip,
+       under the bar, where nothing could see it, and the five centred items
+       overflowed a 70px box in both directions — Features and For creators
+       ended up above the top of the screen with no way to reach them.
 
-        <nav className="hidden md:flex items-center gap-7">
-          {LINKS.map(l => (
-            <a key={l.href} href={l.href} className="text-sm font-medium transition-colors nav-link">
-              {l.label}
+       As siblings the two are ordered by the root stacking context, which is
+       what the z-indexes below were always assuming. */
+    <>
+      <header
+        className="fanav fixed top-0 inset-x-0 z-50 transition-all duration-300"
+        data-solid={scrolled || open ? '1' : '0'}>
+        <div className="max-w-[1180px] mx-auto px-6 flex items-center justify-between" style={{ height: 70 }}>
+          <a href="/" aria-label="Fanation home"><Logo /></a>
+
+          <nav className="hidden md:flex items-center gap-7">
+            {LINKS.map(l => (
+              <a key={l.href} href={l.href} className="text-sm font-medium transition-colors nav-link">
+                {l.label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-3">
+            {/* Same title as the product's control, which is what
+                `verify-theme.mjs` matches on across all three apps. */}
+            <button
+              type="button"
+              className="nav-toggle"
+              title="Toggle light / dark"
+              aria-label="Toggle light / dark"
+              onClick={() => {
+                const next = theme === 'dark' ? 'light' : 'dark'
+                setTheme(next)
+                writeStoredTheme(next)
+              }}>
+              {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+            </button>
+
+            <a href="#" className="hidden md:inline-flex text-sm font-medium transition-colors nav-link">
+              Log in
             </a>
-          ))}
-        </nav>
+            <a href="#"
+              className="hidden md:inline-flex text-[13px] font-bold px-5 py-2.5 rounded-full text-white whitespace-nowrap transition-all"
+              style={{ background: 'var(--blue-solid)' }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLElement).style.background = 'var(--blue-solid-hover)'
+                ;(e.currentTarget as HTMLElement).style.boxShadow = '0 4px 18px rgba(37,153,246,0.35)'
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLElement).style.background = 'var(--blue-solid)'
+                ;(e.currentTarget as HTMLElement).style.boxShadow = ''
+              }}>
+              Start Creating
+            </a>
 
-        <div className="flex items-center gap-3">
-          {/* Same title as the product's control, which is what
-              `verify-theme.mjs` matches on across all three apps. */}
-          <button
-            type="button"
-            className="nav-toggle"
-            title="Toggle light / dark"
-            aria-label="Toggle light / dark"
-            onClick={() => {
-              const next = theme === 'dark' ? 'light' : 'dark'
-              setTheme(next)
-              writeStoredTheme(next)
-            }}>
-            {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
-          </button>
-
-          <a href="#" className="hidden md:inline-flex text-sm font-medium transition-colors nav-link">
-            Log in
-          </a>
-          <a href="#"
-            className="hidden md:inline-flex text-[13px] font-bold px-5 py-2.5 rounded-full text-white whitespace-nowrap transition-all"
-            style={{ background: 'var(--blue-solid)' }}
-            onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.background = 'var(--blue-solid-hover)'
-              ;(e.currentTarget as HTMLElement).style.boxShadow = '0 4px 18px rgba(37,153,246,0.35)'
-            }}
-            onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.background = 'var(--blue-solid)'
-              ;(e.currentTarget as HTMLElement).style.boxShadow = ''
-            }}>
-            Start Creating
-          </a>
-
-          {/* Hamburger */}
-          <button
-            onClick={() => setOpen(v => !v)}
-            className="md:hidden flex flex-col gap-[5px] p-1 bg-transparent border-none cursor-pointer"
-            aria-label="Menu"
-            aria-expanded={open}>
-            <span className="block w-6 h-0.5 nav-bar-ic rounded transition-all duration-300"
-              style={open ? { transform: 'translateY(7px) rotate(45deg)' } : {}} />
-            <span className="block w-6 h-0.5 nav-bar-ic rounded transition-all duration-300"
-              style={open ? { opacity: 0 } : {}} />
-            <span className="block w-6 h-0.5 nav-bar-ic rounded transition-all duration-300"
-              style={open ? { transform: 'translateY(-7px) rotate(-45deg)' } : {}} />
-          </button>
+            {/* Hamburger */}
+            <button
+              onClick={() => setOpen(v => !v)}
+              className="md:hidden flex flex-col gap-[5px] p-1 bg-transparent border-none cursor-pointer"
+              aria-label="Menu"
+              aria-expanded={open}>
+              <span className="block w-6 h-0.5 nav-bar-ic rounded transition-all duration-300"
+                style={open ? { transform: 'translateY(7px) rotate(45deg)' } : {}} />
+              <span className="block w-6 h-0.5 nav-bar-ic rounded transition-all duration-300"
+                style={open ? { opacity: 0 } : {}} />
+              <span className="block w-6 h-0.5 nav-bar-ic rounded transition-all duration-300"
+                style={open ? { transform: 'translateY(-7px) rotate(-45deg)' } : {}} />
+            </button>
+          </div>
         </div>
-      </div>
+      </header>
 
-      {/* Mobile overlay. `z-10` rather than `z-[400]`: the header is
-          `fixed z-50` and so creates a stacking context, which means a child's
-          z-index only ever orders it against its siblings. 400 was ordering it
-          against one element — the bar — and reading as a guarantee it never
-          made. */}
+      {/* Mobile overlay. `z-40` sits it under the `z-50` header, which is what
+          keeps the close button reachable — the three bars are already animated
+          into an X on open, and the scrim used to cover them. Both numbers are
+          resolved in the root stacking context now that the two are siblings,
+          so the ordering is a rule rather than a hope.
+
+          `inset-0` finally means the viewport. It is still `md:hidden`, and the
+          media query listener above closes the menu on the way past 768px so
+          `data-solid` cannot be left stuck on at the top of a desktop page. */}
       <div
-        className="md:hidden fixed inset-0 flex flex-col items-center justify-center gap-9 z-10 transition-opacity duration-300"
+        className="md:hidden fixed inset-0 flex flex-col items-center justify-center gap-9 z-40 transition-opacity duration-300"
         style={{ background: 'var(--scrim)', opacity: open ? 1 : 0, pointerEvents: open ? 'all' : 'none' }}>
         {LINKS.map(l => (
           <a key={l.href} href={l.href} onClick={() => setOpen(false)}
@@ -167,6 +183,6 @@ export default function Nav() {
           Start Creating →
         </a>
       </div>
-    </header>
+    </>
   )
 }
