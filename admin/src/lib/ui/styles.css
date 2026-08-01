@@ -203,8 +203,82 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
   background:var(--card);border-right:1px solid var(--line2);box-shadow:30px 0 80px rgba(0,0,0,.45);
   display:flex;flex-direction:column;padding:20px 16px;overflow-y:auto;animation:navIn .24s ease both}
 @keyframes navIn{from{transform:translateX(-40px);opacity:0}to{transform:none;opacity:1}}
-.glowbg{position:relative;overflow:hidden}
-.glowbg:before{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 78% 12%,rgba(37,153,246,.14),transparent 60%),radial-gradient(50% 45% at 12% 78%,rgba(243,106,70,.13),transparent 58%);pointer-events:none}
+/* ── The sign-in backdrop ────────────────────────────────────────────────────
+   `.glowbg` is on exactly one element in this app — the root of the sign-in
+   page — so everything below is scoped to that screen without a route class,
+   and none of it can reach the console behind the login.
+
+   What was here was two radial lobes at .14 and .13. At 1440 that is a 400px
+   card floating in a near-empty field, which is what a staff console looks like
+   when nobody has designed its front door. This puts a backdrop under it in
+   four layers and adds no DOM: the mesh is on the element itself, the grid is
+   `:before`, the mark is `:after`, and the vignette is the first background
+   layer rather than a fifth thing. Nothing animates, so reduced-motion has
+   nothing to turn off, and the whole backdrop costs one 4.5 KB SVG.
+
+   1. The mesh. The two brand lobes keep their corners and gain a third that
+      sits directly under the card, so the card reads as standing in light
+      rather than on a flat field. Dark lifts that third lobe with --blue;
+      light lifts it with white, because a blue tint under a white card just
+      makes the card look yellow.
+
+   2. The grid, at 56px. It is masked to a radial that is solid behind the card
+      and gone by the edges — a grid that runs to the bezel reads as wallpaper,
+      one that fades reads as a plotted surface. It carries most of the
+      "console" of this screen and it is the layer to weaken first if it ever
+      starts competing with the form.
+
+   3. The mark, 78vmin, bled off the left edge. It is painted through
+      `mask-image` rather than as an `<img>`, so one monochrome file serves both
+      palettes and the colour stays in the stylesheet where the rest of the
+      palette lives. At .032 in dark and .05 in light it is architecture, not a
+      logo — you should have to look for it.
+
+   4. The vignette, listed first because the first background layer paints on
+      top. It is deliberately shallow, 55% before it starts, so it seats the
+      composition without eating the blue lobe in the corner it shares.
+
+   The pseudos take `z-index:0` and the form column takes `z-index:1`. Without
+   that the mark paints over the card: `.glowbg` is `position:relative` with
+   `z-index:auto` and therefore is not a stacking context, so an absolute pseudo
+   beats a static sibling regardless of source order. That was already true of
+   the old lobes — they were painting over the card too, and got away with it
+   because two transparent washes over an opaque card are invisible. */
+.glowbg{position:relative;overflow:hidden;
+  background:
+    radial-gradient(130% 110% at 50% 45%,transparent 55%,rgba(2,4,12,.38) 100%),
+    radial-gradient(64% 52% at 78% 6%,rgba(37,153,246,.20),transparent 62%),
+    radial-gradient(52% 46% at 10% 88%,rgba(243,106,70,.15),transparent 60%),
+    radial-gradient(46% 38% at 50% 46%,rgba(37,153,246,.10),transparent 68%),
+    linear-gradient(168deg,#0a0f24 0%,#07091a 52%,#090c1e 100%)}
+.glowbg:before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    repeating-linear-gradient(0deg,rgba(255,255,255,.030) 0 1px,transparent 1px 56px),
+    repeating-linear-gradient(90deg,rgba(255,255,255,.030) 0 1px,transparent 1px 56px);
+  -webkit-mask-image:radial-gradient(58% 52% at 50% 46%,#000 0%,rgba(0,0,0,.38) 58%,transparent 88%);
+  mask-image:radial-gradient(58% 52% at 50% 46%,#000 0%,rgba(0,0,0,.38) 58%,transparent 88%)}
+.glowbg:after{content:"";position:absolute;z-index:0;pointer-events:none;
+  left:-16vmin;top:50%;width:78vmin;height:78vmin;transform:translateY(-50%);
+  background:rgba(255,255,255,.032);
+  -webkit-mask:url(/img/mark-mono.svg) no-repeat center/contain;
+  mask:url(/img/mark-mono.svg) no-repeat center/contain}
+.glowcol{position:relative;z-index:1;width:100%;max-width:400px}
+/* The card was flat because it had nothing to stand on. Scoped by descendant so
+   the 60-odd cards in the console keep the surface treatment they already had. */
+.glowbg .card{box-shadow:0 30px 80px -24px rgba(2,5,16,.62),0 2px 10px rgba(2,5,16,.24)}
+[data-theme="light"] .glowbg{
+  background:
+    radial-gradient(130% 110% at 50% 45%,transparent 58%,rgba(12,24,48,.10) 100%),
+    radial-gradient(64% 52% at 78% 6%,rgba(37,153,246,.16),transparent 62%),
+    radial-gradient(52% 46% at 10% 88%,rgba(243,106,70,.11),transparent 60%),
+    radial-gradient(46% 38% at 50% 46%,rgba(255,255,255,.88),transparent 70%),
+    linear-gradient(168deg,#ffffff 0%,#f3f5fa 46%,#e9eef6 100%)}
+[data-theme="light"] .glowbg:before{
+  background-image:
+    repeating-linear-gradient(0deg,rgba(12,18,32,.05) 0 1px,transparent 1px 56px),
+    repeating-linear-gradient(90deg,rgba(12,18,32,.05) 0 1px,transparent 1px 56px)}
+[data-theme="light"] .glowbg:after{background:rgba(12,18,32,.05)}
+[data-theme="light"] .glowbg .card{box-shadow:0 26px 70px -28px rgba(12,24,48,.30),0 2px 8px rgba(12,24,48,.06)}
 /* modal */
 .overlay{position:fixed;inset:0;background:rgba(4,6,16,.72);backdrop-filter:blur(6px);z-index:90;display:flex;align-items:center;justify-content:center;padding:20px}
 .modal{width:100%;max-width:440px;background:var(--card2);border:1px solid var(--line2);border-radius:var(--r2);padding:26px;max-height:90vh;overflow-y:auto}

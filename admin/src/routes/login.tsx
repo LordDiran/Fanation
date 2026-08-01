@@ -10,7 +10,9 @@ export default function AdminLogin() {
   return (
     <div className="glowbg row center" style={{ minHeight: "100vh", padding: 24 }}>
       <AdminAuthThemeToggle />
-      <div style={{ width: "100%", maxWidth: 400 }}>
+      {/* `.glowcol` is the old inline width, plus the z-index that keeps this
+          column above the backdrop's two pseudo-layers. See `.glowbg`. */}
+      <div className="glowcol">
         <div className="row center" style={{ marginBottom: 22 }}>
           <Logo label={<>Fanation <span className="muted">Admin</span></>} />
         </div>
