@@ -2,7 +2,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { fhash } from "@/lib/core";
 import type { ToastMsg } from "@/lib/core";
-import { avatarFor } from "./media";
+import { avatarFor, srcsetFor } from "./media";
 
 /* ---------------- Icons ---------------- */
 const P: Record<string, string> = {
@@ -104,6 +104,12 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(amount = 0.55)
  * over a coloured tile rather than over a hole, and it is what remains if the
  * file 404s. Pass `src` to override the lookup; leave it off and the component
  * resolves the name itself, which is what almost every call site wants.
+ *
+ * The `sizes` here is the one place in the app where it is not a judgement
+ * call: the component is handed its own pixel size, so it declares exactly the
+ * box the browser is choosing for and cannot reach past it. A 40px disc on a
+ * retina screen asks for the 112px rung instead of the 320px original, which is
+ * most of what the admin user table was paying for.
  */
 export function Avatar({ name = "", size = 40, ring, src }: { name?: string; size?: number; ring?: string; src?: string }) {
   const h = fhash(name);
@@ -113,7 +119,8 @@ export function Avatar({ name = "", size = 40, ring, src }: { name?: string; siz
   return (
     <div className="av" style={{ width: size, height: size, fontSize: size * 0.36, background: `linear-gradient(135deg,hsl(${h % 360},66%,55%),hsl(${(h + 50) % 360},66%,42%))`, boxShadow: ring ? `0 0 0 2px ${ring}` : "none" }}>
       {url && !broken ? (
-        <img src={url} alt="" width={size} height={size} loading="lazy" decoding="async"
+        <img src={url} srcSet={srcsetFor(url)} sizes={`${size}px`}
+          alt="" width={size} height={size} loading="lazy" decoding="async"
           onError={() => setBroken(true)}
           style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
       ) : (
@@ -137,10 +144,22 @@ export function Avatar({ name = "", size = 40, ring, src }: { name?: string; siz
  * copies of every PPV image to achieve that would be silly. `scale` pairs with
  * it — a blur samples past the edge of the element and leaves a soft rim, so
  * the image is pushed slightly oversize to keep the corners honest.
+ *
+ * `srcSet` only ships when a `sizes` comes with it, and that guard is the whole
+ * design. A srcset without sizes is worse than no srcset at all: the browser
+ * has to choose a candidate before layout exists, so absent a hint it assumes
+ * the picture fills the viewport and takes the widest rung on the ladder — on a
+ * 216px vault thumbnail that is a straight regression. Gating on `sizes` means
+ * a call site nobody has annotated yet paints exactly what it paints today.
+ *
+ * The strings live in `SIZES` in `lib/ui/media`, keyed by layout rather than by
+ * page, because collections and explore put a photograph in the same box and
+ * naming the box is what keeps one string true for both.
  */
-export function Photo({ src, seed, alt = "", radius, blur, scale, priority, fill = true, style, children }: {
+export function Photo({ src, seed, alt = "", radius, blur, scale, priority, sizes, fill = true, style, children }: {
   src: string; seed?: string; alt?: string; radius?: number | string; blur?: number;
-  scale?: number; priority?: boolean; fill?: boolean; style?: React.CSSProperties; children?: React.ReactNode;
+  scale?: number; priority?: boolean; sizes?: string; fill?: boolean;
+  style?: React.CSSProperties; children?: React.ReactNode;
 }) {
   return (
     <div style={{
@@ -151,7 +170,8 @@ export function Photo({ src, seed, alt = "", radius, blur, scale, priority, fill
       background: bg(seed || src),
       ...style,
     }}>
-      <img src={src} alt={alt} loading={priority ? "eager" : "lazy"} decoding="async"
+      <img src={src} srcSet={sizes ? srcsetFor(src) : undefined} sizes={sizes}
+        alt={alt} loading={priority ? "eager" : "lazy"} decoding="async"
         fetchPriority={priority ? "high" : "auto"}
         style={{
           position: "absolute", inset: 0, width: "100%", height: "100%",

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { SEED_FEED, byHandle, useAppStore } from "@/lib/core";
-import { Avatar, Icon, Photo, Verified, coverFor, gridFor } from "@/lib/ui";
+import { Avatar, Icon, Photo, SIZES, Verified, coverFor, gridFor } from "@/lib/ui";
 import { FollowBtn, PostCard } from "@/components/post-card";
 
 /**
@@ -23,7 +23,7 @@ export default function CreatorProfilePage() {
           is written on it — the avatar is the only thing that overlaps it — so
           it needs no scrim. */}
       <div style={{ height: 180, position: "relative", overflow: "hidden" }}>
-        <Photo src={coverFor(c.handle)} seed={c.id} />
+        <Photo sizes={SIZES.cover} src={coverFor(c.handle)} seed={c.id} />
       </div>
       {/* The avatar alone rides up into the photograph; the name, handle and
           counts sit below it on the page background. Pulling the whole header
@@ -68,7 +68,7 @@ export default function CreatorProfilePage() {
                 {Array.from({ length: 18 }).map((_, i) => (
                   <div key={i} className="card" style={{ padding: 0, overflow: "hidden", aspectRatio: "1", position: "relative", cursor: "pointer" }}
                     onClick={() => { if (i % 4 === 0) S.openModal("ppv", { id: `pm${i}`, price: 150, who: c.name }); }}>
-                    <Photo src={gridFor(c.handle, i)} seed={`prof${i}`} />
+                    <Photo sizes={SIZES.profileGrid} src={gridFor(c.handle, i)} seed={`prof${i}`} />
                     {i % 4 === 0 && <div className="chip-coin onart" style={{ position: "absolute", top: 8, left: 8, padding: "2px 7px" }}><Icon n="lock" s={11} />PPV</div>}
                     {i % 5 === 2 && <div className="pill t12 onart" style={{ position: "absolute", bottom: 8, right: 8 }}><Icon n="play" s={11} /></div>}
                   </div>

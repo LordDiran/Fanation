@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CREATORS, useAppStore } from "@/lib/core";
-import { Avatar, CoinBadge, Icon, Loop, Photo, Verified, reelFor } from "@/lib/ui";
+import { Avatar, CoinBadge, Icon, Loop, Photo, SIZES, Verified, reelFor } from "@/lib/ui";
 import { FollowBtn, PostCard } from "@/components/post-card";
 
 function StoryViewer({ idx, close }: { idx: number; close: () => void }) {
@@ -29,7 +29,7 @@ function StoryViewer({ idx, close }: { idx: number; close: () => void }) {
   return (
     <div className="overlay" style={{ background: "rgba(2,4,12,.9)" }} onClick={close}>
       <div style={{ width: 380, height: 640, borderRadius: 22, overflow: "hidden", position: "relative" }} onClick={(e) => e.stopPropagation()}>
-        {loop ? <Loop key={c.id} src={loop} poster={still} radius={22} /> : <Photo src={still} seed={c.id} radius={22} />}
+        {loop ? <Loop key={c.id} src={loop} poster={still} radius={22} /> : <Photo sizes={SIZES.story} src={still} seed={c.id} radius={22} />}
         <div style={{ position: "absolute", top: 10, left: 12, right: 12, height: 3, borderRadius: 9, background: "rgba(255,255,255,.25)" }}>
           <div key={i} style={{ height: "100%", borderRadius: 9, background: "#fff", animation: "storyprog 4s linear forwards" }} />
         </div>

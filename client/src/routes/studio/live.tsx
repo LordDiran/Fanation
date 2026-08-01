@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAppStore } from "@/lib/core";
-import { Icon, Loop, Photo, loopFor, mediaFor } from "@/lib/ui";
+import { Icon, Loop, Photo, SIZES, loopFor, mediaFor } from "@/lib/ui";
 
 export default function GoLivePage() {
   const S = useAppStore();
@@ -37,7 +37,7 @@ export default function GoLivePage() {
         <div className="card" style={{ padding: 0, height: 420, position: "relative", overflow: "hidden", background: "var(--card2)" }}>
           {live && (camLoop
             ? <Loop src={camLoop} poster={camStill} active={live} />
-            : <Photo src={camStill} seed="mystream" />)}
+            : <Photo sizes={SIZES.studioStage} src={camStill} seed="mystream" />)}
           {!live && (
             <div className="col center gap8" style={{ position: "absolute", inset: 0 }}>
               <div className="feature-ic" style={{ width: 60, height: 60, background: "var(--fill)" }}><Icon n="camera" s={28} c="var(--muted)" /></div>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { CREATORS, useAppStore } from "@/lib/core";
-import { Avatar, Icon, Photo, Scrim, Verified, mediaFor, poolFor } from "@/lib/ui";
+import { Avatar, Icon, Photo, Scrim, SIZES, Verified, mediaFor, poolFor } from "@/lib/ui";
 
 const CATS = ["Trending", "Lifestyle", "Fitness", "Music", "Gaming", "Education", "Comedy", "Model", "Podcast", "Art"];
 
@@ -37,7 +37,7 @@ export default function ExplorePage() {
                 <div style={{ height: 118, position: "relative", overflow: "hidden" }}>
                   {/* A live thumbnail is the creator's own frame, not a generic
                       tile — same pool their posts are dealt from. */}
-                  <Photo src={mediaFor(poolFor(c.handle), 0)} seed={c.id} />
+                  <Photo sizes={SIZES.rail} src={mediaFor(poolFor(c.handle), 0)} seed={c.id} />
                   <Scrim from={0.5} height="46%" top />
                   <div className="badge-live" style={{ position: "absolute", top: 10, left: 10 }}><span className="dot" />LIVE</div>
                   <div className="pill t12 onart" style={{ position: "absolute", top: 10, right: 10 }}><Icon n="eye" s={12} />{i + 1}.2K</div>
@@ -66,7 +66,7 @@ export default function ExplorePage() {
           <div key={c.id} className="card" style={{ padding: 0, overflow: "hidden", cursor: "pointer" }}
             onClick={() => navigate(`/creator/${c.handle}`)}>
             <div style={{ height: 180, position: "relative", overflow: "hidden" }}>
-              <Photo src={mediaFor(poolFor(c.handle), 1)} seed={c.id} />
+              <Photo sizes={SIZES.g3} src={mediaFor(poolFor(c.handle), 1)} seed={c.id} />
               {/* The name sits in white on this frame, so the wash is not
                   decoration — half the pool is a bright room. The top wash
                   carries the earnings chip and the live badge for the same

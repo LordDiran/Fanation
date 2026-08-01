@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAppStore } from "@/lib/core";
-import { Icon, Photo, mediaFor } from "@/lib/ui";
+import { Icon, Photo, SIZES, mediaFor } from "@/lib/ui";
 
 /**
  * The pieces /login and /signup share.
@@ -54,7 +54,7 @@ export function AuthHero({ title, sub }: { title: string; sub: string }) {
           <div key={ci} className={`authcol d${ci + 1}`}>
             {[...col, ...col].map(([cat, n], ti) => (
               <div key={`${cat}${n}-${ti}`} className="authtile">
-                <Photo src={mediaFor(cat, n)} seed={`${cat}${n}`} />
+                <Photo sizes={SIZES.authTile} src={mediaFor(cat, n)} seed={`${cat}${n}`} />
               </div>
             ))}
           </div>

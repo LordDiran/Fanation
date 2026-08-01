@@ -41,6 +41,106 @@ export {
   EVIDENCE,
 };
 
+/**
+ * The widths each asset directory has been cut to, and how wide the original is.
+ *
+ * `tools/variants.mjs` writes those files; this is the same list a second time
+ * and nothing enforces that the two agree. They have to, because a `srcset`
+ * fails hard: a `w`-descriptor candidate that 404s does not fall back to
+ * another rung, the <img> fires onerror and paints nothing at all. Run
+ * `node tools/variants.mjs --check` after touching either side.
+ *
+ * The originals carry no width in their filename, so they are named separately
+ * rather than sitting at the end of the rung list.
+ */
+const RUNGS: Record<string, number[]> = {
+  a: [112, 208],
+  c: [480, 960],
+  m: [320, 560, 800],
+  r: [400],
+};
+
+const INTRINSIC: Record<string, number> = { a: 320, c: 1500, m: 1100, r: 720 };
+
+/**
+ * `sizes` per layout, not per call site.
+ *
+ * Several pages put a photograph in the same box — collections and explore both
+ * paint a `.g3` tile at the full content width — and naming the layout rather
+ * than the page is what lets one string serve both and stay true when the grid
+ * moves. Measured with `tools/boxes.mjs` at 1440 and 390 rather than read off
+ * the stylesheet, because the boxes are nested percentages of a max-width
+ * container and reading those is guessing.
+ *
+ * The breakpoints are the real ones — 900 where the sidebar leaves and the
+ * split stacks, 560 where the grids collapse to one or two columns. The vw
+ * figures deliberately round up: over-declaring costs a rung, under-declaring
+ * costs sharpness, and only one of those is visible.
+ */
+export const SIZES = {
+  /** A tile in the drifting mosaic behind sign-in and sign-up. */
+  authTile: "(max-width: 900px) 210px, 260px",
+  /** A post card in the feed, and the studio's attachment well beside it. */
+  feedCard: "(max-width: 900px) 96vw, 620px",
+  /** A `.g3` tile at the full content width — collections, explore. */
+  g3: "(max-width: 560px) 96vw, (max-width: 900px) 48vw, 370px",
+  /** A `.g4` tile — the studio's published grid. */
+  g4: "(max-width: 560px) 96vw, (max-width: 900px) 48vw, 270px",
+  /** A `.g5` tile — the vault. */
+  g5: "(max-width: 560px) 46vw, (max-width: 900px) 31vw, 220px",
+  /** A `.g3` tile inside the profile's 620px column, which is narrower. */
+  profileGrid: "(max-width: 560px) 96vw, (max-width: 900px) 48vw, 200px",
+  /** The 3:1 strip over a profile — the one picture that runs edge to edge. */
+  cover: "(max-width: 900px) 100vw, calc(100vw - 248px)",
+  /** The live stage, and the blurred fill behind its 9:16 source. */
+  stage: "(max-width: 900px) 96vw, 820px",
+  /** The studio's camera preview. */
+  studioStage: "(max-width: 900px) 96vw, 670px",
+  /** A reel: the window height, turned into a 9:16 frame. */
+  reel: "(max-width: 900px) 100vw, 540px",
+  /** The story viewer, which is 380x640 at every width. */
+  story: "380px",
+  /** A card in the horizontal live rail on explore. */
+  rail: "200px",
+  /** An attachment in a DM thread, which is a fixed 280px card. */
+  dm: "280px",
+  /** The composer's attachment well, inside a 440px sheet. */
+  modal: "(max-width: 900px) 96vw, 390px",
+} as const;
+
+/* Built once per path. The feed asks for the same handful of photographs on
+   every render and the answer cannot change between those calls. */
+const SRCSET_CACHE: Record<string, string> = {};
+
+/**
+ * The `srcset` for a photograph, or nothing if it has no rungs.
+ *
+ * A pure function of the path, deliberately — there is no manifest to keep in
+ * step and no build step to couple to. Anything outside the four generated
+ * directories returns undefined and behaves exactly as it does today, which is
+ * also what a path that is already a rung does: the name group rejects a dot,
+ * so `art-0.320.webp` cannot be laddered a second time.
+ */
+export function srcsetFor(src?: string): string | undefined {
+  if (!src) return undefined;
+  const cached = SRCSET_CACHE[src];
+  if (cached !== undefined) return cached || undefined;
+
+  const m = /^\/img\/([a-z]+)\/[^/.]+\.webp$/.exec(src);
+  const dir = m && RUNGS[m[1]] ? m[1] : "";
+  if (!dir) {
+    SRCSET_CACHE[src] = "";
+    return undefined;
+  }
+  const base = src.slice(0, -".webp".length);
+  const out = RUNGS[dir]
+    .map((w) => `${base}.${w}.webp ${w}w`)
+    .concat(`${src} ${INTRINSIC[dir]}w`)
+    .join(", ");
+  SRCSET_CACHE[src] = out;
+  return out;
+}
+
 /** The category a creator we have never heard of gets dealt from. */
 const DEFAULT_CAT = "life";
 

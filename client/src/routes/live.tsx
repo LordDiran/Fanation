@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { LIVE_LINES, LIVE_NAMES, useAppStore } from "@/lib/core";
-import { Avatar, Icon, Loop, Photo, Verified, reelFor } from "@/lib/ui";
+import { Avatar, Icon, Loop, Photo, SIZES, Verified, reelFor } from "@/lib/ui";
 import { FollowBtn } from "@/components/post-card";
 
 type ChatLine = [string, string, string];
@@ -97,11 +97,11 @@ export default function LivePage() {
                 player, not as a stream. */}
             {loop ? (
               <>
-                <Photo src={still} seed="liveelena" blur={30} scale={1.2} />
+                <Photo sizes={SIZES.stage} src={still} seed="liveelena" blur={30} scale={1.2} />
                 <Loop src={loop} poster={still} fit="contain" style={{ background: "transparent" }} />
               </>
             ) : (
-              <Photo src={still} seed="liveelena" />
+              <Photo sizes={SIZES.stage} src={still} seed="liveelena" />
             )}
             <div className="badge-live" style={{ position: "absolute", top: 16, left: 16, animation: "pulseglow 2s infinite" }}>
               <span className="dot" />LIVE · {mmss(dur)}

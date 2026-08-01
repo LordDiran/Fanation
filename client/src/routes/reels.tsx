@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { CREATORS, SEED_FEED, fhash, useAppStore } from "@/lib/core";
-import { Avatar, Icon, Loop, Photo, Scrim, Verified, reelFor } from "@/lib/ui";
+import { Avatar, Icon, Loop, Photo, Scrim, SIZES, Verified, reelFor } from "@/lib/ui";
 import { FollowBtn } from "@/components/post-card";
 
 /**
@@ -142,7 +142,7 @@ export default function ReelsPage() {
               element and the old frame hangs for a beat over the new source. */}
           {loop
             ? <Loop key={c.id} src={loop} poster={still} active={!paused} />
-            : <Photo src={still} seed={c.id} />}
+            : <Photo sizes={SIZES.reel} src={still} seed={c.id} />}
 
           {/* The frames are real photographs and a third of them are bright, so
               the top wash is unconditional — the live badge sits in it. The

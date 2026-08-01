@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { CREATORS, REPORT_REASONS, useAppStore } from "@/lib/core";
 import type { Creator, PollOpt, Post } from "@/lib/core";
-import { Avatar, Icon, Photo, Verified, myMediaFor } from "@/lib/ui";
+import { Avatar, Icon, Photo, SIZES, Verified, myMediaFor } from "@/lib/ui";
 
 /** Global modal host — open from anywhere via store.openModal(type, data). */
 export function ModalHost() {
@@ -251,7 +251,7 @@ function ComposeModal({ defaultVis }: { defaultVis?: string }) {
         style={{ border: `1px dashed ${media ? "var(--mint-ink)" : "var(--line2)"}`, borderRadius: 14, marginBottom: 14, cursor: "pointer", overflow: "hidden", position: "relative", height: media ? 110 : undefined, padding: media ? 0 : 20 }}>
         {media ? (
           <>
-            <Photo src={myMediaFor(1)} seed="composeMedia" />
+            <Photo sizes={SIZES.modal} src={myMediaFor(1)} seed="composeMedia" />
             <span className="chip-mint onart" style={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}><Icon n="check" s={12} />Media attached — click to remove</span>
           </>
         ) : (

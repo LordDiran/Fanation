@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { fhash, useAppStore } from "@/lib/core";
-import { Icon, Menu, Photo, myMediaFor } from "@/lib/ui";
+import { Icon, Menu, Photo, SIZES, myMediaFor } from "@/lib/ui";
 
 export default function ContentStudioPage() {
   const S = useAppStore();
@@ -49,7 +49,7 @@ export default function ContentStudioPage() {
             style={{ border: `1px dashed ${mediaOn ? "var(--mint-ink)" : "var(--line2)"}`, borderRadius: 14, marginBottom: 14, cursor: "pointer", height: mediaOn ? 110 : undefined, position: "relative", overflow: "hidden", padding: mediaOn ? 0 : 20 }}>
             {mediaOn ? (
               <>
-                <Photo src={myMediaFor(0)} seed="studioMedia" />
+                <Photo sizes={SIZES.feedCard} src={myMediaFor(0)} seed="studioMedia" />
                 <span className="chip-mint onart" style={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}><Icon n="check" s={12} />Media attached</span>
               </>
             ) : (
@@ -114,7 +114,7 @@ export default function ContentStudioPage() {
                 new card onto the front, and index-keyed pictures would shuffle
                 every existing thumbnail down one. */}
             <div style={{ height: 118, position: "relative", overflow: "hidden" }}>
-              <Photo src={myMediaFor(fhash(c[0]))} seed={`pub${i}${c[0]}`} />
+              <Photo sizes={SIZES.g4} src={myMediaFor(fhash(c[0]))} seed={`pub${i}${c[0]}`} />
               <div className="tag onart" style={{ position: "absolute", top: 10, left: 10, fontSize: 11, zIndex: 1 }}>{c[1]}</div>
               {c[2] === "Just now" && <span className="chip-mint onart" style={{ position: "absolute", top: 10, right: 10, padding: "2px 7px", zIndex: 1 }}>New</span>}
             </div>

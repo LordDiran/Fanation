@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { CREATORS, SEED_FEED, useAppStore } from "@/lib/core";
-import { Avatar, Icon, Photo, Verified, postMediaFor } from "@/lib/ui";
+import { Avatar, Icon, Photo, SIZES, Verified, postMediaFor } from "@/lib/ui";
 import { FollowBtn } from "@/components/post-card";
 
 export default function CollectionsPage() {
@@ -36,7 +36,7 @@ export default function CollectionsPage() {
             return (
             <div key={p.id} className="card" style={{ padding: 0, overflow: "hidden" }}>
               <div style={{ height: 150, position: "relative", overflow: "hidden" }}>
-                <Photo src={postMediaFor(p)} seed={`sv${p.id}`} blur={lk ? 10 : undefined} scale={lk ? 1.12 : undefined} />
+                <Photo sizes={SIZES.g3} src={postMediaFor(p)} seed={`sv${p.id}`} blur={lk ? 10 : undefined} scale={lk ? 1.12 : undefined} />
                 {lk && (
                   <span className="chip-coin onart" style={{ position: "absolute", top: 8, left: 8, padding: "2px 7px", zIndex: 1 }}><Icon n="lock" s={11} />PPV</span>
                 )}

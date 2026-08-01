@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { byHandle, seedCommentsFor, useAppStore } from "@/lib/core";
 import type { Post } from "@/lib/core";
-import { Avatar, Icon, Loop, Menu, Photo, Verified, postMediaFor, postVideoFor, useInView } from "@/lib/ui";
+import { Avatar, Icon, Loop, Menu, Photo, SIZES, Verified, postMediaFor, postVideoFor, useInView } from "@/lib/ui";
 
 const EMOJIS = ["❤️", "🔥", "😂", "😍", "👏"];
 
@@ -35,7 +35,7 @@ function PostMedia({ p, onToggle, playing }: { p: Post; playing: boolean; onTogg
       {isVideo ? (
         <Loop src={loop} poster={src} active={inView && playing} radius={14} />
       ) : (
-        <Photo src={src} seed={p.seed} alt="" radius={14} />
+        <Photo sizes={SIZES.feedCard} src={src} seed={p.seed} alt="" radius={14} />
       )}
       {isVideo && !playing && (
         <div className="row center" style={{ position: "absolute", inset: 0 }}>
@@ -151,7 +151,7 @@ export function PostCard({ p }: { p: Post }) {
               than pre-blurred into a second file — unlocking has to reveal the
               picture the blur was hiding, not swap in a different one. The
               oversize scale covers the soft rim a blur leaves at the edges. */}
-          <Photo src={postMediaFor(p)} seed={p.seed} blur={10} scale={1.12} />
+          <Photo sizes={SIZES.feedCard} src={postMediaFor(p)} seed={p.seed} blur={10} scale={1.12} />
           <div className="lockcover">
             <div className="feature-ic" style={{ background: "rgba(37,153,246,.16)" }}><Icon n="lock" c="var(--blueL)" /></div>
             <div className="b7" style={{ color: "#fff" }}>{isSub ? "Pay-per-view drop" : "Exclusive locked content"}</div>
@@ -164,7 +164,7 @@ export function PostCard({ p }: { p: Post }) {
       )}
       {p.type === "locked" && isUnlocked && (
         <div style={{ height: MEDIA_H, borderRadius: 14, position: "relative", overflow: "hidden" }}>
-          <Photo src={postMediaFor(p)} seed={p.seed} radius={14} />
+          <Photo sizes={SIZES.feedCard} src={postMediaFor(p)} seed={p.seed} radius={14} />
           <span className="chip-mint onart" style={{ position: "absolute", top: 10, left: 10, zIndex: 1 }}><Icon n="check" s={12} />Unlocked</span>
         </div>
       )}

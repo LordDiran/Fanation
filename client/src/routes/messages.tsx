@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { DM_OPENERS, DM_THREADS, byHandle, useAppStore } from "@/lib/core";
-import { Avatar, Icon, Menu, Photo, Verified, mediaFor, poolFor } from "@/lib/ui";
+import { Avatar, Icon, Menu, Photo, SIZES, Verified, mediaFor, poolFor } from "@/lib/ui";
 
 export default function MessagesPage() {
   const S = useAppStore();
@@ -82,14 +82,14 @@ export default function MessagesPage() {
             {t.locked && (unlocked ? (
               <div className="card" style={{ alignSelf: "flex-start", width: 280, padding: 0, overflow: "hidden" }}>
                 <div style={{ height: 170, position: "relative", overflow: "hidden" }}>
-                  <Photo src={dmShot} seed={`dm${creator.id}`} />
+                  <Photo sizes={SIZES.dm} src={dmShot} seed={`dm${creator.id}`} />
                   <span className="chip-mint onart" style={{ position: "absolute", top: 8, left: 8, zIndex: 1 }}><Icon n="check" s={12} />Unlocked · 200</span>
                 </div>
                 <div className="t13" style={{ padding: "9px 12px" }}>Full BTS set from Friday&apos;s shoot 📸</div>
               </div>
             ) : (
               <div className="card locked" style={{ alignSelf: "flex-start", width: 280, height: 180 }}>
-                <Photo src={dmShot} seed={`dm${creator.id}`} blur={9} scale={1.12} />
+                <Photo sizes={SIZES.dm} src={dmShot} seed={`dm${creator.id}`} blur={9} scale={1.12} />
                 <div className="lockcover">
                   <Icon n="lock" c="var(--amber-ink)" />
                   <div className="b7 t14" style={{ color: "#fff" }}>Locked message</div>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAppStore } from "@/lib/core";
-import { Icon, MOTION_STILLS, Photo, mediaFor, myMediaFor } from "@/lib/ui";
+import { Icon, MOTION_STILLS, Photo, SIZES, mediaFor, myMediaFor } from "@/lib/ui";
 
 /**
  * `n` is the item's position within its own kind, fixed when the item is
@@ -79,7 +79,7 @@ export default function VaultPage() {
             style={{ aspectRatio: "1", borderRadius: 12, position: "relative", cursor: "pointer", outline: sel[x.id] ? "2px solid var(--blue-ink)" : "none", outlineOffset: -2 }}>
             {/* A video item shows a frame that actually has footage behind it,
                 so the play badge is not a lie. */}
-            <Photo radius={12} seed={`v${x.id}`} src={coverFor(x)} />
+            <Photo sizes={SIZES.g5} radius={12} seed={`v${x.id}`} src={coverFor(x)} />
             {!x.used && !sel[x.id] && <span className="chip-coin onart" style={{ position: "absolute", top: 8, left: 8, padding: "2px 7px" }}>Unused</span>}
             {x.kind === "Videos" && <span className="pill t12 onart" style={{ position: "absolute", bottom: 8, right: 8 }}><Icon n="play" s={11} /></span>}
             {sel[x.id] && (
