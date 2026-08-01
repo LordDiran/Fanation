@@ -86,12 +86,24 @@
      fail 1.4.3 wherever the label is under 24px, which is everywhere they are
      used. Darkening the base would drag every border and tint along with it, so
      the solid fill gets its own token, exactly as the ink did.
-     Dark aliases the base, so these cannot move a pixel here. */
-  --blue-solid:#2599F6; --red-solid:#EF4444; --blue-solid-hover:#1A80D8;
+
+     These were aliases of the base until now, on the reasoning that a solid on a
+     dark page is surrounded by dark and so reads as bright enough. That reasoning
+     confuses looking bright with being readable: the label is white and the only
+     thing it contrasts against is the fill under it, which the page around it
+     does not change. So the solid is solved here too, down its own hue and
+     saturation ramp — the same blue and the same red, deep enough to carry a
+     white 15px label. Every dark pixel this moves is a solid accent fill, and
+     every one of them was failing. */
+  --blue-solid:#0977d0;       /* 4.60 with #fff */
+  --red-solid:#e81414;        /* 4.62 with #fff */
+  --blue-solid-hover:#086dbf; /* 5.32 with #fff */
   /* The hero's primary CTA is the same role again, but its fill is a gradient
      rather than a flat colour, so no amount of `--blue-solid` reaches it. Both
-     stops carry the same white 16px label and the lighter one is 3.01. */
-  --blue-solid-grad:linear-gradient(135deg, #2599F6 0%, #1e7fd4 100%);
+     stops carry the same white 16px label and the lighter one was 3.01. Built
+     out of the two blues above rather than out of two new ones, which is what
+     light does — one construction, two palettes. */
+  --blue-solid-grad:linear-gradient(135deg, #0977d0 0%, #086dbf 100%); /* 4.60 → 5.32 */
 
   /* Social hover colours are brand-owned, so they only move where the
      brand value would otherwise vanish against a light surface. */

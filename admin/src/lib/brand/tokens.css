@@ -58,9 +58,21 @@
      --red or --grad instead would drag along every tint, border and shadow
      derived from them.
 
-     Dark aliases the base exactly, so nothing here can move a pixel in dark. */
-  --red-solid: #ef4444;
-  --grad-solid: linear-gradient(90deg, #f36a46 0%, #2599f6 100%);
+     These aliased the base exactly, on the reasoning that a solid sitting on a
+     dark page is surrounded by dark and therefore reads as bright enough. That
+     reasoning confuses looking bright with being readable: the label is white
+     and the only thing it contrasts against is the fill directly under it, which
+     the page around it does not change. The comment above had already measured
+     the failures — 3.76, 3.02, 3.01 — and then fixed only one of the two themes.
+
+     So dark is solved too, walked down its own hue and saturation ramp rather
+     than replaced: the same red and the same coral-to-blue sweep, deep enough to
+     carry a white 12px label. The gradient is checked at a hundred samples, not
+     at its two ends, because CSS interpolates per channel in sRGB while
+     luminance does not, so a ramp between two passing colours can still sag
+     under the bar in the middle — which is exactly where both of these failed. */
+  --red-solid: #e81414; /* 4.62 with #fff */
+  --grad-solid: linear-gradient(90deg, #d9380e 0%, #0977d0 100%); /* 4.64 → 4.60, worst 4.60 */
 
   /* ── Surfaces, dark (default) ───────────────────────────────────────────── */
   --bg: #07091a;
