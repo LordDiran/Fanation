@@ -132,7 +132,7 @@ export function PostCard({ p }: { p: Post }) {
             const pct = voted == null ? o.pct : voted === i ? Math.min(99, o.pct + 1) : Math.max(1, o.pct - 1);
             return (
               <div key={i} className="hair" onClick={() => { if (voted == null) S.vote(p.id, i); }}
-                style={{ position: "relative", padding: "11px 14px", borderRadius: 12, overflow: "hidden", cursor: voted == null ? "pointer" : "default", borderColor: voted === i ? "var(--blue)" : "var(--line)" }}>
+                style={{ position: "relative", padding: "11px 14px", borderRadius: 12, overflow: "hidden", cursor: voted == null ? "pointer" : "default", borderColor: voted === i ? "var(--blue-ink)" : "var(--line)" }}>
                 <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: `${pct}%`, background: voted === i ? "rgba(37,153,246,.3)" : "rgba(37,153,246,.14)", transition: ".4s" }} />
                 <div className="row between" style={{ position: "relative" }}>
                   <span className="row gap8 b6 t14">{voted === i && <Icon n="check" s={14} c="var(--blueL-ink)" />}{o.label}</span>

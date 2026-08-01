@@ -85,7 +85,7 @@ export default function ModerationPage() {
           const u = targetUser(r);
           const isOpen = open === r.id;
           return (
-            <div key={r.id} className="card" style={{ padding: 0, overflow: "hidden", borderColor: isOpen ? "var(--blue)" : undefined }}>
+            <div key={r.id} className="card" style={{ padding: 0, overflow: "hidden", borderColor: isOpen ? "var(--blue-ink)" : undefined }}>
               <div className="row gap14 wrap" style={{ padding: 16, cursor: "pointer" }} onClick={() => setOpen(isOpen ? null : r.id)}>
                 <div className="feature-ic" style={{ width: 40, height: 40, background: "var(--fill)" }}><Icon n="flag" s={17} c={r.sev === "High" ? "var(--coral-ink)" : "var(--amber-ink)"} /></div>
                 <div className="col gap2" style={{ flex: 1.6, minWidth: 170 }}>

@@ -92,7 +92,7 @@ function ConfirmModal({ cfg, close }: { cfg: ConfirmCfg; close: () => void }) {
             <div className="col gap6" style={{ marginBottom: 12, maxHeight: 220, overflowY: "auto" }}>
               {cfg.reasons.map((r, i) => (
                 <label key={i} className="row gap10 hair t13 b6" onClick={() => setRi(i)}
-                  style={{ padding: "9px 12px", borderRadius: 10, cursor: "pointer", borderColor: ri === i ? (cfg.tone === "danger" ? "var(--coral)" : "var(--blue)") : "var(--line)" }}>
+                  style={{ padding: "9px 12px", borderRadius: 10, cursor: "pointer", borderColor: ri === i ? (cfg.tone === "danger" ? "var(--coral-ink)" : "var(--blue-ink)") : "var(--line)" }}>
                   <input type="radio" checked={ri === i} onChange={() => setRi(i)} />{r}
                 </label>
               ))}

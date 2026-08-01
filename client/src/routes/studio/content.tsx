@@ -46,7 +46,7 @@ export default function ContentStudioPage() {
             onChange={(e) => setCap(e.target.value)} style={{ resize: "none", marginBottom: 4 }} />
           <div className="row between muted2 t12" style={{ marginBottom: 8 }}><span /><span>{cap.length}/500</span></div>
           <div onClick={() => setMediaOn((v) => !v)}
-            style={{ border: `1px dashed ${mediaOn ? "var(--mint)" : "var(--line2)"}`, borderRadius: 14, marginBottom: 14, cursor: "pointer", height: mediaOn ? 110 : undefined, position: "relative", overflow: "hidden", padding: mediaOn ? 0 : 20 }}>
+            style={{ border: `1px dashed ${mediaOn ? "var(--mint-ink)" : "var(--line2)"}`, borderRadius: 14, marginBottom: 14, cursor: "pointer", height: mediaOn ? 110 : undefined, position: "relative", overflow: "hidden", padding: mediaOn ? 0 : 20 }}>
             {mediaOn ? (
               <>
                 <Photo src={myMediaFor(0)} seed="studioMedia" />

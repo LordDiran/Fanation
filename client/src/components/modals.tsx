@@ -70,7 +70,7 @@ function SubscribeModal({ c = CREATORS[0] }: { c?: Creator }) {
       <div className="b7 t18" style={{ marginBottom: 10 }}>Choose your plan</div>
       {plans.map((b, i) => (
         <div key={i} onClick={() => setSel(i)} className="row between hair"
-          style={{ padding: "13px 15px", borderRadius: 12, marginBottom: 9, cursor: "pointer", borderColor: sel === i ? "var(--blue)" : "var(--line)", background: sel === i ? "rgba(37,153,246,.07)" : "" }}>
+          style={{ padding: "13px 15px", borderRadius: 12, marginBottom: 9, cursor: "pointer", borderColor: sel === i ? "var(--blue-ink)" : "var(--line)", background: sel === i ? "rgba(37,153,246,.07)" : "" }}>
           <div className="row gap10"><input type="radio" checked={sel === i} onChange={() => setSel(i)} /><span className="b6">{b[0]}</span></div>
           <div className="row gap8"><span className="blue b7">{b[1]}</span>{b[2] && <span className="chip-mint">{b[2]}</span>}</div>
         </div>
@@ -248,7 +248,7 @@ function ComposeModal({ defaultVis }: { defaultVis?: string }) {
         onChange={(e) => setCap(e.target.value)} style={{ resize: "none", marginBottom: 4 }} />
       <div className="row between muted2 t12" style={{ marginBottom: 10 }}><span /><span>{cap.length}/500</span></div>
       <div onClick={() => setMedia(!media)}
-        style={{ border: `1px dashed ${media ? "var(--mint)" : "var(--line2)"}`, borderRadius: 14, marginBottom: 14, cursor: "pointer", overflow: "hidden", position: "relative", height: media ? 110 : undefined, padding: media ? 0 : 20 }}>
+        style={{ border: `1px dashed ${media ? "var(--mint-ink)" : "var(--line2)"}`, borderRadius: 14, marginBottom: 14, cursor: "pointer", overflow: "hidden", position: "relative", height: media ? 110 : undefined, padding: media ? 0 : 20 }}>
         {media ? (
           <>
             <Photo src={myMediaFor(1)} seed="composeMedia" />

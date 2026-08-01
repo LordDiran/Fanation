@@ -58,32 +58,32 @@ const FEATURES = [
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style={{ stroke: 'var(--blueL-ink)' }} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect width="22" height="16" x="1" y="4" rx="2" ry="2"/><line x1="1" x2="23" y1="10" y2="10"/>
       </svg>
-    ), bg: 'rgba(37,153,246,0.12)',   border: 'rgba(37,153,246,0.2)',   title: 'Earn Recurring Income',        body: 'Create subscription plans and generate predictable monthly revenue from your most loyal supporters. Tiered access means fans choose what they value most.',                          pills: ['Monthly memberships', 'Annual plans', 'Tiered access'] },
+    ), tile: 'blue',   title: 'Earn Recurring Income',        body: 'Create subscription plans and generate predictable monthly revenue from your most loyal supporters. Tiered access means fans choose what they value most.',                          pills: ['Monthly memberships', 'Annual plans', 'Tiered access'] },
   { icon: (
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style={{ stroke: 'var(--amber-ink)' }} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" x2="12.01" y1="20" y2="20"/>
       </svg>
-    ), bg: 'rgba(252,164,75,0.12)',   border: 'rgba(252,164,75,0.2)',   title: 'Go Live & Get Paid',            body: 'Host live sessions, interact in real time, and receive gifts and support directly from fans as it happens. The most addictive earn loop on Fanation.',                  pills: ['Real-time gifts', 'Live interaction', 'Instant payouts'] },
+    ), tile: 'amber',  title: 'Go Live & Get Paid',            body: 'Host live sessions, interact in real time, and receive gifts and support directly from fans as it happens. The most addictive earn loop on Fanation.',                  pills: ['Real-time gifts', 'Live interaction', 'Instant payouts'] },
   { icon: (
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style={{ stroke: 'var(--red-ink)' }} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
       </svg>
-    ), bg: 'rgba(239,68,68,0.12)',    border: 'rgba(239,68,68,0.2)',    title: 'Own Your Community',            body: 'Build direct relationships through communities, messaging, comments, and exclusive experiences. Your fans, your space — no algorithm between you and them.', pills: ['Direct messaging', 'Group communities', 'No algorithm'] },
+    ), tile: 'red',    title: 'Own Your Community',            body: 'Build direct relationships through communities, messaging, comments, and exclusive experiences. Your fans, your space — no algorithm between you and them.', pills: ['Direct messaging', 'Group communities', 'No algorithm'] },
   { icon: (
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style={{ stroke: 'var(--violet-ink)' }} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
       </svg>
-    ), bg: 'rgba(168,85,247,0.12)',   border: 'rgba(168,85,247,0.2)',   title: 'Sell Exclusive Content',        body: 'Offer premium videos, photos, audio, behind-the-scenes content, and subscriber-only experiences. Lock what\'s valuable and let fans pay to unlock.',                           pills: ['Pay-per-view', 'Subscriber drops', 'Private media'] },
+    ), tile: 'violet', title: 'Sell Exclusive Content',        body: 'Offer premium videos, photos, audio, behind-the-scenes content, and subscriber-only experiences. Lock what\'s valuable and let fans pay to unlock.',                           pills: ['Pay-per-view', 'Subscriber drops', 'Private media'] },
   { icon: (
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style={{ stroke: 'var(--mint-ink)' }} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
       </svg>
-    ), bg: 'rgba(93,221,144,0.12)',   border: 'rgba(93,221,144,0.2)',   title: 'Grow Beyond Algorithms',        body: 'Stay connected with your audience without depending on social media reach or changing platform rules. On Fanation, you own the relationship.',                        pills: ['Direct audience access', 'No feed throttling', 'You own your fans'] },
+    ), tile: 'mint',   title: 'Grow Beyond Algorithms',        body: 'Stay connected with your audience without depending on social media reach or changing platform rules. On Fanation, you own the relationship.',                        pills: ['Direct audience access', 'No feed throttling', 'You own your fans'] },
   { icon: (
       <svg width="26" height="26" viewBox="0 0 24 24" fill="none" style={{ stroke: 'var(--gold-ink)' }} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
         <line x1="18" x2="18" y1="20" y2="10"/><line x1="12" x2="12" y1="20" y2="4"/><line x1="6" x2="6" y1="20" y2="14"/>
       </svg>
-    ), bg: 'rgba(245,158,11,0.12)',   border: 'rgba(245,158,11,0.2)',   title: 'Manage Your Creator Business', body: 'Track earnings, monitor engagement, manage subscribers, and grow your brand with confidence. Everything you need to run a serious creator business.',                                pills: ['Earnings dashboard', 'Subscriber analytics', 'Growth insights'] },
+    ), tile: 'gold',   title: 'Manage Your Creator Business', body: 'Track earnings, monitor engagement, manage subscribers, and grow your brand with confidence. Everything you need to run a serious creator business.',                                pills: ['Earnings dashboard', 'Subscriber analytics', 'Growth insights'] },
 ]
 
 const CREATORS = [
@@ -233,7 +233,7 @@ export default function Page() {
               {/* Step 01 */}
               <div className="how-step rounded-[22px] p-9 relative md:flex-1" style={{ background: 'var(--card)', border: `1px solid ${BORDER}` }}>
                 <div className="text-xs font-black tracking-[0.1em] mb-5" style={{ color: 'var(--blue-ink)', textTransform: 'uppercase' }}>Step {STEPS[0].n}</div>
-                <div className="flex items-center justify-center rounded-2xl mb-5 text-[26px]" style={{ width: 56, height: 56, background: 'rgba(37,153,246,0.1)', border: '1px solid rgba(37,153,246,0.18)' }}>{STEPS[0].icon}</div>
+                <div className="icontile flex items-center justify-center rounded-2xl mb-5 text-[26px]" data-tile="step" style={{ width: 56, height: 56 }}>{STEPS[0].icon}</div>
                 <h3 className="font-black ink mb-2.5" style={{ fontSize: 19, letterSpacing: '-0.02em' }}>{STEPS[0].title}</h3>
                 <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.72 }}>{STEPS[0].body}</p>
               </div>
@@ -242,7 +242,7 @@ export default function Page() {
               {/* Step 02 */}
               <div className="how-step rounded-[22px] p-9 relative md:flex-1" style={{ background: 'var(--card)', border: `1px solid ${BORDER}` }}>
                 <div className="text-xs font-black tracking-[0.1em] mb-5" style={{ color: 'var(--blue-ink)', textTransform: 'uppercase' }}>Step {STEPS[1].n}</div>
-                <div className="flex items-center justify-center rounded-2xl mb-5 text-[26px]" style={{ width: 56, height: 56, background: 'rgba(37,153,246,0.1)', border: '1px solid rgba(37,153,246,0.18)' }}>{STEPS[1].icon}</div>
+                <div className="icontile flex items-center justify-center rounded-2xl mb-5 text-[26px]" data-tile="step" style={{ width: 56, height: 56 }}>{STEPS[1].icon}</div>
                 <h3 className="font-black ink mb-2.5" style={{ fontSize: 19, letterSpacing: '-0.02em' }}>{STEPS[1].title}</h3>
                 <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.72 }}>{STEPS[1].body}</p>
               </div>
@@ -251,7 +251,7 @@ export default function Page() {
               {/* Step 03 */}
               <div className="how-step rounded-[22px] p-9 relative md:flex-1" style={{ background: 'var(--card)', border: `1px solid ${BORDER}` }}>
                 <div className="text-xs font-black tracking-[0.1em] mb-5" style={{ color: 'var(--blue-ink)', textTransform: 'uppercase' }}>Step {STEPS[2].n}</div>
-                <div className="flex items-center justify-center rounded-2xl mb-5 text-[26px]" style={{ width: 56, height: 56, background: 'rgba(37,153,246,0.1)', border: '1px solid rgba(37,153,246,0.18)' }}>{STEPS[2].icon}</div>
+                <div className="icontile flex items-center justify-center rounded-2xl mb-5 text-[26px]" data-tile="step" style={{ width: 56, height: 56 }}>{STEPS[2].icon}</div>
                 <h3 className="font-black ink mb-2.5" style={{ fontSize: 19, letterSpacing: '-0.02em' }}>{STEPS[2].title}</h3>
                 <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.72 }}>{STEPS[2].body}</p>
               </div>
@@ -323,7 +323,7 @@ export default function Page() {
                 </div>
                 {/* Float stat badge — positioned relative to outer container */}
                 <div className="absolute text-center rounded-[14px] px-4 py-3.5"
-                  style={{ top: 20, right: 12, background: 'var(--card2)', border: '1px solid rgba(252,164,75,0.3)', boxShadow: '0 20px 50px rgba(0,0,0,0.4)', minWidth: 130 }}>
+                  style={{ top: 20, right: 12, background: 'var(--card2)', border: '1px solid var(--amber-edge)', boxShadow: '0 20px 50px rgba(0,0,0,0.4)', minWidth: 130 }}>
                   <p style={{ fontSize: 11, color: 'var(--muted)', marginBottom: 4 }}>Coins sent today</p>
                   <p className="font-black" style={{ fontSize: 26, color: 'var(--amber-ink)', letterSpacing: '-0.02em' }}>2.4M 🪙</p>
                 </div>
@@ -371,8 +371,8 @@ export default function Page() {
               {FEATURES.map(f => (
                 <div key={f.title} className="feat-card rounded-[22px] p-9 flex flex-col gap-5"
                   style={{ background: 'var(--card)', border: `1px solid ${BORDER}` }}>
-                  <div className="flex items-center justify-center rounded-[15px] text-[26px]"
-                    style={{ width: 54, height: 54, background: f.bg, border: `1px solid ${f.border}` }}>
+                  <div className="icontile flex items-center justify-center rounded-[15px] text-[26px]"
+                    data-tile={f.tile} style={{ width: 54, height: 54 }}>
                     {f.icon}
                   </div>
                   <div>

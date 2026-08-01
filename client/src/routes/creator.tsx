@@ -45,7 +45,7 @@ export default function CreatorProfilePage() {
             <FollowBtn handle={c.handle} />
             <button className="btn btn-ghost" onClick={() => navigate("/messages")}><Icon n="msg" s={16} />Message</button>
             {isSub ? (
-              <button className="btn btn-ghost" style={{ color: "var(--mint-ink)", borderColor: "rgba(93,221,144,.4)" }} onClick={() => navigate("/subscriptions")}>
+              <button className="btn btn-ghost" style={{ color: "var(--mint-ink)", borderColor: "var(--mint-edge)" }} onClick={() => navigate("/subscriptions")}>
                 <Icon n="check" s={16} />Subscribed
               </button>
             ) : (
@@ -56,7 +56,7 @@ export default function CreatorProfilePage() {
         <div className="row gap24" style={{ margin: "22px 0 0", borderBottom: "1px solid var(--line)" }}>
           {["Posts", "Media"].map((t) => (
             <div key={t} onClick={() => setTab(t)}
-              style={{ padding: "12px 2px", cursor: "pointer", fontWeight: 600, color: tab === t ? "var(--text)" : "var(--muted)", borderBottom: tab === t ? "2px solid var(--blue)" : "2px solid transparent" }}>
+              style={{ padding: "12px 2px", cursor: "pointer", fontWeight: 600, color: tab === t ? "var(--text)" : "var(--muted)", borderBottom: tab === t ? "2px solid var(--blue-ink)" : "2px solid transparent" }}>
               {t}
             </div>
           ))}

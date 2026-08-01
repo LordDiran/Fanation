@@ -15,7 +15,7 @@ export default function CollectionsPage() {
       <div className="row gap24" style={{ borderBottom: "1px solid var(--line)", marginBottom: 20 }}>
         {["Bookmarks", "Subscriptions", "Following"].map((t) => (
           <div key={t} onClick={() => setTab(t)}
-            style={{ padding: "10px 2px", cursor: "pointer", fontWeight: 600, color: tab === t ? "var(--text)" : "var(--muted)", borderBottom: tab === t ? "2px solid var(--blue)" : "2px solid transparent" }}>
+            style={{ padding: "10px 2px", cursor: "pointer", fontWeight: 600, color: tab === t ? "var(--text)" : "var(--muted)", borderBottom: tab === t ? "2px solid var(--blue-ink)" : "2px solid transparent" }}>
             {t}{t === "Bookmarks" && savedPosts.length > 0 && <span className="tag" style={{ marginLeft: 8, padding: "1px 8px", fontSize: 11 }}>{savedPosts.length}</span>}
           </div>
         ))}

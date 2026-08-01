@@ -54,7 +54,7 @@ export default function VaultPage() {
         ))}
       </div>
       {nSel > 0 && (
-        <div className="card row gap12" style={{ padding: "10px 16px", marginBottom: 14, borderColor: "var(--blue)" }}>
+        <div className="card row gap12" style={{ padding: "10px 16px", marginBottom: 14, borderColor: "var(--blue-ink)" }}>
           <span className="b7 t14">{nSel} selected</span>
           <div className="grow" />
           <button className="btn btn-ghost btn-sm" onClick={() => { S.toast("Sent as PPV message to VIP fans · 150 coins to unlock", "ok"); setSel({}); }}>
@@ -76,7 +76,7 @@ export default function VaultPage() {
       <div className="grid g5 gap12">
         {list.map((x) => (
           <div key={x.id} onClick={() => setSel((m) => ({ ...m, [x.id]: !m[x.id] }))}
-            style={{ aspectRatio: "1", borderRadius: 12, position: "relative", cursor: "pointer", outline: sel[x.id] ? "2px solid var(--blue)" : "none", outlineOffset: -2 }}>
+            style={{ aspectRatio: "1", borderRadius: 12, position: "relative", cursor: "pointer", outline: sel[x.id] ? "2px solid var(--blue-ink)" : "none", outlineOffset: -2 }}>
             {/* A video item shows a frame that actually has footage behind it,
                 so the play badge is not a lie. */}
             <Photo radius={12} seed={`v${x.id}`} src={coverFor(x)} />

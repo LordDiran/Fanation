@@ -73,7 +73,7 @@ export default function UsersPage() {
         ))}
       </div>
       {nSel > 0 && (
-        <div className="card row gap12" style={{ padding: "10px 16px", marginBottom: 14, borderColor: "var(--blue)" }}>
+        <div className="card row gap12" style={{ padding: "10px 16px", marginBottom: 14, borderColor: "var(--blue-ink)" }}>
           <span className="b7 t14">{nSel} selected</span>
           <div className="grow" />
           <button className="btn btn-ghost btn-sm" onClick={() => A.ask({
