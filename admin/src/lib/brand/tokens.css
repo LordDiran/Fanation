@@ -49,6 +49,19 @@
   --mint-ink: #5ddd90;
   --amber-ink: #fca44b;
 
+  /* ── Solid — the accent as the surface, with white on top ───────────────── */
+  /* The -ink set above covers an accent used as a glyph. This is the inverse
+     case, and it needs its own token for the same reason: white on #ef4444 is
+     3.76 and on the --grad endpoints 3.02 and 3.01, so `.btn-red`,
+     `.badge-live` and `.btn-grad` all fail 1.4.3 in light — their labels are
+     11px and 13px, nowhere near the 24px that would let 3:1 apply. Darkening
+     --red or --grad instead would drag along every tint, border and shadow
+     derived from them.
+
+     Dark aliases the base exactly, so nothing here can move a pixel in dark. */
+  --red-solid: #ef4444;
+  --grad-solid: linear-gradient(90deg, #f36a46 0%, #2599f6 100%);
+
   /* ── Surfaces, dark (default) ───────────────────────────────────────────── */
   --bg: #07091a;
   --bg2: #0c1121;
@@ -122,4 +135,13 @@
   --fill2: rgba(12, 24, 48, 0.08);
   --glass: rgba(255, 255, 255, 0.72);
   --topbar: rgba(255, 255, 255, 0.85);
+
+  /* ── Solid, light ───────────────────────────────────────────────────────── */
+  /* Solved for white ink rather than for the surface underneath. The two
+     gradient endpoints are matched on ratio, not on lightness — 5.67 and 5.66 —
+     so the bar reads at an even weight end to end instead of dimming toward the
+     blue. #1a6ba8 is the same blue the marketing site uses for its solid CTA;
+     one light-mode solid blue across the product, not two. */
+  --red-solid: #cc2020; /* 5.53 with #fff */
+  --grad-solid: linear-gradient(90deg, #a94a2d 0%, #1a6ba8 100%); /* 5.67 → 5.66 */
 }

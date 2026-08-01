@@ -39,3 +39,21 @@ export function ThemeToggle() {
     </button>
   );
 }
+
+/**
+ * The same control, placed for the two screens that render outside the shell.
+ *
+ * `/login` and `/signup` sit outside `AppLayout` — nesting them would loop,
+ * because the shell redirects anyone unauthenticated back to `/login` — so the
+ * topbar and its toggle do not exist there. A visitor who prefers light had no
+ * way to reach it until after they had signed in.
+ *
+ * A wrapper rather than a variant of `ThemeToggle`, so the button stays one
+ * component: same icon, same title, same store call. `verify-theme.mjs` matches
+ * signed-in and signed-out on the same `button[title]`, and the two can never
+ * disagree about what the control does. The positioning lives entirely in
+ * `.authtoggle`.
+ */
+export function AuthThemeToggle() {
+  return <div className="authtoggle"><ThemeToggle /></div>;
+}

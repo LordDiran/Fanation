@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAdminStore } from "@/lib/core";
 import { Icon, Logo } from "@/lib/ui";
+import { AdminAuthThemeToggle } from "@/components/admin-chrome";
 
 /** Staff-only mock auth — swap for SSO/JWT with role claims at integration. */
 export default function AdminLogin() {
@@ -8,6 +9,7 @@ export default function AdminLogin() {
   const setAuthed = useAdminStore((s) => s.setAuthed);
   return (
     <div className="glowbg row center" style={{ minHeight: "100vh", padding: 24 }}>
+      <AdminAuthThemeToggle />
       <div style={{ width: "100%", maxWidth: 400 }}>
         <div className="row center" style={{ marginBottom: 22 }}>
           <Logo label={<>Fanation <span className="muted">Admin</span></>} />

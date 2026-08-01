@@ -58,19 +58,19 @@ a{color:inherit;text-decoration:none}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 18px;border-radius:var(--rp);font-weight:600;font-size:14px;transition:.18s;white-space:nowrap}
 .btn:hover{transform:translateY(-1px)}
 .btn-blue{background:var(--blue);color:#04122a;box-shadow:0 8px 26px rgba(37,153,246,.35)}
-.btn-grad{background:var(--grad);color:#fff;box-shadow:0 10px 30px rgba(243,106,70,.28)}
+.btn-grad{background:var(--grad-solid);color:#fff;box-shadow:0 10px 30px rgba(243,106,70,.28)}
 .btn-ghost{background:var(--fill);border:1px solid var(--line2);color:var(--text)}
 .btn-ghost:hover{background:var(--fill2)}
-.btn-red{background:var(--red);color:#fff}
+.btn-red{background:var(--red-solid);color:#fff}
 .btn-sm{padding:8px 14px;font-size:13px}
 .btn-block{width:100%}
 button:disabled{opacity:.45;cursor:not-allowed;transform:none}
 /* pills / tags */
 .pill{display:inline-flex;align-items:center;gap:7px;padding:6px 13px;border-radius:var(--rp);font-size:12.5px;font-weight:600;background:var(--fill);border:1px solid var(--line)}
 .tag{display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:var(--rp);font-size:12px;font-weight:600;background:var(--fill);border:1px solid var(--line);color:var(--muted)}
-.tag.on{background:var(--grad);color:#fff;border-color:transparent;cursor:pointer}
+.tag.on{background:var(--grad-solid);color:#fff;border-color:transparent;cursor:pointer}
 .dot{width:7px;height:7px;border-radius:50%;flex:none}
-.badge-live{display:inline-flex;align-items:center;gap:6px;background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:4px 9px;border-radius:var(--rp)}
+.badge-live{display:inline-flex;align-items:center;gap:6px;background:var(--red-solid);color:#fff;font-size:11px;font-weight:700;padding:4px 9px;border-radius:var(--rp)}
 .badge-live .dot{background:#fff;animation:blink 1.4s infinite}
 @keyframes blink{50%{opacity:.35}}
 .chip-coin{display:inline-flex;align-items:center;gap:6px;background:rgba(252,164,75,.14);color:var(--amber-ink);border:1px solid rgba(252,164,75,.3);padding:5px 10px;border-radius:var(--rp);font-weight:700;font-size:12px}
@@ -262,6 +262,29 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .authform{position:relative;z-index:2;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:40px 44px}
 .authinner{width:100%;max-width:452px;margin:0 auto}
 .authbrand{display:flex;margin-bottom:22px;color:var(--text)}
+/* The signed-out toggle. `/login` and `/signup` render outside the shell, so the
+   topbar control does not exist on them — without this, someone who prefers
+   light has to sign in before they can reach it, which is not a preference, it
+   is a locked door.
+
+   Positioned against `.authwrap` rather than appended to `.authbrand`, for two
+   reasons. `.authbrand` takes `justify-content:center` at ≤960px and would
+   carry the control into the middle of the screen. And the top-right of the
+   viewport is where the toggle sits once you are signed in, so this is the same
+   corner rather than a second convention.
+
+   The wrapper paints `--card` so the button composites over an opaque surface
+   instead of over the photographs. On desktop it sits on `.authhero`, which is
+   `#05070f` under a veil; at ≤960px the hero goes `position:fixed;inset:0` and
+   `.authveil` lays near-black across the top of the viewport. Either way, a
+   `.btn-ghost` on light — dark ink over a 4.5%-alpha fill — would be dark on
+   dark. Backing it keeps one button component for both screens and lets
+   `:hover` stay exactly what it is everywhere else.
+
+   `display:flex` because the button is inline-level: in a block wrapper it
+   would sit on a line box and leave a strip of `--card` showing under it. */
+.authtoggle{position:absolute;top:18px;right:20px;z-index:3;display:flex;border-radius:var(--rp);
+  background:var(--card);box-shadow:0 6px 20px rgba(4,8,20,.32)}
 .authhero{position:relative;overflow:hidden;background:#05070f;display:flex;flex-direction:column;justify-content:flex-end;padding:46px 44px}
 /* Three columns of stills drifting at different speeds and directions. Each column
    renders its three tiles twice and travels exactly half the strip, and the two
@@ -336,6 +359,29 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
   .authwrap{grid-template-columns:1fr}
   .authform{padding:34px 20px;min-height:100vh}
   .authbrand{color:#fff;justify-content:center}
+  /* Below 960 everything outside the `.card` reads against the veiled
+     photographs rather than against `--bg`, and that veil is near-black in
+     both palettes. On dark nothing moves. On light the inks invert and the
+     heading, the sub-line and the legal line all go dark on dark — which is
+     the problem `.authbrand` above was already solving, one element at a time,
+     back when dark was the only palette and it was the only element that
+     needed it.
+
+     The literals are the dark palette's `--text`, `--muted` and `--muted2`,
+     hard-coded rather than referenced: the point is that this text sits on a
+     dark surface irrespective of the palette chosen, so it wants the dark
+     surface's inks, and a `var()` here would resolve to the light ones. The
+     legal line is the smallest type on the page, and the veil arithmetic above
+     was measured for exactly this ink against exactly this backdrop.
+
+     Direct children only, and scoped to light so the dark render stays
+     byte-for-byte what it was. `.card` is white on light, and the muted text
+     inside it — the checkbox label, the "Don't have an account?" line — has to
+     stay dark. */
+  [data-theme="light"] .authinner > .display{color:#f6f8fc}
+  [data-theme="light"] .authinner > .muted{color:#7a8fb8}
+  [data-theme="light"] .authinner > .authlegal{color:rgba(255,255,255,.5)}
+  [data-theme="light"] .authinner > .authlegal b{color:#7a8fb8}
   .authhero{position:fixed;inset:0;z-index:0;padding:0}
   .authcopy{display:none}
   /* Dimmer than the desktop hero but not black. Measured off the render: the two

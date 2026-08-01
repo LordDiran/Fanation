@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 /**
- * Theme persistence check — drives production builds of client (:3000) and
- * admin (:3001).
+ * Theme persistence check — drives production builds of client (:3000),
+ * admin (:3001) and the marketing site (:3002).
  *
- *     cd client && npm run build && npm run preview   # terminal one
- *     cd admin  && npm run build && npm run preview   # terminal two
- *     node tools/verify-theme.mjs                     # terminal three
+ *     cd client  && npm run build && npm run preview
+ *     cd admin   && npm run build && npm run preview
+ *     cd landing && npm run build && npm run preview
+ *     node tools/verify-theme.mjs
  *
  * Light mode is only worth having if the choice survives the reload, and a
  * choice that survives the reload is only worth having if the page does not
@@ -40,9 +41,24 @@
 
 import { chromium, launchOpts } from "./playwright-env.mjs";
 
+/**
+ * `signin` is the control that takes the app from public to authenticated, and
+ * `null` says the app has no such boundary. The marketing site is one public
+ * page: the sections below that sign in and re-measure still run for it, minus
+ * the click, because what they are really asserting — that a choice survives a
+ * reload — does not depend on there being an inside.
+ *
+ * Three keys, not one. The product and the marketing site are separate origins
+ * in production and a reader of one is not necessarily the user of the other;
+ * sharing a key would mean a preference set on either silently rewrote both.
+ */
 const APPS = [
-  { name: "client", base: process.env.BASE_CLIENT || "http://localhost:3000", key: "fanation.theme" },
-  { name: "admin", base: process.env.BASE_ADMIN || "http://localhost:3001", key: "fanation.admin.theme" },
+  { name: "client", base: process.env.BASE_CLIENT || "http://localhost:3000", key: "fanation.theme",
+    publicRoutes: ["/login", "/signup"], signin: ".btn-blue" },
+  { name: "admin", base: process.env.BASE_ADMIN || "http://localhost:3001", key: "fanation.admin.theme",
+    publicRoutes: ["/login"], signin: ".btn-blue" },
+  { name: "landing", base: process.env.BASE_LANDING || "http://localhost:3002", key: "fanation.landing.theme",
+    publicRoutes: ["/"], signin: null },
 ];
 
 const DARK = "#07091A";
@@ -120,6 +136,21 @@ const read = (pg) =>
 
 const stored = (pg, key) => pg.evaluate((k) => localStorage.getItem(k), key);
 
+/**
+ * Waited for, then counted.
+ *
+ * `locator.count()` does not auto-wait and `locator.click()` does, so counting
+ * the moment `networkidle` returns reads zero and the very next line clicks the
+ * element successfully — a race that reports as an app fault. The count is
+ * still asserted exactly, because two toggles rendering at once would be a real
+ * bug worth catching.
+ */
+const toggleCount = async (pg) => {
+  const t = pg.locator('button[title="Toggle light / dark"]');
+  await t.first().waitFor({ state: "visible" });
+  return t.count();
+};
+
 /** The probe measures the app; nothing measures the probe. This does. */
 const probeOk = (label, s) => {
   ok(label + ": probe installed cleanly", !s.trace?.probeError, s.trace?.probeError);
@@ -169,26 +200,71 @@ for (const app of APPS) {
   ok("theme-color matches dark", s.meta === DARK, "got " + s.meta);
   ok("loading alone writes nothing to storage", (await stored(page, app.key)) === null);
 
-  // ── 2. An explicit choice ──────────────────────────────────────────────────
-  await page.click(".btn-blue");
+  // ── 2. The screens you see before you have signed in ───────────────────────
+  /* The toggle used to live only in the shell, which meant the one palette a
+     visitor could not choose was the one they were looking at. `/login` and
+     `/signup` render outside the shell — nesting them would loop, because the
+     shell sends anyone unauthenticated back to `/login` — so they carry their
+     own control, and the exact count in §3 stays exact rather than softening to
+     "at least one".
+   *
+   * The reload here matters more than any other in this file: `/login` is the
+   * first document most people load, so the signed-out screen is where a flash
+   * would actually be seen. */
+  let n = await toggleCount(page);
+  ok("exactly one toggle on the signed-out screen", n === 1, "found " + n);
+  await page.locator('button[title="Toggle light / dark"]').first().click();
   await settle(page);
-  /* Waited for, then counted. `networkidle` returns before the client's feed
-     route has finished mounting, so counting straight off `settle()` reads zero
-     and then the very next line clicks the element successfully — a race that
-     reports as an app fault. The count is still asserted exactly, because two
-     toggles rendering at once would be a real bug worth catching. */
-  const toggle = page.locator('button[title="Toggle light / dark"]');
-  await toggle.first().waitFor({ state: "visible" });
-  const toggleCount = await toggle.count();
-  ok("exactly one toggle once signed in", toggleCount === 1, "found " + toggleCount);
-  await toggle.first().click();
+  s = await read(page);
+  ok("signed-out toggle switches to light", s.body === "light", "got " + s.body);
+  ok("signed-out theme-color follows to light", s.meta === LIGHT, "got " + s.meta);
+  ok("signed-out choice is written to storage", (await stored(page, app.key)) === "light");
+
+  await page.reload({ waitUntil: "domcontentloaded" });
+  await settle(page);
+  s = await read(page);
+  probeOk("signed-out reload", s);
+  ok("signed-out choice survives reload", s.body === "light", "got " + s.body);
+  noFlash("signed-out reload on light", s, "light");
+
+  /* Every public route, by its own path rather than by the redirect, so a
+     toggle dropped from one of them cannot hide behind another. */
+  for (const r of app.publicRoutes) {
+    await page.goto(app.base + r, { waitUntil: "domcontentloaded" });
+    await settle(page);
+    n = await toggleCount(page);
+    ok("exactly one toggle on " + r, n === 1, "found " + n);
+    s = await read(page);
+    ok(r + " holds light", s.body === "light", "got " + s.body);
+    noFlash("direct load of " + r + " on light", s, "light");
+  }
+
+  /* Back to dark, so §3 starts where it did before this section existed. */
+  await page.goto(app.base + "/", { waitUntil: "domcontentloaded" });
+  await settle(page);
+  await page.locator('button[title="Toggle light / dark"]').first().click();
+  await settle(page);
+  ok("signed-out toggle returns to dark", (await read(page)).body === "dark");
+  ok("signed-out dark is stored explicitly", (await stored(page, app.key)) === "dark");
+
+  // ── 3. An explicit choice, from inside ─────────────────────────────────────
+  /* An app with no signed-in state skips the crossing and makes the choice
+     where it stands. §4 needs light in storage and a page to reload; both are
+     satisfied either way. */
+  if (app.signin) {
+    await page.click(app.signin);
+    await settle(page);
+    n = await toggleCount(page);
+    ok("exactly one toggle once signed in", n === 1, "found " + n);
+  }
+  await page.locator('button[title="Toggle light / dark"]').first().click();
   await settle(page);
   s = await read(page);
   ok("toggle switches to light", s.body === "light", "got " + s.body);
   ok("theme-color follows to light", s.meta === LIGHT, "got " + s.meta);
   ok("choice is written to storage", (await stored(page, app.key)) === "light");
 
-  // ── 3. The reload, which is the whole point ────────────────────────────────
+  // ── 4. The reload, which is the whole point ────────────────────────────────
   await page.reload({ waitUntil: "domcontentloaded" });
   await settle(page);
   s = await read(page);
@@ -197,9 +273,13 @@ for (const app of APPS) {
   noFlash("reload on light", s, "light");
   ok("theme-color survives reload", s.meta === LIGHT, "got " + s.meta);
 
-  // ── 4. Choosing dark is a choice too, not just the absence of one ──────────
-  await page.click(".btn-blue");
-  await settle(page);
+  // ── 5. Choosing dark is a choice too, not just the absence of one ──────────
+  /* The reload in §4 dropped the session — auth lives in memory — so the apps
+     that have an inside have to sign in again to reach the toggle. */
+  if (app.signin) {
+    await page.click(app.signin);
+    await settle(page);
+  }
   await page.locator('button[title="Toggle light / dark"]').first().waitFor({ state: "visible" });
   await page.locator('button[title="Toggle light / dark"]').first().click();
   await settle(page);
@@ -210,7 +290,7 @@ for (const app of APPS) {
   ok("dark survives reload", s.body === "dark", "got " + s.body);
   noFlash("reload on dark", s, "dark");
 
-  // ── 5. A stored value nobody wrote ─────────────────────────────────────────
+  // ── 6. A stored value nobody wrote ─────────────────────────────────────────
   await page.evaluate((k) => localStorage.setItem(k, "chartreuse"), app.key);
   await page.reload({ waitUntil: "domcontentloaded" });
   await settle(page);
@@ -221,7 +301,7 @@ for (const app of APPS) {
 
   await ctx.close();
 
-  // ── 6. Storage that throws on access ───────────────────────────────────────
+  // ── 7. Storage that throws on access ───────────────────────────────────────
   const blocked = await browser.newContext();
   await blocked.addInitScript(PROBE);
   await blocked.addInitScript(() => {
@@ -243,7 +323,7 @@ for (const app of APPS) {
   ok("blocked storage raises nothing", bErrors.length === 0, bErrors[0]);
   await blocked.close();
 
-  // ── 7. Two tabs of the same app ────────────────────────────────────────────
+  // ── 8. Two tabs of the same app ────────────────────────────────────────────
   const shared = await browser.newContext();
   const a = await shared.newPage();
   const b = await shared.newPage();
@@ -260,7 +340,7 @@ for (const app of APPS) {
   ok("a second tab follows the change", followed);
   await shared.close();
 
-  // ── 8. The device the flash actually shows up on ───────────────────────────
+  // ── 9. The device the flash actually shows up on ───────────────────────────
   /* Unthrottled, the gap between first paint and React mounting is small enough
      that a broken build can get lucky. 6x is roughly a mid-range Android, which
      is most of this audience, and it widens that gap to hundreds of

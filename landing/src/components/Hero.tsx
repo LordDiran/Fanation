@@ -130,7 +130,7 @@ export default function Hero() {
             <div className="flex flex-wrap gap-4 mb-10">
               <a href="#"
                 className="inline-flex items-center text-white font-bold"
-                style={{ background: 'linear-gradient(135deg, #2599F6 0%, #1e7fd4 100%)', fontSize: 16, padding: '17px 34px', borderRadius: '100px', transition: 'box-shadow .2s, transform .15s' }}
+                style={{ background: 'var(--blue-solid-grad)', fontSize: 16, padding: '17px 34px', borderRadius: '100px', transition: 'box-shadow .2s, transform .15s' }}
                 onMouseEnter={e => { const el = e.currentTarget as HTMLElement; el.style.boxShadow='0 8px 32px rgba(37,153,246,0.45), 0 0 0 1px rgba(243,106,70,0.25)'; el.style.transform='translateY(-2px)'; }}
                 onMouseLeave={e => { const el = e.currentTarget as HTMLElement; el.style.boxShadow=''; el.style.transform=''; }}>
                 Start Creating Today →
@@ -248,7 +248,7 @@ export default function Hero() {
                   style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 30%,rgba(7,9,26,0.9) 100%)' }} />
                 <div className="absolute top-3 left-3 flex items-center gap-1 text-white font-black rounded-full px-2.5 py-1"
-                  style={{ fontSize: 11, background: '#EF4444' }}>
+                  style={{ fontSize: 11, background: 'var(--red-solid)' }}>
                   <span style={{ fontSize: 8 }}>●</span>LIVE
                 </div>
                 <div className="absolute top-3 right-3 font-bold rounded-full px-2.5 py-1"

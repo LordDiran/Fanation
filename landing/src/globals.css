@@ -2,18 +2,177 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Theme tokens ────────────────────────────────────────────────
+   The marketing site carries its own copy of the palette rather than
+   importing `client/src/lib/brand/tokens.css`. That duplication is on
+   purpose: a brand tweak inside the product should not force a rebuild
+   and redeploy of the live marketing site. The two files are expected to
+   drift; where they agree, they agree because both were measured against
+   the same surfaces.
+
+   Dark is the default — every value in `:root` is the literal that used
+   to sit inline in the TSX, so computed style in dark is unchanged to
+   the byte. `[data-theme="light"]` is the only new rendering.
+
+   The `--ink-*` scale exists because a translucent ink does not survive a
+   surface flip. White at 0.3 over #07091A measures 2.59; black at the same
+   0.3 over #f3f5fa measures 1.97 — worse, not equal. Each light alpha below
+   is raised until it matches or beats its dark counterpart, so nothing that
+   is legible today becomes less legible in light. */
+:root {
+  --bg:#07091A; --band:#0C1121; --card:#111830; --card2:#18223C;
+  --text:#F0F4FF; --heading:#FFFFFF; --muted:#7A8FB8;
+
+  /* Carrier for one-off alphas: rgba(var(--ink-rgb), .06) and friends. */
+  --ink-rgb:255,255,255;
+
+  --ink-90:rgba(255,255,255,0.9);
+  --ink-82:rgba(255,255,255,0.82);
+  --ink-78:rgba(255,255,255,0.78);
+  --ink-60:rgba(255,255,255,0.6);
+  --ink-50:rgba(255,255,255,0.5);
+  --ink-35:rgba(255,255,255,0.35);
+  --ink-30:rgba(255,255,255,0.3);
+
+  --line:rgba(255,255,255,0.07);
+  --line2:rgba(255,255,255,0.15);
+  --fill:rgba(255,255,255,0.05);
+
+  /* The hero is a photographic band and stays dark in both themes. In dark
+     it must compute to `rgba(0, 0, 0, 0)` exactly as it does today, hence
+     `transparent` rather than a repeat of `--bg`. */
+  --hero-bg:transparent; --hero-ink:#F0F4FF;
+
+  --scrim:rgba(7,9,26,0.98);
+  --nav-bar:rgba(7,9,26,0.96);
+  --nav-shadow:0 4px 40px rgba(0,0,0,0.4);
+  /* Unscrolled, the nav floats over the hero photo — dark in both themes. */
+  --nav-veil:linear-gradient(180deg, rgba(7,9,26,0.75) 0%, transparent 100%);
+
+  --stat-from:#fff; --stat-to:#60B8FA;
+  --cta-from:#F36A46; --cta-to:#2599F6;
+
+  --blue-ink:#2599F6; --blueL-ink:#60B8FA; --coral-ink:#F36A46;
+  --mint-ink:#5DDD90; --amber-ink:#FCA44B; --red-ink:#F87171;
+  --violet-ink:#C084FC; --gold-ink:#FCD34D;
+
+  /* A third role, and the `-ink` split does not cover it.
+     `-ink` darkens an accent so it can be *read as a glyph* on a light surface.
+     These two are the mirror image: the accent is the surface, and white is the
+     glyph on top of it. #2599F6 under white is 3.01 and #EF4444 is 3.76 — both
+     fail 1.4.3 wherever the label is under 24px, which is everywhere they are
+     used. Darkening the base would drag every border and tint along with it, so
+     the solid fill gets its own token, exactly as the ink did.
+     Dark aliases the base, so these cannot move a pixel here. */
+  --blue-solid:#2599F6; --red-solid:#EF4444; --blue-solid-hover:#1A80D8;
+  /* The hero's primary CTA is the same role again, but its fill is a gradient
+     rather than a flat colour, so no amount of `--blue-solid` reaches it. Both
+     stops carry the same white 16px label and the lighter one is 3.01. */
+  --blue-solid-grad:linear-gradient(135deg, #2599F6 0%, #1e7fd4 100%);
+
+  /* Social hover colours are brand-owned, so they only move where the
+     brand value would otherwise vanish against a light surface. */
+  --ig-ink:#E1306C; --tt-ink:#69C9D0; --yt-ink:#FF0000;
+}
+
+[data-theme="light"] {
+  --bg:#f3f5fa; --band:#e9eef6; --card:#ffffff; --card2:#ffffff;
+  --text:#0c1220; --heading:#0c1220;
+  /* Was #5a6579, solved against --band alone at 5.05. It also renders as the
+     ✕ glyph on the comparison list's 7% ink pill, and that surface is darker
+     than --band: 4.40, a fail by a tenth. Re-solved against the worst surface
+     it actually lands on. */
+  --muted:#556071;   /* 4.77 on the 7% ink pill · 5.47 on --band */
+
+  --ink-rgb:12,18,32;
+
+  --ink-90:rgba(12,18,32,0.92);
+  --ink-82:rgba(12,18,32,0.86);
+  --ink-78:rgba(12,18,32,0.82);
+  --ink-60:rgba(12,18,32,0.7);
+  --ink-50:rgba(12,18,32,0.62);
+  /* Both were carried over proportionally from dark and both render body copy:
+     --ink-35 is the 13px line under the closing CTA, --ink-30 the 12px sub on
+     each headline stat. At .5 and .45 they measure 3.46 and 2.97 on --bg.
+     .59 is where 12px text clears 4.5 there, which is why the two coincide in
+     light and stay distinct in dark — on a light ground there is simply no room
+     below .59 for a glyph that still has to be read. Hierarchy below body text
+     is carried by size and weight instead. */
+  --ink-35:rgba(12,18,32,0.59); /* 4.61 on --bg */
+  --ink-30:rgba(12,18,32,0.59); /* 4.61 on --bg */
+
+  --line:rgba(12,18,32,.1);
+  --line2:rgba(12,18,32,.17);
+  --fill:rgba(12,24,48,.045);
+
+  --hero-bg:#07091A; --hero-ink:#F0F4FF;
+
+  --scrim:rgba(243,245,250,.98);
+  --nav-bar:rgba(255,255,255,.9);
+  --nav-shadow:0 4px 40px rgba(12,18,32,0.1);
+  --nav-veil:linear-gradient(180deg, rgba(7,9,26,0.75) 0%, transparent 100%);
+
+  --stat-from:#0c1220; --stat-to:#346388;
+  --cta-from:#9b442d; --cta-to:#175f9a;
+
+  /* Each ink below was solved against the tint it actually sits on, to
+     4.5:1 — not eyeballed off the dark value. */
+  --blue-ink:#175f9a;   /* 4.76 */
+  --blueL-ink:#346388;  /* 4.55 */
+  --coral-ink:#9b442d;  /* 4.56 */
+  --mint-ink:#2d6a46;   /* 4.58 */
+  --amber-ink:#825427;  /* 4.61 */
+  --red-ink:#ab4e4e;    /* 4.58 */
+  --violet-ink:#835aab; /* 4.53 */
+  --gold-ink:#836e28;   /* 4.53 */
+
+  /* Instagram's magenta and YouTube's red already clear 3:1 on this surface
+     and are only nudged to reach 4.5; TikTok's teal measures 1.77 and has to
+     move properly to stay a visible hover at all. */
+  --ig-ink:#d12d64;  /* 4.51 */
+  --tt-ink:#3f797d;  /* 4.54 */
+  --yt-ink:#e30000;  /* 4.51 */
+
+  /* Solid fills, solved for white ink rather than for the surface under them.
+     Both keep the hue and give up lightness — the CTA still reads as the brand
+     blue, just a shade that a 13px label can survive on. */
+  --blue-solid:#1a6ba8;       /* 5.66 with #fff */
+  --red-solid:#cc2020;        /* 5.53 with #fff */
+  /* Hover has to stay darker than rest in both themes, so it cannot just
+     inherit dark's #1A80D8 — that is 4.10 and lighter than the new rest state,
+     which would make the button appear to lift on hover instead of press. */
+  --blue-solid-hover:#155c92; /* 7.05 with #fff */
+  /* The hero CTA, built out of the two blues above rather than out of two new
+     ones. Matching both stops on ratio was the first instinct and it was wrong:
+     solving each to 5.66 lands them on #1a6aab and #196ab0, which is a gradient
+     between two colours the eye cannot separate — a flat fill with extra steps.
+     Contrast has a floor, not a ceiling, so the far stop is free to go deeper.
+     Taking it to the hover blue keeps the dark version's direction — lighter at
+     the top-left, deeper at the bottom-right — and keeps the sheen visible. */
+  --blue-solid-grad:linear-gradient(135deg, #1a6ba8 0%, #155c92 100%); /* 5.66 → 7.05 */
+}
+
 @layer base {
   /* Inter ships as a dependency (`@fontsource-variable/inter`, imported in
      `main.tsx`) and is served from our own bundle — no runtime request to Google
      and no flash of fallback text on a filtered network. */
   body {
-    background: #07091A;
-    color: #F0F4FF;
+    background: var(--bg);
+    color: var(--text);
     font-family: "Inter Variable", Inter, system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
   }
   ::selection { background: #2599F6; color: #fff; }
 }
+
+/* ── Themed text ─────────────────────────────────────────────────
+   These replace `text-white` / `hover:text-white` at the call sites that
+   sit on a themed surface. A class rather than a Tailwind override so
+   there is no specificity fight — the utility is removed where this is
+   applied. `--heading` is #FFFFFF in dark, so computed colour is
+   `rgb(255, 255, 255)`, identical to what `text-white` produced. */
+.ink              { color: var(--heading); }
+.ink-hover:hover  { color: var(--heading); }
 
 /* ── Keyframes ───────────────────────────────────────────────── */
 @keyframes marquee {
@@ -78,7 +237,12 @@ details[open] .faq-body { animation: slide-down 0.2s ease; }
 
 /* ── Stat gradient text ──────────────────────────────────── */
 .stat-gradient-text {
-  background: linear-gradient(135deg, #fff 30%, #60B8FA 100%);
+  /* No `100%` on the last stop. It is the default, and Chrome serialises the
+     computed `background-image` differently depending on whether a var() was
+     substituted: `#60B8FA 100%` comes back without the stop, `var(--stat-to)
+     100%` comes back with it. Same gradient, different string — and `darkdiff`
+     compares strings. Dropping the redundant stop is cheaper than an exception. */
+  background: linear-gradient(135deg, var(--stat-from) 30%, var(--stat-to));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -95,9 +259,93 @@ details[open] .faq-body { animation: slide-down 0.2s ease; }
   .section-pad-cta   { padding: 130px 0; }
 }
 
-/* ── Hero responsive padding ─────────────────────────────────── */
-.hero-section { padding: 80px 0 60px; }
+/* ── Hero ────────────────────────────────────────────────────────
+   Photographic band: it stays dark in light mode, the way a cinema keeps
+   the lights down whatever colour the lobby is. Two things follow.
+
+   `--hero-bg` is `transparent` in dark so the computed background is
+   `rgba(0, 0, 0, 0)` — byte-identical to today. In light it becomes a real
+   #07091A, because `.hero-slide` paints from a background-image that loads
+   asynchronously; without a floor underneath, the page background flashes
+   through as white for the length of that request.
+
+   `color` is set explicitly because the `<h1>` has no colour of its own and
+   inherits from `body`. Once `body` is `var(--text)`, an un-anchored heading
+   would go near-black on a near-black photo in light. */
+.hero-section {
+  padding: 80px 0 60px;
+  background: var(--hero-bg);
+  color: var(--hero-ink);
+}
 @media (min-width: 1024px) { .hero-section { padding: 120px 0 80px; } }
+
+/* ── Nav ─────────────────────────────────────────────────────────
+   The header has two lives. Floating, it sits over the hero photo and must
+   read as dark-surface chrome whatever the theme; solid, it becomes an
+   opaque bar on the page and has to follow the theme. `data-solid` is the
+   switch, and every override below fires only in the solid state.
+
+   Solid is `scrolled || menuOpen`, not just scrolled. The mobile scrim is
+   `--scrim`, near-white in light — leave the bar floating over it and the
+   veil paints a dark gradient across the top of a light overlay with dark
+   ink on it. Opening the menu is the same surface change as scrolling, so
+   it takes the same branch.
+
+   Dark computes identically either way with the menu closed, `--muted`
+   being #7A8FB8 and `--heading` #FFFFFF there. */
+.fanav                  { background: var(--nav-veil); }
+.fanav[data-solid="1"] {
+  background: var(--nav-bar);
+  border-bottom: 1px solid var(--line);
+  box-shadow: var(--nav-shadow);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.nav-link                               { color: #7A8FB8; }
+.nav-link:hover                         { color: #FFFFFF; }
+.fanav[data-solid="1"] .nav-link        { color: var(--muted); }
+.fanav[data-solid="1"] .nav-link:hover  { color: var(--heading); }
+
+.nav-word                               { color: #FFFFFF; }
+.fanav[data-solid="1"] .nav-word        { color: var(--heading); }
+
+/* Hamburger bars. Over the hero they are white; on the solid bar they are
+   standalone controls and need 3:1 against it, which `--heading` gives. */
+.nav-bar-ic                             { background: #FFFFFF; }
+.fanav[data-solid="1"] .nav-bar-ic      { background: var(--heading); }
+
+/* Theme toggle. The only route to light mode on this site, so it is in the
+   bar at every breakpoint rather than folded into the mobile menu — a
+   visitor who wants light should not have to open a navigation menu to
+   find it.
+
+   34px to match the logo tile it sits opposite. The floating values are the
+   literals that the solid ones resolve to in dark, so the control does not
+   change appearance as you scroll a dark page; in light the solid state
+   flips it to dark-on-light. `currentColor` on the icon means the two SVGs
+   inherit all of this and neither carries a colour of its own. */
+.nav-toggle {
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  cursor: pointer;
+  color: #FFFFFF;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: color .3s, background .2s, border-color .3s;
+}
+.nav-toggle:hover                            { background: rgba(255,255,255,0.12); }
+.fanav[data-solid="1"] .nav-toggle {
+  color: var(--heading);
+  background: var(--fill);
+  border-color: var(--line2);
+}
+.fanav[data-solid="1"] .nav-toggle:hover     { background: rgba(var(--ink-rgb),0.12); }
 
 /* ── Mobile overrides ────────────────────────────────────────── */
 @media (max-width: 767px) {
@@ -135,7 +383,9 @@ details[open] .faq-body { animation: slide-down 0.2s ease; }
 /* All backdrop-filter elements also get -webkit- via React's WebkitBackdropFilter inline prop */
 /* Stat gradient text — ensure cross-browser */
 .stat-gradient-text {
-  background: linear-gradient(135deg, #fff 30%, #60B8FA 100%);
+  /* Same rule as above and the same reason for the missing `100%`; this is the
+     copy that actually wins the cascade. */
+  background: linear-gradient(135deg, var(--stat-from) 30%, var(--stat-to));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;

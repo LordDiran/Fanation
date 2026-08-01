@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppStore } from "@/lib/core";
 import { Logo } from "@/lib/ui";
 import { AuthHero, AuthLegal, PasswordField, SocialRow } from "@/components/auth";
+import { AuthThemeToggle } from "@/components/theme";
 
 /** Mock auth — swap for the real auth provider at integration (see README). */
 export default function Login() {
@@ -14,6 +15,7 @@ export default function Login() {
 
   return (
     <div className="authwrap">
+      <AuthThemeToggle />
       <div className="authform">
         <div className="authinner">
           <div className="authbrand"><Logo /></div>

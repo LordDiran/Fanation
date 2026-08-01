@@ -35,7 +35,39 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#07091A" />
   </head>
-  <body>
+  <!-- Dark is the default palette in `src/globals.css`, and declaring it on the
+       tag is what a visitor with JavaScript off or site data blocked gets — a
+       fully painted page rather than an unstyled one.
+
+       The script below is the only thing that changes it before first paint. It
+       is the first child of <body>, so `document.body` exists while `#root` has
+       not been parsed and the module bundle has not run; module scripts are
+       deferred, so `Nav` cannot get there first. Reading the stored choice any
+       later than this means a light visitor watches the page arrive dark and
+       then flip.
+
+       The key and the two hexes are duplicated from `src/lib/theme-storage.ts`.
+       Nothing can share them — this has to run before any module does.
+       Deliberately ES5: a syntax error here fails silently in older engines and
+       takes the anti-flash guarantee with it.
+
+       `fanation.landing.theme`, not `fanation.theme`. The marketing site and the
+       product are different origins in production, and a reader here is not
+       necessarily the signed-in user on the same machine. -->
+  <body data-theme="dark">
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("fanation.landing.theme");
+          if (t !== "light" && t !== "dark") return;
+          document.body.setAttribute("data-theme", t);
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute("content", t === "light" ? "#F3F5FA" : "#07091A");
+        } catch (e) {
+          /* Storage blocked or unavailable. The attribute on <body> holds. */
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

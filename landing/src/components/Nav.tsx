@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { applyTheme, readStoredTheme, subscribeToStoredTheme, writeStoredTheme } from '@/lib/theme-storage'
 
 const LINKS = [
   { href: '#features',  label: 'Features' },
@@ -6,6 +7,27 @@ const LINKS = [
   { href: '#earn',      label: 'Earn' },
   { href: '#faq',       label: 'FAQ' },
 ]
+
+/* 16px, stroked in `currentColor` so `.nav-toggle` owns the colour and these
+   follow it through the floating → solid change without a rule of their own. */
+function SunIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="4.2" />
+      <path d="M12 2.2v2.1M12 19.7v2.1M4.1 12H2M22 12h-2.1M6.34 6.34 4.86 4.86M19.14 19.14l-1.48-1.48M17.66 6.34l1.48-1.48M4.86 19.14l1.48-1.48" />
+    </svg>
+  )
+}
+
+function MoonIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+      strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <path d="M20.5 13.4A8.4 8.4 0 0 1 10.6 3.5a8.4 8.4 0 1 0 9.9 9.9z" />
+    </svg>
+  )
+}
 
 function Logo() {
   return (
@@ -19,7 +41,7 @@ function Logo() {
           </g>
         </svg>
       </div>
-      <span className="font-black text-[19px] text-white" style={{ letterSpacing: '-0.01em' }}>Fanation</span>
+      <span className="font-black text-[19px] nav-word" style={{ letterSpacing: '-0.01em' }}>Fanation</span>
     </div>
   )
 }
@@ -27,6 +49,9 @@ function Logo() {
 export default function Nav() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  /* Lazy initialiser: `readStoredTheme` reads storage, and running it on every
+     render would be a synchronous read per keystroke elsewhere on the page. */
+  const [theme, setTheme] = useState(readStoredTheme)
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 20)
@@ -34,77 +59,111 @@ export default function Nav() {
     return () => window.removeEventListener('scroll', fn)
   }, [])
 
+  /* The inline script in `index.html` has already written this attribute from
+     the same key, so the first run is a no-op and only a click does real work.
+     Storage is written by the click handler, not here — arriving on the page
+     is not a choice, and `verify-theme.mjs` asserts that a plain load leaves
+     the key untouched. */
+  useEffect(() => {
+    applyTheme(theme)
+  }, [theme])
+
+  useEffect(() => subscribeToStoredTheme(setTheme), [])
+
+  /* The overlay is `md:hidden`, so widening past the breakpoint hides it while
+     `open` stays true — and `open` is half of `data-solid`, which would leave a
+     desktop header stuck in its scrolled skin at the top of the page. */
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)')
+    const fn = () => { if (mq.matches) setOpen(false) }
+    mq.addEventListener('change', fn)
+    return () => mq.removeEventListener('change', fn)
+  }, [])
+
   return (
     <header
-      className="fixed top-0 inset-x-0 z-50 transition-all duration-300"
-      style={scrolled ? {
-        background: 'rgba(7,9,26,0.96)',
-        borderBottom: '1px solid rgba(255,255,255,0.07)',
-        boxShadow: '0 4px 40px rgba(0,0,0,0.4)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-      } : {
-        background: 'linear-gradient(180deg, rgba(7,9,26,0.75) 0%, transparent 100%)',
-      }}>
-      <div className="max-w-[1180px] mx-auto px-6 flex items-center justify-between" style={{ height: 70 }}>
+      className="fanav fixed top-0 inset-x-0 z-50 transition-all duration-300"
+      data-solid={scrolled || open ? '1' : '0'}>
+      {/* `relative z-20` keeps the bar above the overlay below it. Without it
+          the scrim covers its own close button: the three bars are already
+          animated into an X on open, and until now nobody could reach it. */}
+      <div className="max-w-[1180px] mx-auto px-6 flex items-center justify-between relative z-20" style={{ height: 70 }}>
         <a href="/" aria-label="Fanation home"><Logo /></a>
 
         <nav className="hidden md:flex items-center gap-7">
           {LINKS.map(l => (
-            <a key={l.href} href={l.href}
-              className="text-sm font-medium transition-colors hover:text-white"
-              style={{ color: '#7A8FB8' }}>
+            <a key={l.href} href={l.href} className="text-sm font-medium transition-colors nav-link">
               {l.label}
             </a>
           ))}
         </nav>
 
-        <div className="hidden md:flex items-center gap-3">
-          <a href="#" className="text-sm font-medium transition-colors hover:text-white" style={{ color: '#7A8FB8' }}>
+        <div className="flex items-center gap-3">
+          {/* Same title as the product's control, which is what
+              `verify-theme.mjs` matches on across all three apps. */}
+          <button
+            type="button"
+            className="nav-toggle"
+            title="Toggle light / dark"
+            aria-label="Toggle light / dark"
+            onClick={() => {
+              const next = theme === 'dark' ? 'light' : 'dark'
+              setTheme(next)
+              writeStoredTheme(next)
+            }}>
+            {theme === 'dark' ? <SunIcon /> : <MoonIcon />}
+          </button>
+
+          <a href="#" className="hidden md:inline-flex text-sm font-medium transition-colors nav-link">
             Log in
           </a>
           <a href="#"
-            className="text-[13px] font-bold px-5 py-2.5 rounded-full text-white whitespace-nowrap transition-all"
-            style={{ background: '#2599F6' }}
+            className="hidden md:inline-flex text-[13px] font-bold px-5 py-2.5 rounded-full text-white whitespace-nowrap transition-all"
+            style={{ background: 'var(--blue-solid)' }}
             onMouseEnter={e => {
-              (e.currentTarget as HTMLElement).style.background = '#1A80D8'
+              (e.currentTarget as HTMLElement).style.background = 'var(--blue-solid-hover)'
               ;(e.currentTarget as HTMLElement).style.boxShadow = '0 4px 18px rgba(37,153,246,0.35)'
             }}
             onMouseLeave={e => {
-              (e.currentTarget as HTMLElement).style.background = '#2599F6'
+              (e.currentTarget as HTMLElement).style.background = 'var(--blue-solid)'
               ;(e.currentTarget as HTMLElement).style.boxShadow = ''
             }}>
             Start Creating
           </a>
-        </div>
 
-        {/* Hamburger */}
-        <button
-          onClick={() => setOpen(v => !v)}
-          className="md:hidden flex flex-col gap-[5px] p-1 bg-transparent border-none cursor-pointer"
-          aria-label="Menu">
-          <span className="block w-6 h-0.5 bg-white rounded transition-all duration-300"
-            style={open ? { transform: 'translateY(7px) rotate(45deg)' } : {}} />
-          <span className="block w-6 h-0.5 bg-white rounded transition-all duration-300"
-            style={open ? { opacity: 0 } : {}} />
-          <span className="block w-6 h-0.5 bg-white rounded transition-all duration-300"
-            style={open ? { transform: 'translateY(-7px) rotate(-45deg)' } : {}} />
-        </button>
+          {/* Hamburger */}
+          <button
+            onClick={() => setOpen(v => !v)}
+            className="md:hidden flex flex-col gap-[5px] p-1 bg-transparent border-none cursor-pointer"
+            aria-label="Menu"
+            aria-expanded={open}>
+            <span className="block w-6 h-0.5 nav-bar-ic rounded transition-all duration-300"
+              style={open ? { transform: 'translateY(7px) rotate(45deg)' } : {}} />
+            <span className="block w-6 h-0.5 nav-bar-ic rounded transition-all duration-300"
+              style={open ? { opacity: 0 } : {}} />
+            <span className="block w-6 h-0.5 nav-bar-ic rounded transition-all duration-300"
+              style={open ? { transform: 'translateY(-7px) rotate(-45deg)' } : {}} />
+          </button>
+        </div>
       </div>
 
-      {/* Mobile overlay */}
+      {/* Mobile overlay. `z-10` rather than `z-[400]`: the header is
+          `fixed z-50` and so creates a stacking context, which means a child's
+          z-index only ever orders it against its siblings. 400 was ordering it
+          against one element — the bar — and reading as a guarantee it never
+          made. */}
       <div
-        className="md:hidden fixed inset-0 flex flex-col items-center justify-center gap-9 z-[400] transition-opacity duration-300"
-        style={{ background: 'rgba(7,9,26,0.98)', opacity: open ? 1 : 0, pointerEvents: open ? 'all' : 'none' }}>
+        className="md:hidden fixed inset-0 flex flex-col items-center justify-center gap-9 z-10 transition-opacity duration-300"
+        style={{ background: 'var(--scrim)', opacity: open ? 1 : 0, pointerEvents: open ? 'all' : 'none' }}>
         {LINKS.map(l => (
           <a key={l.href} href={l.href} onClick={() => setOpen(false)}
-            className="text-[28px] font-black text-white transition-colors"
+            className="text-[28px] font-black ink transition-colors"
             style={{ letterSpacing: '-0.02em' }}>
             {l.label}
           </a>
         ))}
         <a href="#" className="mt-4 text-white text-lg font-bold px-10 py-4 rounded-full"
-          style={{ background: '#2599F6' }}>
+          style={{ background: 'var(--blue-solid)' }}>
           Start Creating →
         </a>
       </div>

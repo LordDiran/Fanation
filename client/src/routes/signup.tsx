@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAppStore } from "@/lib/core";
 import { Icon, Logo } from "@/lib/ui";
 import { AuthHero, AuthLegal, PasswordField, SocialRow } from "@/components/auth";
+import { AuthThemeToggle } from "@/components/theme";
 
 /**
  * Create account.
@@ -41,6 +42,7 @@ export default function Signup() {
 
   return (
     <div className="authwrap">
+      <AuthThemeToggle />
       <div className="authform">
         <div className="authinner">
           <div className="authbrand"><Logo /></div>

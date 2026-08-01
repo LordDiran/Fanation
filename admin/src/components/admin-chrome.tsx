@@ -48,6 +48,24 @@ export function AdminThemeToggle() {
   );
 }
 
+/**
+ * The same control, placed for the one screen that renders outside the shell.
+ *
+ * `/login` sits outside `AdminLayout` — nesting it would loop, because the
+ * shell redirects anyone unauthenticated back to `/login` — so the topbar and
+ * its toggle do not exist there. An operator who prefers light had no way to
+ * reach it until after they had signed in.
+ *
+ * A wrapper rather than a variant of `AdminThemeToggle`, so the button stays
+ * one component: same icon, same title, same store call. `verify-theme.mjs`
+ * matches signed-in and signed-out on the same `button[title]`, and the two can
+ * never disagree about what the control does. The positioning lives entirely in
+ * `.authtoggle`.
+ */
+export function AdminAuthThemeToggle() {
+  return <div className="authtoggle"><AdminThemeToggle /></div>;
+}
+
 /** Governance confirm — reason-gated, duration picker, type-to-confirm for irreversible actions. */
 function ConfirmModal({ cfg, close }: { cfg: ConfirmCfg; close: () => void }) {
   const [ri, setRi] = useState<number | null>(null);
