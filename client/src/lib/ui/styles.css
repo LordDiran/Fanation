@@ -338,17 +338,37 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
    composite of ~201, which is 3.9:1 for --muted and a fail. The copy block is a
    measured 319px tall with a one-line title and 358px with two — it does not
    scale with the window, it is pinned to the bottom of it — so the wash is
-   pinned the same way. Fully opaque from 400px off the floor, ramping from 500,
-   and the copy is inside that band at every height the hero has. Stops that
-   invert on a very short window clamp to the previous one, which degrades to a
-   steeper ramp in the right place rather than to a wrong one. */
+   pinned the same way, and the copy is inside that band at every height the
+   hero has.
+
+   Pinning it was right. Doing it in one step was not. The wash went .36 → .95
+   across the 100px between those two anchors, and on a tall window that is a
+   ruled line drawn straight across the photographs: full-strength pictures
+   above it, near-solid white below, and the copy sitting on the white half
+   looking like it had been pasted onto a different image. Dark never showed
+   this because its own .42 → .93 move is spread over 48% of the column, which
+   on a 900px hero is more than 400px of travel.
+
+   So the same distance is given back here. The ramp runs from 820px off the
+   floor to 380px, through two intermediate stops so it eases rather than
+   climbs in a straight line, and the fully-washed anchor still lands above the
+   tallest the copy block gets. Measured at the sub-line the ground is 238 —
+   4.90 for --muted, against 4.46 if the .90 stop had been left to carry it.
+   Stops that invert on a very short window clamp to the previous one, which
+   degrades to a steeper ramp in the right place rather than to a wrong one. */
 [data-theme="light"] .authhero{background:var(--bg2)}
-[data-theme="light"] .authmosaic{opacity:.82}
+/* Held at .82 — the black floor a tile can paint is what that number protects.
+   The photographs read louder here than anywhere else in light, though, because
+   the veil above the ramp is thin by design, so a little saturation comes out to
+   put them in the same register as the rest of the palette. */
+[data-theme="light"] .authmosaic{opacity:.82;filter:saturate(.92)}
 [data-theme="light"] .authveil{background:linear-gradient(175deg,
-  rgba(246,248,252,.58) 0,
-  rgba(246,248,252,.34) 32%,
-  rgba(246,248,252,.36) calc(100% - 500px),
-  rgba(243,245,250,.95) calc(100% - 400px),
+  rgba(246,248,252,.56) 0,
+  rgba(246,248,252,.40) 30%,
+  rgba(246,248,252,.46) calc(100% - 820px),
+  rgba(247,249,252,.70) calc(100% - 640px),
+  rgba(245,247,251,.88) calc(100% - 490px),
+  rgba(243,245,250,.96) calc(100% - 380px),
   rgba(243,245,250,.97) 100%)}
 [data-theme="light"] .authcopy{color:var(--text)}
 [data-theme="light"] .authsub{color:var(--muted)}
