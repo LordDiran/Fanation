@@ -97,6 +97,50 @@ export function useInView<T extends HTMLElement = HTMLDivElement>(amount = 0.55)
 }
 
 /**
+ * Has this element come close enough to be worth the bytes?
+ *
+ * A sibling of `useInView`, and deliberately not the same hook. `useInView`
+ * answers "is it on screen right now", which is the question playback asks —
+ * it has to be able to go false again so a clip that scrolls away stops
+ * decoding. This one answers "has it ever come close", which is the question
+ * the network asks, and that answer must never go back: dropping a poster the
+ * moment it leaves the fold would just re-fetch it on the way back up. So this
+ * one latches, and disconnects the observer the first time it fires.
+ *
+ * `margin` is how far ahead of the fold to arm. Two hundred pixels is about one
+ * flick of a trackpad, which is enough for a still to have decoded by the time
+ * it matters and little enough that a nine-post feed does not fetch all nine.
+ *
+ * `now` is the escape hatch for the places where the deferral is pure cost —
+ * a screen that renders exactly one clip and that clip is the reason you opened
+ * the screen. It is folded into the returned value rather than the initial
+ * state so a call site that computes it can still change its mind.
+ *
+ * The initial value is a fallback, not optimism: where there is no
+ * IntersectionObserver there is no signal to wait for, so the answer is yes and
+ * everything loads exactly as it did before this hook existed. Starting false
+ * there would be a browser that never loads a poster at all.
+ */
+export function useNear<T extends HTMLElement = HTMLDivElement>(margin = 200, now = false) {
+  const ref = useRef<T>(null);
+  const [near, setNear] = useState(() => typeof IntersectionObserver === "undefined");
+  const on = near || now;
+  useEffect(() => {
+    if (on) return;
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      setNear(true);
+      io.disconnect();
+    }, { rootMargin: `${margin}px` });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [on, margin]);
+  return [ref, on] as const;
+}
+
+/**
  * A person.
  *
  * The initials disc is not gone — it is the floor. The gradient paints first
@@ -230,17 +274,40 @@ export function Scrim({ from = 0.8, height = "58%", top = false, hold = 0 }: { f
  *
  * `active` is what a snap feed drives. Only the reel on screen should be
  * decoding; the rest hold their poster frame.
+ *
+ * `active` governs playback; whether anything is fetched at all is a separate
+ * question, and one the platform gives no help with. An `<img>` carries
+ * `loading="lazy"` and the browser honours it. A `<video poster>` has no such
+ * attribute — the poster is a full image fetched the moment the element parses,
+ * so nine posts in a feed paid for nine photographs before a person had scrolled
+ * past the first. So the element is handed nothing until `useNear` says it is
+ * close, and `src` goes with `poster`: a poster with no video is a still that
+ * never moves, a video with no poster is a hole while it buffers, and holding
+ * both back also spares nine `preload="metadata"` range requests.
+ *
+ * Nothing goes blank in the meantime. The wrapper's gradient is seeded from the
+ * path rather than fetched from it, so it is already painted, costs no network,
+ * and is the same floor that has always been there behind a decoding poster —
+ * which is why it reads the props and not the deferred values.
+ *
+ * `priority` is for a screen that renders exactly one clip and that clip is the
+ * reason the screen was opened — a reel, a live stage. There is nothing below
+ * the fold to save, and waiting a frame for the observer would put a gradient
+ * where a cached still could have painted immediately.
  */
-export function Loop({ src, poster, active = true, sound = false, radius, fit = "cover", style, children }: {
-  src: string; poster?: string; active?: boolean; sound?: boolean;
-  radius?: number | string; fit?: "cover" | "contain"; style?: React.CSSProperties; children?: React.ReactNode;
+export function Loop({ src, poster, active = true, sound = false, radius, fit = "cover", priority, style, children }: {
+  src: string; poster?: string; active?: boolean; sound?: boolean; radius?: number | string;
+  fit?: "cover" | "contain"; priority?: boolean; style?: React.CSSProperties; children?: React.ReactNode;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
+  const [box, near] = useNear<HTMLDivElement>(200, priority);
+  const vsrc = near ? src : undefined;
+  const vposter = near ? poster : undefined;
 
   useEffect(() => {
     const v = ref.current;
     if (!v) return;
-    if (active) {
+    if (active && vsrc) {
       const p = v.play();
       // A rejected play() is normal — a background tab, or a browser that has
       // not seen a gesture yet. The poster stays up and nothing is broken.
@@ -249,18 +316,18 @@ export function Loop({ src, poster, active = true, sound = false, radius, fit = 
       v.pause();
       v.currentTime = 0;
     }
-  }, [active, src]);
+  }, [active, vsrc]);
 
   useEffect(() => {
     if (ref.current) ref.current.muted = !sound;
   }, [sound]);
 
   return (
-    <div style={{
+    <div ref={box} style={{
       position: "absolute", inset: 0, borderRadius: radius, overflow: "hidden",
       background: bg(poster || src), ...style,
     }}>
-      <video ref={ref} src={src} poster={poster} muted={!sound} loop playsInline preload="metadata"
+      <video ref={ref} src={vsrc} poster={vposter} muted={!sound} loop playsInline preload="metadata"
         style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: fit, display: "block" }} />
       {children}
     </div>

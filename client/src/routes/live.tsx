@@ -98,7 +98,7 @@ export default function LivePage() {
             {loop ? (
               <>
                 <Photo sizes={SIZES.stage} src={still} seed="liveelena" blur={30} scale={1.2} />
-                <Loop src={loop} poster={still} fit="contain" style={{ background: "transparent" }} />
+                <Loop src={loop} poster={still} fit="contain" priority style={{ background: "transparent" }} />
               </>
             ) : (
               <Photo sizes={SIZES.stage} src={still} seed="liveelena" />

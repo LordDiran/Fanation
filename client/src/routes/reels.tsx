@@ -141,7 +141,7 @@ export default function ReelsPage() {
           {/* `key` forces a fresh <video> per reel: without it React reuses the
               element and the old frame hangs for a beat over the new source. */}
           {loop
-            ? <Loop key={c.id} src={loop} poster={still} active={!paused} />
+            ? <Loop key={c.id} src={loop} poster={still} active={!paused} priority />
             : <Photo sizes={SIZES.reel} src={still} seed={c.id} />}
 
           {/* The frames are real photographs and a third of them are bright, so

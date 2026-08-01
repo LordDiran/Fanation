@@ -36,7 +36,7 @@ export default function GoLivePage() {
       <div className="grid gmain-15 gap16">
         <div className="card" style={{ padding: 0, height: 420, position: "relative", overflow: "hidden", background: "var(--card2)" }}>
           {live && (camLoop
-            ? <Loop src={camLoop} poster={camStill} active={live} />
+            ? <Loop src={camLoop} poster={camStill} active={live} priority />
             : <Photo sizes={SIZES.studioStage} src={camStill} seed="mystream" />)}
           {!live && (
             <div className="col center gap8" style={{ position: "absolute", inset: 0 }}>
