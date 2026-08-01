@@ -67,8 +67,11 @@ const ROUTES = {
   admin: ["/overview", "/users", "/creators", "/moderation", "/payouts", "/kyc", "/finance", "/reports"],
   landing: ["/"],
 };
-/* Routes that render outside the shell, measured before the click. */
-const PRE = { client: ["/login", "/signup"], admin: [], landing: [] };
+/* Routes that render outside the shell, measured before the click. Admin's `/`
+   joined once its sign-in screen got a painted backdrop: the logo lockup above
+   the card now sits on a gradient rather than a flat field, which makes it ink
+   over art and puts it here rather than in lightaudit. */
+const PRE = { client: ["/login", "/signup"], admin: ["/"], landing: [] };
 const SIGNIN = { client: "button.btn-blue", admin: "button:has-text('Sign in')", landing: null };
 const THEME_KEY = { client: "fanation.theme", admin: "fanation.admin.theme", landing: "fanation.landing.theme" };
 
@@ -92,12 +95,32 @@ const collect = (chipSel) => {
     const a = bg ? (bg[1].split(",")[3] === undefined ? 1 : parseFloat(bg[1].split(",")[3])) : 0;
     return a >= 0.995 || (cs.backgroundImage !== "none" && !/gradient/.test(cs.backgroundImage));
   };
-  /* An ancestor chain that reaches a photograph without an opaque surface in
-     between. Same question as overMedia, asked for elements that sit beside the
-     picture rather than inside its box. */
+  /* A gradient lightaudit cannot resolve analytically. Its parser reads the
+     stops out of a gradient and scores the worst one, and it gives up the moment
+     any stop is translucent — because then the surface under a letter is the
+     composite of that stop with whatever is beneath it, layer by layer, and
+     there is no single colour to name. It reports those as OVER ART and does not
+     score them.
+
+     Nothing scored them. The rule was "photographs are pixels, gradients are
+     arithmetic", and a stack of translucent radials is neither. This is the
+     other half of that split: lightaudit measures what it can compute, and
+     anything it hands over arrives here to be measured the honest way, by
+     reading the pixels that actually got painted. */
+  const softGradient = (cs) => {
+    const bg = cs.backgroundImage;
+    if (!bg || bg === "none" || !/gradient\(/i.test(bg)) return false;
+    return (bg.match(/rgba\([^()]*\)/g) || [])
+      .some((c) => parseFloat(c.split(",")[3]) < 0.999);
+  };
+  /* An ancestor chain that reaches a photograph — or one of those gradients —
+     without an opaque surface in between. Same question as overMedia, asked for
+     elements that sit beside the picture rather than inside its box. */
   const artBackdrop = (el) => {
-    for (let p = el.parentElement; p; p = p.parentElement) {
+    for (let p = el; p; p = p.parentElement) {
       const cs = getComputedStyle(p);
+      if (softGradient(cs)) return true;
+      if (p === el) continue;
       if (opaque(cs)) return false;
       if (overMedia(p)) return true;
       if (p.querySelector("img,video") && getComputedStyle(p).position !== "static") return true;

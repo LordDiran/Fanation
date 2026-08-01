@@ -31,8 +31,11 @@ const ROUTES = {
 /* Routes that render outside the shell, walked before the sign-in click.
    These were a blind spot: `/login` and `/signup` are the only two screens that
    carry their own frame, they are the first thing anyone sees, and nothing in
-   this pass looked at them until the auth hero got a light palette of its own. */
-const PRE = { client: ['/login', '/signup'], admin: [], landing: [] };
+   this pass looked at them until the auth hero got a light palette of its own.
+   Admin's `/` is the same screen for the console and joined the list when its
+   backdrop was rebuilt — before that, the one page every member of staff sees
+   every morning was the only page nothing checked. */
+const PRE = { client: ['/login', '/signup'], admin: ['/'], landing: [] };
 /* `null` means the app has no signed-out boundary to cross. */
 const SIGNIN = { client: 'button.btn-blue', admin: "button:has-text('Sign in')", landing: null };
 

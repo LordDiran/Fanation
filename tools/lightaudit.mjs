@@ -34,6 +34,14 @@ const ROUTES = {
 };
 /* `null` where there is no signed-out boundary to cross. */
 const SIGNIN = { client: 'button.btn-blue', admin: "button:has-text('Sign in')", landing: null };
+/* Routes that render outside the shell, walked with `goto` before the sign-in
+   click. The same blind spot darkdiff carried: the signed-out screens are the
+   first thing anyone sees and nothing measured their contrast. Reaching them
+   costs a real navigation because `authed` is an in-memory field — a `goto`
+   after signing in re-mounts the app signed out, which is fine here only
+   because these run first. */
+const PRE = { client: ['/login', '/signup'], admin: ['/'], landing: [] };
+const THEME_KEY = { client: 'fanation.theme', admin: 'fanation.admin.theme', landing: 'fanation.landing.theme' };
 
 /* Runs in the page. Returns one record per element that paints a glyph. */
 const probe = () => {
@@ -281,12 +289,15 @@ await page.addInitScript(() => {
     document.head.appendChild(s);
   });
 });
-await page.goto(ORIGIN + '/', { waitUntil: 'networkidle' });
-if (SIGNIN[KIND]) {
-  await page.click(SIGNIN[KIND]);
-  await page.waitForTimeout(700);
-}
-await page.click('button[title="Toggle light / dark"]');
+/* Light used to be reached by clicking the toggle after signing in, which is why
+   nothing signed-out was ever measured: there was no light on screen until the
+   app was already inside. Seeding storage instead paints light before the first
+   frame, on every route, which is also the production path — the pre-paint
+   script in index.html reads exactly this key. The toggle is still asserted to
+   exist so removing it cannot pass unnoticed; it is no longer clicked, because
+   clicking it now would turn the lights back off. */
+await page.addInitScript(([k, t]) => localStorage.setItem(k, t), [THEME_KEY[KIND], 'light']);
+await page.goto(ORIGIN + (PRE[KIND][0] || '/'), { waitUntil: 'networkidle' });
 await page.waitForTimeout(400);
 const theme = await page.evaluate(() => document.body.dataset.theme);
 if (theme !== 'light') { console.error(`✗ theme is "${theme}", not light — aborting`); process.exit(1); }
@@ -294,9 +305,23 @@ if (theme !== 'light') { console.error(`✗ theme is "${theme}", not light — a
 const fails = new Map(), iconFails = new Map();
 let nText = 0, nIcon = 0, nArt = 0, artSet = new Map();
 
-for (const r of ROUTES[KIND]) {
-  await page.evaluate((to) => { history.pushState({}, '', to); dispatchEvent(new PopStateEvent('popstate')); }, r);
+const WALK = [...PRE[KIND].map((r) => [r, 'pre']), ...ROUTES[KIND].map((r) => [r, 'in'])];
+let signedIn = false, sawToggle = false;
+
+for (const [r, phase] of WALK) {
+  if (phase === 'pre') {
+    await page.goto(ORIGIN + r, { waitUntil: 'networkidle' });
+  } else {
+    if (!signedIn && SIGNIN[KIND]) {
+      await page.goto(ORIGIN + '/', { waitUntil: 'networkidle' });
+      await page.click(SIGNIN[KIND]);
+      signedIn = true;
+      await page.waitForTimeout(700);
+    }
+    await page.evaluate((to) => { history.pushState({}, '', to); dispatchEvent(new PopStateEvent('popstate')); }, r);
+  }
   await page.waitForTimeout(450);
+  sawToggle ||= await page.locator('button[title="Toggle light / dark"]').count() > 0;
   const { text, icons, art } = await page.evaluate(probe);
   nText += text.length; nIcon += icons.length; nArt += art.length;
   for (const a of art) {
@@ -320,9 +345,10 @@ for (const r of ROUTES[KIND]) {
   }
 }
 await browser.close();
+if (!sawToggle) { console.error('✗ no light/dark toggle on any route — aborting'); process.exit(1); }
 
 const sorted = [...fails.values()].sort((a, b) => a.got - b.got);
-console.log(`\n  ${KIND} — light · ${ROUTES[KIND].length} routes · ${nText} text nodes · ${nIcon} icons · ${nArt} over art\n`);
+console.log(`\n  ${KIND} — light · ${WALK.length} routes · ${nText} text nodes · ${nIcon} icons · ${nArt} over art\n`);
 console.log(`  TEXT — 1.4.3 (${sorted.length} distinct failing combinations, ${sorted.reduce((s, x) => s + x.n, 0)} occurrences)`);
 for (const f of sorted) {
   console.log(`    ${String(f.got).padStart(5)} / ${f.need}   ${f.fg} on ${f.bg}   ${String(f.size).padStart(4)}px w${f.weight}  ×${String(f.n).padStart(3)}  ${f.routes.size} routes`);
