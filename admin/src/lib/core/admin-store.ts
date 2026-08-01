@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import { create } from "zustand";
 import { ADM_KYC, ADM_PAY, ADM_REPORTS, ADM_USERS } from "./data";
+import { readStoredTheme, writeStoredTheme } from "./theme-storage";
 import type { AdminPayout, AdminUser, AuditEntry, ConfirmCfg, KycApp, ModReport, ToastMsg } from "./types";
 
 /**
@@ -46,7 +47,11 @@ export interface AdminState {
 
 export const useAdminStore = create<AdminState>()((set) => ({
   authed: false,
-  theme: "dark",
+  /* Read at module evaluation, which happens after the pre-paint script in
+     `index.html` has already put the same value on `<body>`. Both read the same
+     key, so React mounts agreeing with what is on screen instead of correcting
+     it. Everything else in this store is session state and stays in memory. */
+  theme: readStoredTheme(),
   users: ADM_USERS,
   kyc: ADM_KYC,
   pay: ADM_PAY,
@@ -65,7 +70,13 @@ export const useAdminStore = create<AdminState>()((set) => ({
   confirm: null,
 
   setAuthed: (v) => set({ authed: v }),
-  setTheme: (t) => set({ theme: t }),
+  /* Write first, then set. Only an explicit choice is ever stored — an operator
+     who never touches the toggle leaves no key behind, so the default stays
+     changeable without stranding anyone on a value they never picked. */
+  setTheme: (t) => {
+    writeStoredTheme(t);
+    set({ theme: t });
+  },
 
   toast: (msg, tone = "") => {
     const id = uid();

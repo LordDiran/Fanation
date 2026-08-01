@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAdminStore } from "@/lib/core";
+import { applyTheme, subscribeToStoredTheme, useAdminStore } from "@/lib/core";
 import type { ConfirmCfg } from "@/lib/core";
 import { Icon, ToastStack } from "@/lib/ui";
 
@@ -8,6 +8,12 @@ import { Icon, ToastStack } from "@/lib/ui";
  * `index.html`, not by React, so the theme is written onto it as an attribute —
  * `tokens.css` keys its light palette off `[data-theme="light"]`, which matches
  * on `<body>` exactly as it did before.
+ *
+ * React is not first to write that attribute any more. The pre-paint script in
+ * `index.html` sets it from storage before this component exists, and the store
+ * initialises from the same key, so the effect below is a no-op on load and
+ * only does real work once someone touches the toggle. That ordering is the
+ * whole point: an operator on light must never watch the console arrive dark.
  *
  * Mounted once at the top of the route tree: a confirm opened on /payouts must
  * not be unmounted by the navigation it triggers.
@@ -18,8 +24,11 @@ export function AdminChrome() {
   const confirm = useAdminStore((s) => s.confirm);
   const close = useAdminStore((s) => s.closeConfirm);
   useEffect(() => {
-    document.body.dataset.theme = theme;
+    applyTheme(theme);
   }, [theme]);
+  /* Sets state only — writing back would be re-storing a value the tab that
+     raised the event has already stored. */
+  useEffect(() => subscribeToStoredTheme((t) => useAdminStore.setState({ theme: t })), []);
   return (
     <>
       <ToastStack list={toasts} />

@@ -16,10 +16,35 @@
     <meta name="robots" content="noindex, nofollow" />
     <meta name="theme-color" content="#07091A" />
   </head>
-  <!-- Dark is the default palette in `tokens.css`; `AdminChrome` overwrites this
-       attribute on mount. Declaring it here means the first paint is already the
-       right colour instead of flashing. -->
+  <!-- Dark is the default palette in `tokens.css`, and declaring it on the tag
+       is what an operator with JavaScript off or site data blocked gets — a
+       fully painted console rather than an unstyled one.
+
+       The script below is the only thing that changes it before first paint. It
+       is the first child of <body>, so `document.body` exists while `#root` has
+       not been parsed and the module bundle has not run; module scripts are
+       deferred, so `AdminChrome` cannot get there first. Reading the stored
+       choice any later than this means an operator on light watches the console
+       arrive dark and then flip.
+
+       The key and the two hexes are duplicated from
+       `src/lib/core/theme-storage.ts`. Nothing can share them — this has to run
+       before any module does. Deliberately ES5: a syntax error here fails
+       silently in older engines and takes the anti-flash guarantee with it. -->
   <body data-theme="dark">
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem("fanation.admin.theme");
+          if (t !== "light" && t !== "dark") return;
+          document.body.setAttribute("data-theme", t);
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute("content", t === "light" ? "#F3F5FA" : "#07091A");
+        } catch (e) {
+          /* Storage blocked or unavailable. The attribute on <body> holds. */
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

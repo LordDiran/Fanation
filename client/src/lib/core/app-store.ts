@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { SEED_FEED, TX_SEED } from "./data";
+import { readStoredTheme, writeStoredTheme } from "./theme-storage";
 import type { ModalState, PayoutReq, PollOpt, Post, ToastMsg, TxItem } from "./types";
 
 /**
@@ -83,7 +84,11 @@ const drop = <T extends object>(m: T, k: string): T => {
 
 export const useAppStore = create<AppState>()((set, get) => ({
   authed: false,
-  theme: "dark",
+  /* Read at module evaluation, which happens after the pre-paint script in
+     `index.html` has already put the same value on `<body>`. Both read the same
+     key, so React mounts agreeing with what is on screen instead of correcting
+     it. Everything else in this store is session state and stays in memory. */
+  theme: readStoredTheme(),
   coins: 12400,
   walletTx: [],
   payoutReqs: [],
@@ -115,7 +120,13 @@ export const useAppStore = create<AppState>()((set, get) => ({
   modal: null,
 
   setAuthed: (v) => set({ authed: v }),
-  setTheme: (t) => set({ theme: t }),
+  /* Write first, then set. Only an explicit choice is ever stored — a visitor
+     who never touches the toggle leaves no key behind, so the default stays
+     changeable without stranding anyone on a value they never picked. */
+  setTheme: (t) => {
+    writeStoredTheme(t);
+    set({ theme: t });
+  },
 
   toast: (msg, tone = "", actionLabel, action) => {
     const id = uid();
