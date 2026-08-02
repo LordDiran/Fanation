@@ -396,7 +396,7 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
    Stops that invert on a very short window clamp to the previous one, which
    degrades to a steeper ramp in the right place rather than to a wrong one. */
 [data-theme="light"] .authhero{background:var(--bg2)}
-   Everything above is the reasoning that produced the ramp below it, and the
+/* Everything above is the reasoning that produced the ramp below it, and the
    ramp below it was wrong. Not by a ratio — every role in this hero passed, and
    `tools/artcopy.mjs` re-measures them at eight points around the drift loop to
    say so. Wrong because of what it cost: the ground under the copy measured
