@@ -219,6 +219,64 @@ Two things to know about `verify-responsive.mjs`:
 
 `smoke.mjs` navigates client-side throughout — clicking the nav, never `goto` — because a hard reload logs you out (boundary 2). One assertion proves that deliberately, then signs in again.
 
+### 6.5 The full gate
+
+The three scripts above are the minimum. There is a longer gate that covers theme, contrast, motion, layout stability and payload, and it is what runs before a release rather than before a commit. Every tool takes its arguments in a fixed order and several of them disagree with each other about that order, so the list below is the reference — `lightaudit` takes the origin first, `onart` and `borderaudit` take the kind first.
+
+```bash
+for a in client admin landing; do ( cd $a && npx tsc --noEmit && npx vite build ); done
+
+node tools/darkdiff.mjs      http://localhost:4300 http://localhost:4200 client
+node tools/lightaudit.mjs    http://localhost:4200 client
+node tools/onart.mjs         client http://localhost:4200
+node tools/borderaudit.mjs   client http://localhost:4200 --theme=dark,light
+node tools/verify-theme.mjs
+node tools/verify-media.mjs
+node tools/verify-responsive.mjs
+node tools/smoke.mjs
+node tools/motioncheck.mjs   http://localhost:4202
+node tools/hero-probe.mjs    http://localhost:4202 light
+node tools/clsprobe.mjs      http://localhost:4200 /login /signup
+node tools/variants.mjs --check
+node tools/perfaudit.mjs     landing
+```
+
+Preview servers run on 4200 (client), 4201 (admin), 4202 (landing). `perfaudit.mjs` defaults to 3000–3002, which are dead — export `BASE_CLIENT`, `BASE_ADMIN` and `BASE_LANDING` or it will report nothing at all. `darkdiff` needs a second set of servers on 4300–4302 built from the commit you are comparing against.
+
+Results at the head of this branch:
+
+| Check | Result |
+|---|---|
+| `tsc --noEmit` and `vite build`, all three apps | RC 0, zero warnings |
+| `darkdiff` client / admin | 7832 and 2129 elements, **0 differing** |
+| `darkdiff` landing | 737 elements, **4 differing** — the four authorised carousel `backgroundImage` URLs moving from `.jpg` to `.webp` |
+| `lightaudit` client / admin / landing | 1.4.3 and 1.4.11 both **0 failing** on all three |
+| `onart` client / admin / landing | **0 of 366**, **0 of 204**, **0 of 116** below bar |
+| `borderaudit` client / admin / landing | **0 of 284**, **0 of 70**, **0 of 20** gated edges failing |
+| `verify-theme` | 166 passed, 0 failed |
+| `verify-media` | 181 manifest paths, 42 admin images, 3 posters — 0 unresolved |
+| `verify-responsive` (client) | PASS, 0 images failed to decode |
+| `smoke` | 27 passed, 0 failed |
+| `motioncheck` | PASS, 13 checks |
+| `hero-probe` light | PASS, 0 of 10 below bar — H1 at 9.46:1, ghost CTA at 10.09:1 |
+| `clsprobe` `/login`, `/signup`, landing `/` | CLS 0.0000 on all three |
+| `variants --check` | 490 rungs present, 0 missing |
+| `perfaudit` cold — client / admin / landing | 260.5 KB / 167.9 KB / 354.8 KB, CLS 0 |
+
+### 6.6 What the gate does not cover
+
+Four gaps, stated as gaps rather than buried as passes.
+
+**Focus and selection states are unmeasured.** Every `borderaudit` report has zero `focus` rows because the prober reads the resting DOM and never clicks or tabs. That matters most on `/studio/vault`, where a selected tile carries `outline: 2px solid var(--blue-ink)` and nothing has ever checked that outline against the tile behind it in either theme. Someone has to either teach the prober to tab through and re-measure, or check it by hand.
+
+**`verify-responsive.mjs` is client-only by construction, not by accident.** Its route table is 25 client paths and it signs in at `/login` and waits for `/feed`. Pointed at 4201 or 4202 it times out — that is the tool refusing a job it was never built for, not a regression in admin or landing. Admin and landing responsive layout is therefore unverified by any automated check.
+
+**Landing ships as one JavaScript chunk** and `perfaudit` flags it every run. For a single page with no routes that is the correct shape, and splitting it would add a request to save nothing. The line in the report is noise, but it is permanent noise, so read past it rather than fixing it.
+
+**Accent edges are design debt.** 167 of 202 labelled accent edges on the client, 200 of 200 on admin and 26 of 30 on landing score below 3:1 against their backgrounds. None of these are 1.4.11 failures — in every case the label text carries the meaning and the edge only decorates it, which is why the gated count is zero. But a colour-blind user gets less from those edges than the design intends, and the number is large enough to be worth a deliberate decision rather than a silent one.
+
+**One more thing to look at with your eyes.** The contrast tools score text against whatever is behind it, so flooding white over a photograph until the text passes will produce a clean report and an invisible photograph. That is exactly what happened to the light-mode landing hero and the client auth mosaic, and three separate audits called it a pass. Automated scores are a floor. Take a 1440×900 screenshot in both themes and look at it before you believe the table above.
+
 ---
 
 ## 7. Security
