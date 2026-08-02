@@ -24,7 +24,7 @@ const config: Config = {
         green: "#22C55E",
       },
       fontFamily: {
-        sans: ["Inter Variable", "Inter", "system-ui", "sans-serif"],
+        sans: ["Inter Variable", "Inter", "Inter Fallback", "system-ui", "sans-serif"],
       },
     },
   },
