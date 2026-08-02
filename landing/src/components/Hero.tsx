@@ -1,21 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
+import { Pic, SIZES } from '../lib/images'
 import { useInView, useReducedMotion } from '../lib/motion'
 
 // Carousel: platform-consistent photos that look dramatic blurred
 // Uses creators-section photos (different from hero mosaic) + atmospheric new additions
 const CAROUSEL_PHOTOS = [
-  'creator-dembe.jpg',
-  'creator-nadia.jpg',
-  'creator-tobi.jpg',
-  'creator-sofia.jpg',
+  'creator-dembe.webp',
+  'creator-nadia.webp',
+  'creator-tobi.webp',
+  'creator-sofia.webp',
 ]
 
 const AVATARS = [
-  { file: 'creator-amara.jpg',  name: 'Amara' },
-  { file: 'creator-marcus.jpg', name: 'James' },
-  { file: 'creator-aisha.jpg',  name: 'Priscilia' },
-  { file: 'creator-tobi.jpg',   name: 'David' },
-  { file: 'creator-nadia.jpg',  name: 'Sofia' },
+  { file: 'creator-amara.webp',  name: 'Amara' },
+  { file: 'creator-marcus.webp', name: 'James' },
+  { file: 'creator-aisha.webp',  name: 'Priscilia' },
+  { file: 'creator-tobi.webp',   name: 'David' },
+  { file: 'creator-nadia.webp',  name: 'Sofia' },
 ]
 
 const GIFTS = [
@@ -198,8 +199,9 @@ export default function Hero() {
                 {AVATARS.map((a, i) => (
                   <div key={i} className="w-9 h-9 rounded-full overflow-hidden flex-shrink-0"
                     style={{ border: '2px solid var(--hero-ring)', marginLeft: i === 0 ? 0 : -9 }}>
-                    <img
+                    <Pic
                       src={`/images/${a.file}`}
+                      sizes={SIZES.heroFace}
                       alt={a.name}
                       loading="lazy"
                       decoding="async"
@@ -228,7 +230,7 @@ export default function Hero() {
               {/* Card A: Sofia — col1, rows 1-2 (LEFT TALL) */}
               <div className="relative rounded-[18px] overflow-hidden"
                 style={{ gridRow: '1/span 2', gridColumn: 1 }}>
-                <img src="/images/creator-amara.jpg" alt=""
+                <Pic src="/images/creator-amara.webp" sizes={SIZES.heroCard} alt=""
                   style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 40%,rgba(7,9,26,0.92) 100%)' }} />
                 <div className="hero-artchip absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"
@@ -258,7 +260,7 @@ export default function Hero() {
               {/* Card B: Elena LIVE — col2, row 1 (RIGHT TOP) */}
               <div className="relative rounded-[18px] overflow-hidden"
                 style={{ gridRow: 1, gridColumn: 2, height: 250 }}>
-                <img src="/images/creator-elena.jpg" alt=""
+                <Pic src="/images/creator-elena.webp" sizes={SIZES.heroCard} alt=""
                   style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }} />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 30%,rgba(7,9,26,0.9) 100%)' }} />
                 <div className="absolute top-3 left-3 flex items-center gap-1 text-white font-black rounded-full px-2.5 py-1"
@@ -278,7 +280,7 @@ export default function Hero() {
               {/* Card C: Marcus — col2, row 2 (RIGHT BOTTOM) */}
               <div className="relative rounded-[18px] overflow-hidden"
                 style={{ gridRow: 2, gridColumn: 2, height: 200 }}>
-                <img src="/images/creator-marcus.jpg" alt=""
+                <Pic src="/images/creator-marcus.webp" sizes={SIZES.heroCard} alt=""
                   style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center' }} />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0) 30%,rgba(7,9,26,0.9) 100%)' }} />
                 <div className="hero-artchip absolute top-3 left-3 font-bold rounded-full px-2.5 py-1"

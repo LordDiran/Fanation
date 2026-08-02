@@ -1,6 +1,7 @@
 import Nav from '@/components/Nav'
 import Hero from '@/components/Hero'
 import SocialIcons from '@/components/SocialIcons'
+import { Pic, SIZES } from '@/lib/images'
 
 // ─── Data ────────────────────────────────────────────────────────────────────
 
@@ -87,12 +88,12 @@ const FEATURES = [
 ]
 
 const CREATORS = [
-  { name: 'Marcus', role: 'Podcaster',         avg: '$2.8K avg/mo', photo: '/images/creator-marcus.jpg' },
-  { name: 'Dembe',  role: 'Fitness Coach',     avg: '$1.9K avg/mo', photo: '/images/creator-dembe.jpg' },
-  { name: 'Sofia',  role: 'Model · Creator',   avg: '$5.2K avg/mo', photo: '/images/creator-sofia.jpg' },
-  { name: 'Aisha',  role: 'Travel Creator',    avg: '$3.1K avg/mo', photo: '/images/creator-aisha.jpg' },
-  { name: 'Tobi',   role: 'Vlogger',           avg: '$2.4K avg/mo', photo: '/images/creator-tobi.jpg' },
-  { name: 'Nadia',  role: 'Lifestyle Creator', avg: '$4.0K avg/mo', photo: '/images/creator-nadia.jpg' },
+  { name: 'Marcus', role: 'Podcaster',         avg: '$2.8K avg/mo', photo: '/images/creator-marcus.webp' },
+  { name: 'Dembe',  role: 'Fitness Coach',     avg: '$1.9K avg/mo', photo: '/images/creator-dembe.webp' },
+  { name: 'Sofia',  role: 'Model · Creator',   avg: '$5.2K avg/mo', photo: '/images/creator-sofia.webp' },
+  { name: 'Aisha',  role: 'Travel Creator',    avg: '$3.1K avg/mo', photo: '/images/creator-aisha.webp' },
+  { name: 'Tobi',   role: 'Vlogger',           avg: '$2.4K avg/mo', photo: '/images/creator-tobi.webp' },
+  { name: 'Nadia',  role: 'Lifestyle Creator', avg: '$4.0K avg/mo', photo: '/images/creator-nadia.webp' },
 ]
 
 const EARN = [
@@ -121,9 +122,9 @@ const COMPARE_FANATION = [
 ]
 
 const TESTIMONIALS = [
-  { name: 'Priscilia O.', handle: '@yummychill54', role: 'Lifestyle Creator', stat: '+$2,480', stat2: 'this month',  photo: '/images/creator-amara.jpg',  quote: "I left my old platform after three years of watching fees eat my income. Two months on Fanation and I've tripled what I made there — the live gifting alone covered my rent in one stream." },
-  { name: 'Marcus T.',    handle: '@marcusbeats',  role: 'Musician',          stat: '+$1,800', stat2: 'in 48 hours', photo: '/images/creator-marcus.jpg', quote: "Pay-per-view drops changed everything. I put a track behind a paywall, promoted it on my feed, and made $1,800 in 48 hours. I was giving that music away for free before." },
-  { name: 'Lara K.',      handle: '@laracreates',  role: 'Vlogger',           stat: '+$3,100', stat2: 'last month',  photo: '/images/creator-aisha.jpg',  quote: "My fans feel genuinely close to me here — the DMs and group chats feel different. And the payouts are fast. First withdrawal hit my account within 24 hours of signing up." },
+  { name: 'Priscilia O.', handle: '@yummychill54', role: 'Lifestyle Creator', stat: '+$2,480', stat2: 'this month',  photo: '/images/creator-amara.webp',  quote: "I left my old platform after three years of watching fees eat my income. Two months on Fanation and I've tripled what I made there — the live gifting alone covered my rent in one stream." },
+  { name: 'Marcus T.',    handle: '@marcusbeats',  role: 'Musician',          stat: '+$1,800', stat2: 'in 48 hours', photo: '/images/creator-marcus.webp', quote: "Pay-per-view drops changed everything. I put a track behind a paywall, promoted it on my feed, and made $1,800 in 48 hours. I was giving that music away for free before." },
+  { name: 'Lara K.',      handle: '@laracreates',  role: 'Vlogger',           stat: '+$3,100', stat2: 'last month',  photo: '/images/creator-aisha.webp',  quote: "My fans feel genuinely close to me here — the DMs and group chats feel different. And the payouts are fast. First withdrawal hit my account within 24 hours of signing up." },
 ]
 
 const FAQS = [
@@ -272,9 +273,12 @@ export default function Page() {
                     border: '1px solid rgba(255,255,255,0.08)',
                     boxShadow: '0 40px 100px rgba(0,0,0,0.65)',
                   }}>
-                  <img
-                    src="/images/creator-live.jpg"
+                  <Pic
+                    src="/images/creator-live.webp"
+                    sizes={SIZES.phone}
                     alt=""
+                    loading="lazy"
+                    decoding="async"
                     style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover', objectPosition: 'center top' }}
                   />
                   <div className="absolute inset-0" style={{ background: 'linear-gradient(180deg,rgba(7,9,26,0.1) 0%,rgba(7,9,26,0.7) 100%)' }} />
@@ -416,8 +420,9 @@ export default function Page() {
               {CREATORS.map(c => (
                 <div key={c.name} className="ctype-card relative rounded-[20px] overflow-hidden"
                   style={{ aspectRatio: '3/4', background: 'linear-gradient(145deg,#111830,#18223C)' }}>
-                  <img
+                  <Pic
                     src={c.photo}
+                    sizes={SIZES.creatorCard}
                     alt={c.name}
                     loading="lazy"
                     decoding="async"
@@ -540,8 +545,9 @@ export default function Page() {
                   </p>
                   <div className="flex items-center gap-3 pt-5" style={{ borderTop: `1px solid ${BORDER}` }}>
                     <div className="w-11 h-11 rounded-full overflow-hidden flex-shrink-0">
-                      <img
+                      <Pic
                         src={t.photo}
+                        sizes={SIZES.cardFace}
                         alt={t.name}
                         loading="lazy"
                         decoding="async"
