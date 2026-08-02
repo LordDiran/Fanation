@@ -141,6 +141,50 @@ export function srcsetFor(src?: string): string | undefined {
   return out;
 }
 
+/**
+ * One rung, chosen for a box of a known width. For the places a `srcset` cannot
+ * reach.
+ *
+ * `<video poster>` is the whole reason this exists. It takes a single URL and
+ * has no srcset, no sizes and no `loading`, so the browser is given no way to
+ * choose and simply fetches whatever it is handed — a 1100px photograph into a
+ * 620px card, every time, on every screen. `<img>` solved this years ago;
+ * `<video>` never did.
+ *
+ * So the choosing happens here instead, and it needs a measured width rather
+ * than a declared one. That is the trade: a `sizes` string is a promise the
+ * layout has to keep, and this is the layout reporting what it actually did.
+ * The cost is that the caller cannot ask until the element exists, which is why
+ * `Loop` holds the poster back for one layout tick — before paint, so nothing
+ * flashes and nothing is fetched twice.
+ *
+ * Rounds up, never down: the rung has to cover the box or the poster is
+ * visibly softer than the video that replaces it. A box wider than every rung
+ * gets the original, which is exactly today's behaviour, and so does a path
+ * outside the generated directories.
+ *
+ * The ratio is capped at 2, and that cap is the difference between this helping
+ * on a phone and doing nothing there. A 328px feed card on a 3x screen asks for
+ * 984 and the ladder's top rung is 800, so an uncapped rule hands back the
+ * 1100px original and the phone pays 40 KB a card — measured, on exactly the
+ * devices this market runs on. Capped, the same card takes the 800 at 2.44x its
+ * box. Nobody has ever resolved the difference between 2.44x and 3x on a
+ * five-inch screen, and this is a poster: a frame that is either covered by
+ * video a moment later or sitting behind a play button. Sharpness that cannot
+ * be seen is not worth 40 KB on a metered connection.
+ */
+export function rungFor(src: string | undefined, cssWidth: number): string | undefined {
+  if (!src || !(cssWidth > 0)) return src;
+  const m = /^\/img\/([a-z]+)\/[^/.]+\.webp$/.exec(src);
+  const rungs = m && RUNGS[m[1]];
+  if (!rungs) return src;
+
+  const dpr = typeof window === "undefined" ? 1 : Math.min(window.devicePixelRatio || 1, 2);
+  const need = cssWidth * dpr;
+  const pick = rungs.find((w) => w >= need);
+  return pick ? `${src.slice(0, -".webp".length)}.${pick}.webp` : src;
+}
+
 /** The category a creator we have never heard of gets dealt from. */
 const DEFAULT_CAT = "life";
 

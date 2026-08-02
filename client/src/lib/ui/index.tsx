@@ -1,8 +1,8 @@
 /** Fanation UI primitives — presentational, store-free. */
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { fhash } from "@/lib/core";
 import type { ToastMsg } from "@/lib/core";
-import { avatarFor, srcsetFor } from "./media";
+import { avatarFor, rungFor, srcsetFor } from "./media";
 
 /* ---------------- Icons ---------------- */
 const P: Record<string, string> = {
@@ -294,6 +294,14 @@ export function Scrim({ from = 0.8, height = "58%", top = false, hold = 0 }: { f
  * reason the screen was opened — a reel, a live stage. There is nothing below
  * the fold to save, and waiting a frame for the observer would put a gradient
  * where a cached still could have painted immediately.
+ *
+ * The poster is also sized, which `<video>` gives no help with at all: there is
+ * no srcset and no sizes on the element, so a full-width photograph goes into
+ * whatever box it is given. `rungFor` picks the rung instead, off a measured
+ * width rather than a declared one, and the measuring is why `near` alone is no
+ * longer enough to arm the element — the box has to exist first. That happens
+ * in a layout effect, so the measure-then-arm round trip completes before the
+ * browser paints: nothing flashes, and no poster is fetched at two sizes.
  */
 export function Loop({ src, poster, active = true, sound = false, radius, fit = "cover", priority, style, children }: {
   src: string; poster?: string; active?: boolean; sound?: boolean; radius?: number | string;
@@ -301,8 +309,21 @@ export function Loop({ src, poster, active = true, sound = false, radius, fit = 
 }) {
   const ref = useRef<HTMLVideoElement>(null);
   const [box, near] = useNear<HTMLDivElement>(200, priority);
-  const vsrc = near ? src : undefined;
-  const vposter = near ? poster : undefined;
+
+  /* The box's own width, once there is a box. `null` means not yet measured;
+     0 means measured and genuinely zero, which a hidden ancestor produces and
+     which `rungFor` answers with the original file. Measured once — a resize
+     that crossed a rung boundary would only ever re-fetch a poster the video
+     is about to cover. */
+  const [pw, setPw] = useState<number | null>(null);
+  useLayoutEffect(() => {
+    if (!near || pw !== null) return;
+    setPw(box.current ? box.current.getBoundingClientRect().width : 0);
+  }, [near, pw, box]);
+
+  const armed = near && pw !== null;
+  const vsrc = armed ? src : undefined;
+  const vposter = armed ? rungFor(poster, pw as number) : undefined;
 
   useEffect(() => {
     const v = ref.current;
