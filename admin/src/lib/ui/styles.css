@@ -592,3 +592,36 @@ button:disabled{opacity:.45;cursor:not-allowed;transform:none}
   .statnum{font-size:32px}
   .drawer{width:100%;max-width:100%}
 }
+
+
+/* ── Motion, and when not to have any ─────────────────────────────────────
+ *
+ * There was one rule here before this — the auth mosaic stopped drifting — and
+ * nothing else in the app answered the preference at all. Toasts still slid in,
+ * the drawer still swept across, chat messages still rose, the live badge still
+ * blinked.
+ *
+ * Near-zero durations rather than `animation: none`, because several of these
+ * keyframes carry the element's visible state. `riseIn`, `drawIn` and
+ * `chatin` all start at opacity 0 and are declared with a fill mode, so
+ * switching them off outright would leave a toast, a drawer or a message
+ * invisible. Running them once, instantly, lands each on the frame it was
+ * going to rest at anyway.
+ *
+ * `.giftfly` is the exception and it is the important one. It runs `floatup`
+ * with `forwards`, and `floatup` ends at opacity 0 — so under the rule above
+ * a tip notification would be created, finish its animation in a hundredth of a
+ * millisecond, and stick at invisible. "Zara sent 500 coins" is information, not
+ * decoration. It gets pinned to its visible state instead and is removed on the
+ * same timer as always. */
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-delay:0s !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+    transition-delay:0s !important;
+  }
+  html{scroll-behavior:auto !important}
+  .giftfly{animation:none !important;opacity:1 !important;transform:none !important}
+}

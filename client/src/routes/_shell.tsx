@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAppStore } from "@/lib/core";
 import { Avatar, FanationMark, Icon, Logo } from "@/lib/ui";
 import { FAN_NAV, FAN_TABS, STUDIO_NAV, STUDIO_TABS } from "@/components/nav";
 import { ThemeToggle } from "@/components/theme";
 import { ModalHost } from "@/components/modals";
+import RouteFallback from "@/components/route-fallback";
 
 /**
  * One account, two modes: Browse (fan) ⇄ Studio (creator). Route prefix decides
@@ -123,7 +124,12 @@ export default function AppLayout() {
             <Icon n="plus" s={15} /><span className="hide-sm">Create</span>
           </button>
         </div>
-        <Outlet />
+        {/* The boundary sits here rather than around <Routes>, so a split
+            chunk arriving swaps only the content area — the sidebar, topbar
+            and tab bar never unmount and never blink. */}
+        <Suspense fallback={<RouteFallback />}>
+          <Outlet />
+        </Suspense>
       </div>
 
       {/* Phone navigation. `.tabbar` is display:none above 900px, so nothing here

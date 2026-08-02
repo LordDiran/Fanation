@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useAdminStore } from "@/lib/core";
 import { Avatar, Icon, Logo, Menu } from "@/lib/ui";
 import { AdminThemeToggle } from "@/components/admin-chrome";
+import RouteFallback from "@/components/route-fallback";
 
 const NAV: Array<[string, string, string]> = [
   ["/overview", "Overview", "grid"],
@@ -85,7 +86,12 @@ export default function AdminLayout() {
             ]}
           />
         </div>
-        <Outlet />
+        {/* The boundary sits here rather than around <Routes>, so a split
+            chunk arriving swaps only the content area — the sidebar and
+            topbar never unmount and never blink. */}
+        <Suspense fallback={<RouteFallback />}>
+          <Outlet />
+        </Suspense>
       </div>
     </div>
   );
